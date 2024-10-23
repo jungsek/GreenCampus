@@ -1,6 +1,10 @@
 {
   "name": "src",
   "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "seed": "node ./database/seedScript.js"
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -10,6 +14,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "joi": "^17.13.3",
+    "mssql": "^11.0.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7"
+  },
+  "description": ""
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "joi": "^17.13.3",
