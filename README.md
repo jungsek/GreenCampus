@@ -17,7 +17,7 @@ module.exports = {
     user: "sa", 
     password: "sa", 
     server: "localhost",
-    database: "bed-assg-1",
+    database: "fsdp-assg",
     trustServerCertificate: true,
     options: {
       port: 1433, 
