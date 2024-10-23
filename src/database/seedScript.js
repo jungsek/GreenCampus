@@ -1,7 +1,7 @@
 const sql = require("mssql");
 const fs = require("fs");
 const path = require("path");
-const dbConfig = require("./dbConfig");
+const dbConfig = require("../dbConfig");
 
 // SQL data for seeding the database
 const seedSQL = `

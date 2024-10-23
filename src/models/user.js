@@ -1,6 +1,6 @@
 //import sql stuff
 const sql = require("mssql")
-const dbConfig = require("../database/dbConfig")
+const dbConfig = require("../dbConfig")
 const fs = require("fs");
 
 class User {

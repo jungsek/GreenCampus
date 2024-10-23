@@ -1,9 +1,77 @@
 //this file stores common functions to be used in other scripts
 
 //load the navbar html into the class
-$(".nav-placeholder").load("./commonHTML/navbar.html", () => {
+$(".nav-placeholder").load(".index.html", () => {
+  // This code will execute after the navbar is loaded
 
-})
+  // Toggle dark and light mode
+  const body = document.querySelector("body"),
+    modeToggle = document.querySelector(".dark-light"),
+
+    nav = document.querySelector("nav"),
+    navMenuBtn = document.getElementById('navMenuIcon'),
+    sideMenuBtn = document.getElementById('sideMenuIcon'),
+    
+    login = document.getElementById('login'),
+    userBtn = document.getElementById('userIcon'),
+    loginClose = document.getElementById('loginClose'),
+    loginLink = document.getElementById('loginLink'),
+    
+    signUp = document.getElementById('signUp'),
+    signUpClose = document.getElementById('signUpClose'),
+    signUpLink = document.getElementById('signUpLink'),
+    
+    loggedUser = document.getElementById('loggedUser'),
+    loggedUserClose = document.getElementById('loggedUserClose');
+
+
+    modeToggle.addEventListener("click", () => {
+        modeToggle.classList.toggle("active");
+        body.classList.toggle("dark");
+    });
+
+    // Show sidebar
+    navMenuBtn.addEventListener('click', () => {
+        nav.classList.toggle('open');
+    });
+
+    // Hide sidebar
+    sideMenuBtn.addEventListener('click', () => {
+        nav.classList.remove('open');
+    });
+
+    // Show login form
+    userBtn.addEventListener('click', () => {
+        login.classList.add('showLogin');
+    });
+
+    // Hide login form
+    loginClose.addEventListener('click', () => {
+        login.classList.remove('showLogin');
+    });
+
+    // Handle "Login" link click
+    loginLink.addEventListener('click', () => {
+        signUp.classList.remove('showSignUp'); // Hide sign-up form
+        login.classList.add('showLogin'); // Show login form
+    });
+
+    // Handle "Sign Up" link click
+    signUpLink.addEventListener('click', () => {
+        login.classList.remove('showLogin'); // Hide login form
+        signUp.classList.add('showSignUp'); // Show sign-up form
+    });
+
+    // Hide sign-up form
+    signUpClose.addEventListener('click', () => {
+        signUp.classList.remove('showSignUp');
+    });
+
+    // Hide loggedUser form
+    loggedUserClose.addEventListener('click', () => {
+        loggedUser.classList.remove('showLoggedUser'); // Hide loggedUser form
+    });
+});
 
 //load the footer html into the class
 $(".footer-placeholder").load("./commonHTML/footer.html")
@@ -127,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault()
     }, false)
   })
-  
 
 })
 
