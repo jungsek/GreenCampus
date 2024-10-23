@@ -1,0 +1,59 @@
+
+main{
+    min-height: 100vh; /*Take up entire screen height*/
+    position: relative;
+    padding-bottom: 4vw;
+}
+
+.frame{
+    width: 24%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 2px 4px 5px 2px #36363640;
+    padding-top: 3vw;
+    padding-bottom: 1.5vw;
+    height: fit-content;
+    margin-top: 4vw;
+}
+
+.login-form{
+    margin-left: 9%;
+    width: 82%;
+    margin-top: 5vw;
+}
+
+
+.input-field{
+    /*get only the bottom border*/
+    border-color: #535353;
+    outline: 0;
+    border-width: 0 0 2px;
+    border-radius: 0;
+    width: 100%;
+    font-size: 0.9vw;
+}
+
+.form-check{
+    margin-top: 2vw;
+    font-size: 0.9vw;
+}
+
+.login-btn{
+    margin-top: 1vw; 
+    width: 100%; 
+    text-align: center; 
+    background-color: #245D51; 
+    border-radius: 30px; 
+    color: white;
+    font-size: 0.9vw;
+    padding: 0.5vw;
+}
+
+.field-error{
+    color: red;
+    font-size: 0.9vw;
+    font-weight: 500;
+    margin-top: 0.5vw;
+    display: none;
+}
+
