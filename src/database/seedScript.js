@@ -16,6 +16,16 @@ declare @sql nvarchar(max) = (
 exec sp_executesql @sql;
 
 -- Drop foreign key constraints
+IF OBJECT_ID('FK_EnergyBreakdown_EnergyUsageID', 'F') IS NOT NULL
+  ALTER TABLE EnergyBreakdown DROP CONSTRAINT FK_EnergyBreakdown_EnergyUsageID;
+IF OBJECT_ID('FK_CarbonFootprint_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE CarbonFootprint DROP CONSTRAINT FK_CarbonFootprint_SchoolID;
+IF OBJECT_ID('FK_EnergyUsage_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE EnergyUsage DROP CONSTRAINT FK_EnergyUsage_SchoolID;
+IF OBJECT_ID('FK_Schools_PrincipalID', 'F') IS NOT NULL
+  ALTER TABLE Schools DROP CONSTRAINT FK_Schools_PrincipalID;
+IF OBJECT_ID('FK_Users_Schools', 'F') IS NOT NULL
+  ALTER TABLE Users DROP CONSTRAINT FK_Users_Schools;
 
 -- Drop all tables if they exist
 IF OBJECT_ID('EnergyBreakdown', 'U') IS NOT NULL DROP TABLE EnergyBreakdown;
