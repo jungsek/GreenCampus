@@ -76,17 +76,6 @@ class School{
         return result ? this.toSchoolObj(result) : null
     }
 
-    static async getSchoolPrincipalBySchoolID(schoolid) {
-        const params = {"schoolid": schoolid}
-        const query = `
-        SELECT * from u
-        FROM Users u
-        INNER JOIN Schools s ON u.id = s.principal_id
-        WHERE s.id = @schoolid;`
-        
-        const result = (await this.query(query, params)).recordset[0]
-        return result ? result : null;
-    }
 }
 
 module.exports = School;

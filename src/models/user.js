@@ -164,6 +164,18 @@ class User {
         return result
 
     }
+
+    static async getPrincipalBySchoolId(schoolid) {
+        const params = {"schoolid": schoolid}
+        const query = `
+        SELECT * from u
+        FROM Users u
+        INNER JOIN Schools s ON u.id = s.principal_id
+        WHERE s.id = @schoolid;`
+        
+        const result = (await this.query(query, params)).recordset[0]
+        return result ? result : null;
+    }
 }
   
   module.exports = User
