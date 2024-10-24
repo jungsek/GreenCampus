@@ -35,9 +35,13 @@ async function login(){
     
     // Store in local if remember me is enabled
     if (rememberInput.checked) {
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('role', role);
-    }
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('role', role);
+      } else {
+        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem('role', role);
+      }
+      
     //redirect user to courses
     window.location.href = "../index.html"
     

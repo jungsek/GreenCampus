@@ -1,0 +1,113 @@
+/*import font*/
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/*remove pre-built css*/
+button{
+    all: unset;
+}
+
+a{
+    text-decoration: none;
+}
+
+/*make sure navbar is ontop*/
+.nav-placeholder{
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/*commonly used background*/
+.long-bg{
+    background-color: #32CB94;
+    background-image: url('../assets/general/pattern-bg-long.png');
+    padding-bottom: 10vh;
+    position: relative;
+    padding-top: 4vw;
+}
+
+.full-bg{
+    background-color: #32CB94;
+    background-image: url('../assets/general/pattern-bg-full.png');
+}
+
+/*setup classes for font types*/
+.poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+  
+.poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+  
+.poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+  
+.poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.jost-regular{
+    font-family: "Jost", sans-serif; 
+    font-weight:400;
+}
+
+.jost-medium{
+    font-family: "Jost", sans-serif; 
+    font-weight: 500;
+}
+
+.exo-semibold{
+    font-family: "Exo", sans-serif; 
+    font-weight: 600
+}
+
+/*using images as a background */
+.background-img{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+/*parent needs to be relative*/
+/*uses absolute and transform*/
+.abs-center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+/*css for loading animation*/
+#loading-screen {
+    background: white; /* Sets a white background for the loading screen */
+    position: absolute; /* Positions the loading screen absolutely within its container */
+    top: 0; left: 0; /* Aligns the loading screen to the top left corner */
+    width: 100%; /* Loading screen width spans the full width of its container */
+    height: 100vh; /* Loading screen height spans the full height of the viewport */
+}
+
+.loading-animation {
+    position: absolute; /* Positions the animation absolutely within its container */
+    top: 50%; left: 50%; /* Centers the animation */
+    transform: translate(-50%, -50%); /* Adjusts the animation's position to be truly centered */
+    width: 10%; /* Sets the width of the animation to 10% of its container */
+}
+
+/*content to be loaded*/
+#loading-main{
+    display: none; /*hide by default*/
+    min-height: 100vh;
+}
