@@ -18,6 +18,11 @@ exec sp_executesql @sql;
 -- Drop foreign key constraints
 
 -- Drop all tables if they exist
+IF OBJECT_ID('EnergyBreakdown', 'U') IS NOT NULL DROP TABLE EnergyBreakdown;
+IF OBJECT_ID('CarbonFootprint', 'U') IS NOT NULL DROP TABLE CarbonFootprint;
+IF OBJECT_ID('EnergyUsage', 'U') IS NOT NULL DROP TABLE EnergyUsage;
+IF OBJECT_ID('SchoolStudents', 'U') IS NOT NULL DROP TABLE SchoolStudents;
+IF OBJECT_ID('Schools', 'U') IS NOT NULL DROP TABLE Schools;
 IF OBJECT_ID('Users', 'U') IS NOT NULL DROP TABLE Users;
 
 -- Create tables
@@ -35,6 +40,41 @@ CREATE TABLE Users (
     role VARCHAR(8) NOT NULL, CHECK (role = 'student' OR role = 'lecturer')
   );
 
+CREATE TABLE Schools(
+ id INT IDENTITY(1,1) PRIMARY KEY,
+ name VARCHAR(50),
+ description VARCHAR(255),
+ principalid INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
+)
+
+CREATE TABLE SchoolStudents(
+ id INT PRIMARY KEY IDENTITY(1,1),
+ studentid INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
+ schoolid INT FOREIGN KEY REFERENCES Schools(id) ON DELETE CASCADE,
+)
+
+CREATE TABLE EnergyUsage (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    schoolid INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE,
+    month VARCHAR(10),
+    energy_kwh FLOAT,
+    avg_temperature_c FLOAT,
+    timestamp DATETIME,
+)
+
+CREATE TABLE CarbonFootprint(
+ id INT IDENTITY(1,1) PRIMARY KEY,
+ schoolid INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE, 
+ totalcarbontons FLOAT,
+ timestamp DATETIME,
+)
+
+CREATE TABLE EnergyBreakdown(
+ id INT IDENTITY(1,1) PRIMARY KEY,
+ energyusageid INT FOREIGN KEY REFERENCES EnergyUsage(id) ON DELETE CASCADE, 
+ category VARCHAR(50),
+ percentage INT CHECK(percentage >= 0 and percentage <= 100),
+)
 `;
 
 async function insertUsers(connection){
