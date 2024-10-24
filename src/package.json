@@ -5,6 +5,10 @@
   "scripts": {
     "start": "nodemon app.js",
     "seed": "node ./database/seedScript.js"
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -22,4 +26,9 @@
     "nodemon": "^3.1.7"
   },
   "description": ""
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "joi": "^17.13.3",
+    "mssql": "^11.0.1"
+  }
 }
