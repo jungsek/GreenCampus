@@ -64,7 +64,7 @@ class School{
         
         //if there is result array is blank, return null
         //else, map it into the user obj
-        return result.length ? result.map((x) => this.toUserObj(x)) : null
+        return result.length ? result.map((x) => this.toSchoolObj(x)) : null
     }
 
     static async getSchoolById(id) {
