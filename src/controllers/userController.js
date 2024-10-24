@@ -70,8 +70,6 @@ const searchUsers = async (req,res) => {
     }
 }
 
-
-
 //use dependency injection for code testing
 const loginUser = async (req, res, next, _generateAccessToken = generateAccessToken) => {
 

@@ -7,21 +7,12 @@ async function loadNavBar(){
     //check if the user is logged in, if they are, display profile icon, else display login button (by triggering logout)
     const loggedIn = await isLoggedIn()
     if (loggedIn){
-        document.getElementById("profile").style.display = "block" 
-        //use asynchronous fetch, we want the header and content to load asap
-        fetch(`/users/pic`, {method: "GET",headers:{"authorization": `Bearer ${accessToken}`}})
-        .then((response) => {
-            //response is not ok, log out
-            //cause by: forbidden/user not found
-            if (!response.ok){
-                logout(false)
-                return null
-            }
-            return response.json()
-        })
-        .then((body) => {
-            document.getElementById("nav-profile-img").src = `data:image/png;base64,${body.img}`
-        })
+        document.getElementById("profile").style.display = "block";
+        document.getElementById("login").style.display = "none";
+        document.getElementById("nav-profile-img").src = "./assets/profile/default-profile-picture.jpg";
+        console.log("AccessToken:", accessToken);
+        console.log("LoggedIn:", loggedIn);
+
     }else{
         logout(false)
     }

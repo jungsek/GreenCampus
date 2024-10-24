@@ -137,7 +137,7 @@ class User {
             "last_name": user.last_name,
             "email": user.email,
         }
-        await this.query("UPDATE Users SET first_name = @first_name, last_name = @last_name, email = @email, WHERE id = @id", params)
+        await this.query("UPDATE Users SET first_name = @first_name, last_name = @last_name, email = @email WHERE id = @id", params)
         //return the updated user
         return this.getUserById(id)
     }
