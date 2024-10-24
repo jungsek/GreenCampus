@@ -75,6 +75,7 @@ class School{
         //return null if no user found
         return result ? this.toSchoolObj(result) : null
     }
+
 }
 
 module.exports = School;
