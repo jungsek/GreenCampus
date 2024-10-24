@@ -42,20 +42,20 @@ CREATE TABLE Users (
 
 CREATE TABLE Schools(
  id INT IDENTITY(1,1) PRIMARY KEY,
- name VARCHAR(50),
+ school_name VARCHAR(50),
  description VARCHAR(255),
- principalid INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
+ principal_id INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
 )
 
 CREATE TABLE SchoolStudents(
  id INT PRIMARY KEY IDENTITY(1,1),
- studentid INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
- schoolid INT FOREIGN KEY REFERENCES Schools(id) ON DELETE CASCADE,
+ student_id INT FOREIGN KEY REFERENCES Users(id) ON DELETE CASCADE,
+ school_id INT FOREIGN KEY REFERENCES Schools(id) ON DELETE CASCADE,
 )
 
 CREATE TABLE EnergyUsage (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    schoolid INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE,
+    school_id INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE,
     month VARCHAR(10),
     energy_kwh FLOAT,
     avg_temperature_c FLOAT,
@@ -64,14 +64,14 @@ CREATE TABLE EnergyUsage (
 
 CREATE TABLE CarbonFootprint(
  id INT IDENTITY(1,1) PRIMARY KEY,
- schoolid INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE, 
- totalcarbontons FLOAT,
+ school_id INT FOREIGN KEY REFERENCES schools(id) ON DELETE CASCADE, 
+ total_carbon_tons FLOAT,
  timestamp DATETIME,
 )
 
 CREATE TABLE EnergyBreakdown(
  id INT IDENTITY(1,1) PRIMARY KEY,
- energyusageid INT FOREIGN KEY REFERENCES EnergyUsage(id) ON DELETE CASCADE, 
+ energyusage_id INT FOREIGN KEY REFERENCES EnergyUsage(id) ON DELETE CASCADE, 
  category VARCHAR(50),
  percentage INT CHECK(percentage >= 0 and percentage <= 100),
 )
