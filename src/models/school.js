@@ -76,6 +76,18 @@ class School{
         return result ? this.toSchoolObj(result) : null
     }
 
+    static async getSchoolByStudentId(id) {
+        const params = {"studentid": id}
+        const query = `
+        SELECT * from s
+        FROM Schools s 
+        INNER JOIN Users u ON s.id = u.school_id
+        WHERE u.school_id = @studentid;`
+         //get first user from database that matches id and exclude the password
+        const result = (await this.query(query, params)).recordset[0]
+        //return null if no user found
+        return result ? this.toSchoolObj(result) : null
+    }
 }
 
 module.exports = School;
