@@ -1,0 +1,72 @@
+<link href="../styles/nav.css" rel="stylesheet">
+<nav class="navbar navbar-expand-lg py-3" style="background-color: #ffffff;">
+    <div class="container-fluid">
+        <!-- Logo-->
+        <a class="navbar-brand" href="../index.html" style="font-weight:700; font-size: 16px; margin-left: 10%;">
+            <div class = "d-flex">
+                <img src="../assets/general/Logo-icon.png" alt="Logo" height = 24 class="d-inline-block">
+                <div class="d-flex align-items-center" style="margin-left: 5%;">GreenCampus</div>
+            </div>
+        </a>
+
+        <!-- Toggle button for small screens-->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Other options-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mb-2 mb-lg-0 ms-auto" style="margin-right: 10%;">
+            
+            <!-- home link-->
+            <li class="nav-item search-bar-hide">
+                <a class="nav-link active" aria-current="page" href="./dashboard.html" style="color: #000000;" onclick="loadCourses()">Dashboard</a>
+            </li>
+             <!-- How it works link-->
+            <li class="nav-item search-bar-hide">
+                <a class="nav-link" href="./about-us.html" style="color: black;">About Us</a>
+            </li>
+
+            <li class="nav-item search-bar-hide">
+                <a class="nav-link" href="./contact.html" style="color: black;">Contact</a>
+            </li>
+
+            <li class="nav-item search-bar-hide">
+                <a class="nav-link" href="./credit.html" style="color: black;">Credit</a>
+            </li>
+
+            <li class="nav-item search-bar-hide">
+                <a class="nav-link" href="./report.html" style="color: black;">Reports</a>
+            </li>
+
+            <li class="nav-item align-items-center search-bar-hide" onclick = "searchBar()" style="cursor: pointer; display: flex;">
+                <img src="./assets/navbar/search-icon.png" alt="Logo" height = 16 class="d-inline-block">
+            </li>
+
+            <!--Search bar (hidden by default)-->
+            <form class="form-inline my-2 my-lg-0" id = "nav-search-bar-form">
+                <div class = "form-control mr-sm-2 d-flex align-items-center" id = "nav-search-bar" style="color: black;">
+                    <input type="text" placeholder="Search.." style="all: unset; width: 100%;">
+                    <img src = "../assets/navbar/close.png" style="object-fit: contain; cursor: pointer;width: 2.8%; aspect-ratio: 1/1;" onclick="hideSearchBar()">
+                </div>
+            </form>
+
+            <!--Hide login and profile buttons by default, show with js-->
+            <li class="nav-item" id = "login" style="display: none;">
+                <a class="btn nav-login-btn" href="../login.html" role="button">Login</a>
+            </li>
+
+            <li class="nav-item dropdown" id = "profile" style="display: none;">
+                <img src="./assets/profile/default-profile-picture.jpg" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" height= "40" width = "40" style="border-radius: 50%; object-fit: cover;" id="nav-profile-img">
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="../settings.html">Settings</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#" onclick="logout()">Log out</a></li>
+                </ul>
+              </li>
+
+        </ul>
+        </div>
+    </div>
+</nav>
+<script src="../scripts/navbar.js"></script>

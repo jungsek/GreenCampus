@@ -54,9 +54,6 @@ const validateUser = async (req, res, next) => {
     last_name: Joi.string().min(1).max(40).required(), //no blanks, max 40 chars
     email: Joi.string().min(3).max(50).required().email().external(uniqueEmail), //must be valid email + not taken
     password: Joi.string().min(5).max(100).required(), //min 5 chars, max 100
-    about_me: Joi.string().max(250).required().allow(''), //can be blank, max 250 chars
-    country: Joi.string().max(100).required(),
-    job_title: Joi.string().max(100).required().allow(''), //max 100 chars, can be blank
     role: Joi.string().required().valid("student","lecturer") //either student or lecturer
   })
   //check if validation successful
@@ -70,9 +67,6 @@ const validateUpdate = async (req,res,next) => {
     first_name: Joi.string().min(1).max(40).required(),
     last_name: Joi.string().min(1).max(40).required(),
     email: Joi.string().min(3).max(50).required().email().external((value,helper) => uniqueUpdateEmail(req.user.userId,value,helper)),
-    about_me: Joi.string().max(250).required().allow(''),
-    country: Joi.string().max(100).required(),
-    job_title: Joi.string().max(100).required().allow('')
   })
    //check if validation successful
    if (await validateSchema(req,res,schema)) next()

@@ -5,22 +5,18 @@ const fs = require("fs");
 
 class User {
     //setup user object
-    constructor(id, first_name, last_name, email, about_me, country, join_date, job_title, role) {
+    constructor(id, first_name, last_name, email, role) {
       this.id = id
       this.first_name = first_name
       this.last_name = last_name
       this.email = email
-      this.about_me = about_me
-      this.country = country
-      this.join_date = join_date
-      this.job_title = job_title
       this.role = role
     }
 
     //pass the sql recordset in
     //returns a new user obj
     static toUserObj(row){
-        return new User(row.id, row.first_name, row.last_name, row.email, row.about_me, row.country, row.join_date, row.job_title, row.role)
+        return new User(row.id, row.first_name, row.last_name, row.email, row.role)
     }
     
 
@@ -120,13 +116,10 @@ class User {
             "last_name": user.last_name,
             "email": user.email,
             "password": user.password,
-            "about_me": user.about_me,
-            "country": user.country,
-            "job_title": user.job_title,
             "role": user.role
         }
         //add user data
-        const result = await this.query("INSERT INTO Users (first_name, last_name, email, password, about_me, country, join_date, job_title, role) VALUES (@first_name, @last_name, @email, @password, @about_me, @country, GETDATE(), @job_title, @role); SELECT SCOPE_IDENTITY() AS id;", params)
+        const result = await this.query("INSERT INTO Users (first_name, last_name, email, password, role) VALUES (@first_name, @last_name, @email, @password, @role); SELECT SCOPE_IDENTITY() AS id;", params)
 
         
         //get the newly-created user
@@ -143,11 +136,9 @@ class User {
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
-            "about_me": user.about_me,
-            "country": user.country,
-            "job_title": user.job_title,
         }
-        await this.query("UPDATE Users SET first_name = @first_name, last_name = @last_name, email = @email, about_me = @about_me, country = @country, job_title = @job_title WHERE id = @id", params)
+        await this.query("UPDATE Users SET first_name = @first_name, last_name = @last_name, email = @email WHERE id = @id", params)
+
         //return the updated user
         return this.getUserById(id)
     }
@@ -172,6 +163,18 @@ class User {
         //no need to check if result is empty, returning an empty array is fine
         return result
 
+    }
+
+    static async getPrincipalBySchoolId(schoolid) {
+        const params = {"schoolid": schoolid}
+        const query = `
+        SELECT * from u
+        FROM Users u
+        INNER JOIN Schools s ON u.id = s.principal_id
+        WHERE s.id = @schoolid;`
+        
+        const result = (await this.query(query, params)).recordset[0]
+        return result ? result : null;
     }
 }
   

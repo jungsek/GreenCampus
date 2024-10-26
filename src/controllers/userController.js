@@ -70,8 +70,6 @@ const searchUsers = async (req,res) => {
     }
 }
 
-
-
 //use dependency injection for code testing
 const loginUser = async (req, res, next, _generateAccessToken = generateAccessToken) => {
 
@@ -146,6 +144,20 @@ const updatePassword = async (req, res) => {
   }
 }
 
+const getPrincipalBySchoolId = async (req, res) => {
+  const id = parseInt(req.params.schoolid);
+  try {
+    const principal = await User.getPrincipalBySchoolId(id)
+    if (!principal) {
+      return res.status(404).send("Principal not found")
+    }
+    res.json(principal);
+  } catch (error) {
+    console.error(error)
+    res.status(500).send("Error retrieving principal")
+  }
+}
+
 
 const decodeJWT = async (req, res) => {
 
@@ -162,5 +174,6 @@ module.exports = {
     updatePassword,
     hashPassword,
     decodeJWT,
-    searchUsers
+    searchUsers,
+    getPrincipalBySchoolId
 }

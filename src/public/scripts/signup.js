@@ -37,9 +37,6 @@ async function signUp(){
         "last_name": last_nameInput.value,
         "email": emailInput.value,
         "password": passwordInput.value,
-        "about_me": "",
-        "country": "United States", //default to US, will be set in controller
-        "job_title": "", //default to blank
         "role": roleInput.value
     }
     //update database
