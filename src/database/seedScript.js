@@ -94,7 +94,7 @@ CREATE TABLE EnergyBreakdown (
 
 `;
 
-async function insertUsers(connection){
+async function insertData(connection){
   await connection.request().query(`
     -- First insert the lecturers (without school_id since they're principals)
     INSERT INTO Users (first_name, last_name, email, password, role, school_id)
@@ -116,6 +116,31 @@ async function insertUsers(connection){
     
     INSERT INTO Users (first_name, last_name, email, password, role, school_id)
     VALUES ('Sarah', 'Lee', 'sarah@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 2);
+
+    -- Mock data for EnergyUsage table
+INSERT INTO EnergyUsage (school_id, month, energy_kwh, avg_temperature_c, timestamp)
+VALUES
+    (1, 'January', 1000.5, 24.5, '2024-01-15 10:00:00'),
+    (1, 'February', 1200.7, 25.0, '2024-02-15 10:00:00'),
+    (1, 'March', 1100.8, 26.1, '2024-03-15 10:00:00'),
+    (1, 'April', 1300.4, 27.3, '2024-04-15 10:00:00'),
+    (2, 'January', 950.3, 23.8, '2024-01-15 10:00:00'),
+    (2, 'February', 1050.0, 24.2, '2024-02-15 10:00:00'),
+    (2, 'March', 1150.9, 25.3, '2024-03-15 10:00:00'),
+    (2, 'April', 1250.1, 26.0, '2024-04-15 10:00:00');
+
+-- Mock data for CarbonFootprint table
+INSERT INTO CarbonFootprint (school_id, total_carbon_tons, timestamp)
+VALUES
+    (1, 200.5, '2024-01-31 12:00:00'),
+    (1, 180.7, '2024-02-28 12:00:00'),
+    (1, 195.2, '2024-03-31 12:00:00'),
+    (1, 210.9, '2024-04-30 12:00:00'),
+    (2, 190.3, '2024-01-31 12:00:00'),
+    (2, 185.6, '2024-02-28 12:00:00'),
+    (2, 192.4, '2024-03-31 12:00:00'),
+    (2, 198.1, '2024-04-30 12:00:00');
+
   `);
 }
   
@@ -130,8 +155,8 @@ async function run() {
       console.log("Database reset and tables created");
   
         // Insert user data
-        await insertUsers(connection);
-        console.log("Users inserted");
+        await insertData(connection);
+        console.log("Data inserted");
         connection.close();
       console.log("Seeding completed");
     } catch (err) {
