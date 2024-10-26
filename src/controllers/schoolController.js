@@ -26,7 +26,22 @@ const getAllSchools = async (req, res) => {
     }
   }
 
+  const getSchoolByStudentId = async (req, res) => {
+    const studentid = parseInt(req.params.id);
+    try {
+      const school = await School.getSchoolByStudentId(studentid)
+      if (!school) {
+        return res.status(404).send("School not found")
+      }
+      res.json(school);
+    } catch(error) {
+      console.error(error)
+      res.status(500).send("Error retrieving school")
+    }
+  }
+
 module.exports = {
     getAllSchools,
-    getSchoolById
+    getSchoolById,
+    getSchoolByStudentId
 }
