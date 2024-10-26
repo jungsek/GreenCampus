@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const dbConfig = require("./dbConfig");
+const dbConfig = require("./database/dbConfig");
 const sql = require("mssql");
 const route = require("./routes/routes");
 const bodyParser = require("body-parser");
