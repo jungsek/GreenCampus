@@ -1,5 +1,5 @@
 // routes/carbonFootprintRoutes.js
-const carbonFootprintController = require("../controllers/carbonFootprint");
+const carbonFootprintController = require("../controllers/carbonFootprintController");
 const authenticateToken = require("../middlewares/authenticateToken");
 
 const carbonFootprintRoute = (app) => {

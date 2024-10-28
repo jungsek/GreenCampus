@@ -1,5 +1,5 @@
 // routes/energyRoutes.js
-const energyController = require("../controllers/energyController");
+const energyController = require("../controllers/energyUsageController");
 const authenticateToken = require("../middlewares/authenticateToken");
 
 // Create routes
