@@ -1,0 +1,245 @@
+/* ================== Green Background ================== */
+.dashboard-content { 
+    background-color: #59c19b69; 
+    padding: 15px; /* Fixed padding */
+    position: relative;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    box-sizing: border-box;
+    width: 100%; /* Full width without accounting for the scrollbar */
+    height: calc(100vh - 40px - 28px); /* Full height minus navbar and footer heights */
+}  
+
+/* ================== White Layered Background ================== */
+.carpet-container { 
+    background-color: #ffffff; 
+    padding: 15px; 
+    border-radius: 13px; 
+    width: 100%; 
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+    width: 100%; /* Full width of the container */
+    box-sizing: border-box;
+}
+
+.content-card {
+    padding: 15px;
+    height: 150px; 
+    border-radius: 10px;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+    text-align: left;
+    border: 1px solid #ddd; 
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%; /* Allow the card to take full width of its container */
+}
+
+.content-card:hover {
+    background-color: #245D51;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.menu-icon {
+    cursor: pointer;
+    margin-top: -10px;
+    margin-right: 10px;
+}
+
+.income-value {
+    display: flex;
+    align-items: baseline;
+}
+
+.units {
+    font-size: 20px;
+    color: #666;
+    margin-right: 5px;
+}
+
+.amount {
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+}
+
+.change {
+    margin-top: -10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.increase-icon {
+    font-size: 20px; /* Adjust the size of the icon */
+    color: rgb(25, 176, 25); 
+    margin-right: 5px; /* Add some space between the icon and the text */
+    vertical-align: middle; /* Align the icon with the text */
+    display: inline-block; /* Ensure it behaves like an inline element */
+}
+
+.change-text {
+    color: rgb(25, 176, 25); 
+    font-weight: bold;
+}
+
+.content-card:hover .header span,
+.content-card:hover .value span,
+.content-card:hover .last-month {
+    color: white; /* Make text white on hover */
+}
+
+.value {
+    display: flex;
+    align-items: center; 
+}
+
+.value canvas {
+    margin-left: 10px; 
+}
+
+/* ================== Graphs ================== */
+.middle-graphs-container {
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+    width: 100%; 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.graph-names-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; /* Vertically center the elements */
+    width: 100%; /* Full width of container */
+    max-width: 100%; /* Ensure container scales */
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
+.energyBreakdown {
+    margin-right: 290px;
+}
+
+.charts-wrapper {
+    display: flex; /* Flex layout to place bar and pie charts side by side */
+    gap: 20px; /* Space between the two charts */
+    width: 100%;
+}
+
+
+/* ================== Bar Chart ================== */
+.barChart-container {
+    display: flex;
+    flex-grow: 1;
+    padding: 3px; 
+    height: 290px; 
+    width: 100%; 
+    max-width: 1800px; 
+    margin-top: -20px;
+    border-radius: 8px; /* Slightly smaller border radius */
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between;
+}
+
+.barChart-info {
+    padding: 35px;
+    width: 23%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1rem; 
+}
+
+.barChart-info p {
+    font-weight: bold;
+}
+
+.barChart-info strong {
+    font-weight: normal;
+}
+
+/* ================== Pie Chart ================== */
+.pieChart-container {
+    display: flex;
+    padding: 5px;
+    height: 290px; 
+    width: 100%;
+    max-width: 498px;
+    margin-top: -20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+    text-align: left;
+    border: 1px solid #ddd; 
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between; /* Push chart and info to opposite sides */
+}
+
+.filter-container {
+    margin-bottom: 15px;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#filter {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* ================== Line Graph ================== */
+.bottom-graph-name-container {
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; /* Vertically center the elements */
+    width: 100%; /* Full width of container */
+    max-width: 100%; /* Ensure container scales */
+}
+
+
+.line-graph-container {
+    display: flex;
+    flex-grow: 1;
+    padding: 3px; 
+    height: 210px; 
+    width: 100%; 
+    border-radius: 8px; /* Slightly smaller border radius */
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between;
+}
+
+
+

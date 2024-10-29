@@ -1,6 +1,4 @@
-// controllers/energyController.js
 const EnergyUsage = require("../models/energyUsage");
-const CarbonFootprint = require("../models/carbonFootprint");
 
 const getAllEnergyUsage = async (req, res) => {
     try {
@@ -51,36 +49,10 @@ const getMonthlyEnergyUsage = async (req, res) => {
     }
 };
 
-// Carbon Footprint Controllers
-const getCarbonFootprintBySchool = async (req, res) => {
-    const schoolId = parseInt(req.params.schoolId);
-    try {
-        const carbonData = await CarbonFootprint.getCarbonFootprintBySchool(schoolId);
-        if (!carbonData) {
-            return res.status(404).send("No carbon footprint data found for this school");
-        }
-        res.json(carbonData);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error retrieving carbon footprint data");
-    }
-};
-
-const createCarbonFootprint = async (req, res) => {
-    try {
-        const id = await CarbonFootprint.createCarbonFootprint(req.body);
-        res.status(201).json({ id: id });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error creating carbon footprint record");
-    }
-};
 
 module.exports = {
     getAllEnergyUsage,
     getEnergyUsageBySchool,
     createEnergyUsage,
-    getMonthlyEnergyUsage,
-    getCarbonFootprintBySchool,
-    createCarbonFootprint
+    getMonthlyEnergyUsage
 };

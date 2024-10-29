@@ -31,7 +31,6 @@ IF OBJECT_ID('FK_Users_Schools', 'F') IS NOT NULL
 IF OBJECT_ID('EnergyBreakdown', 'U') IS NOT NULL DROP TABLE EnergyBreakdown;
 IF OBJECT_ID('CarbonFootprint', 'U') IS NOT NULL DROP TABLE CarbonFootprint;
 IF OBJECT_ID('EnergyUsage', 'U') IS NOT NULL DROP TABLE EnergyUsage;
-IF OBJECT_ID('SchoolStudents', 'U') IS NOT NULL DROP TABLE SchoolStudents;
 IF OBJECT_ID('Schools', 'U') IS NOT NULL DROP TABLE Schools;
 IF OBJECT_ID('Users', 'U') IS NOT NULL DROP TABLE Users;
 
@@ -140,6 +139,56 @@ VALUES
     (2, 185.6, '2024-02-28 12:00:00'),
     (2, 192.4, '2024-03-31 12:00:00'),
     (2, 198.1, '2024-04-30 12:00:00');
+
+INSERT INTO EnergyBreakdown (energyusage_id, category, percentage)
+VALUES
+    (1, 'Lighting', 25),
+    (1, 'HVAC', 35),
+    (1, 'Appliances', 20),
+    (1, 'Canteen Operations', 10),
+    (1, 'Food Waste Management', 10),
+
+    (2, 'Lighting', 20),
+    (2, 'HVAC', 30),
+    (2, 'Appliances', 25),
+    (2, 'Canteen Operations', 15),
+    (2, 'Food Waste Management', 10),
+
+    (3, 'Lighting', 30),
+    (3, 'HVAC', 30),
+    (3, 'Appliances', 20),
+    (3, 'Canteen Operations', 15),
+    (3, 'Food Waste Management', 5),
+
+    (4, 'Lighting', 20),
+    (4, 'HVAC', 40),
+    (4, 'Appliances', 25),
+    (4, 'Canteen Operations', 10),
+    (4, 'Food Waste Management', 5),
+
+    (5, 'Lighting', 25),
+    (5, 'HVAC', 25),
+    (5, 'Appliances', 20),
+    (5, 'Canteen Operations', 15),
+    (5, 'Food Waste Management', 15),
+
+    (6, 'Lighting', 15),
+    (6, 'HVAC', 30),
+    (6, 'Appliances', 25),
+    (6, 'Canteen Operations', 20),
+    (6, 'Food Waste Management', 10),
+
+    (7, 'Lighting', 30),
+    (7, 'HVAC', 35),
+    (7, 'Appliances', 20),
+    (7, 'Canteen Operations', 10),
+    (7, 'Food Waste Management', 5),
+
+    (8, 'Lighting', 20),
+    (8, 'HVAC', 40),
+    (8, 'Appliances', 20),
+    (8, 'Canteen Operations', 10),
+    (8, 'Food Waste Management', 10);
 
   `);
 }
