@@ -2,6 +2,8 @@
 const carbonFootprintController = require("../controllers/carbonFootprintController");
 const authenticateToken = require("../middlewares/authenticateToken");
 
+
+
 const carbonFootprintRoute = (app) => {
     app.get("/carbon-footprints", carbonFootprintController.getAllCarbonFootprints); // Get all carbon footprints
     app.get("/carbon-footprints/:id", carbonFootprintController.getCarbonFootprintById); // Get carbon footprint by ID

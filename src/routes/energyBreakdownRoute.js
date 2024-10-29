@@ -1,6 +1,7 @@
 const energyBreakdownController = require("../controllers/energyBreakdownController");
 const authenticateToken = require("../middlewares/authenticateToken");
 
+
 const energyBreakdownRoute = (app) => {
     app.get("/energy-breakdowns", energyBreakdownController.getAllEnergyBreakdowns); // Get all energy breakdowns
     app.get("/energy-breakdowns/usage/:energyUsageId", energyBreakdownController.getEnergyBreakdownByUsage); // Get breakdowns by energy usage ID
