@@ -1,3 +1,29 @@
+async function fetchEnergyUsageData() {
+    let response = await fetch(`/dashboard/energyusage`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        }
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    let Edata = await response.json();
+    return Edata;
+}
+
+async function fetchCarbonFootprintData() {
+    let response = await fetch(`/dashboard/carbonfootprint`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        }
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    let Edata = await response.json();
+    return Edata;
+}
+
 // ==================== Doughnut Progress Chart ====================
 const chartData = {
     labels: ['Current Progress', 'Remaining Target'],
@@ -54,7 +80,86 @@ const doughnutChart3 = new Chart(ctx3, {
 });
 
 // ==================== Bar + Line Graph ====================
-const energyTemperatureData = {
+
+async function initEnergyTempChart(){
+    const fetchedData = await fetchEnergyUsageData();
+
+    const labels = fetchedData.map(item => item.month);
+    const energyData = fetchedData.map(item => item.energy_kwh);
+    const temperatureData = fetchedData.map(item => item.avg_temperature_c);
+    const schID = fetchedData.map(item => item.school_id);
+
+    const totalEnergy = energyData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    const totalTemp = temperatureData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    // Define the chart configuration
+    const energyTemperatureConfig = {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Energy (kWh)',
+                    type: 'bar',
+                    data: energyData,
+                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y1'
+                },
+                {
+                    label: 'Temperature (°C)',
+                    type: 'line',
+                    data: temperatureData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false,
+                    yAxisID: 'y2'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y1: {
+                    type: 'linear',
+                    position: 'left',
+                    beginAtZero: true,
+                    max: 2000,
+                    ticks: {
+                        callback: function(value) {
+                            return value + ' kWh';
+                        }
+                    }
+                },
+                y2: {
+                    type: 'linear',
+                    position: 'right',
+                    beginAtZero: true,
+                    max: 50,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '°C';
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    //calculate average energy usage and temperature
+    const avgEnergyTemp = document.querySelector('.barChart-info')
+    avgEnergyTemp.innerHTML = `<p>Energy consumption:<br><strong> ${(totalEnergy/12).toFixed(2)} kWh/month</strong></p>
+                            <p>Average Temperature:<br><strong>${(totalTemp/12).toFixed(1)}°C</strong></p>`
+
+    // Initialize the energy vs. temperature chart
+    const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
+    const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
+}
+initEnergyTempChart();
+
+/*const energyTemperatureData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
         {
@@ -114,7 +219,7 @@ const energyTemperatureConfig = {
 // Initialize the energy vs. temperature chart
 const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
 const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
-
+*/
 
 // ==================== Pie Chart ====================
 const chartDataPie = {
@@ -242,6 +347,56 @@ const pieChart = new Chart(pieCtx, {
 
 
 // ==================== Line Graph ====================
+async function initCarbonFootprintChart() {
+    const fetchedData = await fetchCarbonFootprintData();
+
+    const schID = fetchedData.map(item => item.school_id);
+    const totalCarbonFoot = fetchedData.map(item => item.total_carbon_tons);
+    const month = fetchedData.map(item => new Date(item.timestamp).getMonth() + 1);
+
+    const carbonFootprintConfig = {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Carbon Footprint (tonnes)',
+                    type: 'line',
+                    data: totalCarbonFoot,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: true,
+                    borderWidth: 2,
+                    yAxisID: 'y1'
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y1: {
+                    type: 'linear',
+                    position: 'left',
+                    beginAtZero: true,
+                    max: 300, // Adjust based on expected maximum carbon footprint
+                    ticks: {
+                        callback: function(value) {
+                            return value + ' tonnes'; // Add unit to tick labels
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Initialize the chart
+    const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
+    const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
+}
+initCarbonFootprintChart();
+//test
+/*
 const carbonFootprintData = {
     months: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -317,3 +472,4 @@ const carbonFootprintConfig = {
 // Initialize the chart
 const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
 const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
+*/
