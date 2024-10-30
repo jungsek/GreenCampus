@@ -1,5 +1,14 @@
+placeholderID = 1; //placeholder until school id can be transferred from login
+placeholderYear = 2024
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; //For labeling of charts
+
+function getMonthFromTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.getMonth() + 1; // Adding 1 because JavaScript months are zero-indexed (0 = January, 11 = December)
+}
+
 async function fetchEnergyUsageData() {
-    let response = await fetch(`/dashboard/energyusage`, {
+    let response = await fetch(`/energy-usage`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -12,7 +21,20 @@ async function fetchEnergyUsageData() {
 }
 
 async function fetchCarbonFootprintData() {
-    let response = await fetch(`/dashboard/carbonfootprint`, {
+    let response = await fetch(`/carbon-footprints`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        }
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    let Edata = await response.json();
+    return Edata;
+}
+
+async function fetchEnergyBreakdownData() {
+    let response = await fetch(`/energy-breakdowns`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -84,19 +106,46 @@ const doughnutChart3 = new Chart(ctx3, {
 async function initEnergyTempChart(){
     const fetchedData = await fetchEnergyUsageData();
 
-    const labels = fetchedData.map(item => item.month);
-    const energyData = fetchedData.map(item => item.energy_kwh);
-    const temperatureData = fetchedData.map(item => item.avg_temperature_c);
-    const schID = fetchedData.map(item => item.school_id);
+    function filterDataById(fetchedData, selectedId) {
+        const filteredData = fetchedData.filter(item => item.school_id === selectedId);
+        const monthlyEnergyData = {};
+        const monthlyTempData = {};
+    
+        filteredData.forEach(item => {
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; //0 = January, 11 = December
 
+            if (!monthlyEnergyData[monthIndex]) {
+                monthlyEnergyData[monthIndex] = 0;
+            }
+            monthlyEnergyData[monthIndex] += item.energy_kwh;
+            if (!monthlyTempData[monthIndex]) {
+                monthlyTempData[monthIndex] = 0;
+            }
+            monthlyTempData[monthIndex] += item.avg_temperature_c;
+        });
+    
+        return {
+            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
+            totalEnergy: Object.values(monthlyEnergyData),
+            totalTemp: Object.values(monthlyTempData)
+        };
+    }
+    //call the function
+    const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
+
+    const energyData = filteredEnergyTempData.totalEnergy;
+    const temperatureData = filteredEnergyTempData.totalTemp;
+    
+    //to calculate sum of energy/temperature
     const totalEnergy = energyData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     const totalTemp = temperatureData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
+    
     // Define the chart configuration
     const energyTemperatureConfig = {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: monthNames,
             datasets: [
                 {
                     label: 'Energy (kWh)',
@@ -222,6 +271,84 @@ const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 */
 
 // ==================== Pie Chart ====================
+
+async function initPieChart() {
+    const fetchedData = await fetchEnergyBreakdownData();
+
+
+    function filterDataById(fetchedData, selectedId) {
+        const filteredData = fetchedData.filter(item => item.energyusage_id === selectedId);
+    
+        // Extract unique categories and their corresponding percentages
+        const Label = [];
+        const Percentage = [];
+    
+        filteredData.forEach(item => {
+            if (!Label.includes(item.category)) {
+                Label.push(item.category);
+                Percentage.push(item.percentage);
+            }
+        });
+    
+        return { Label, Percentage };
+    }
+
+    const filteredData = filterDataById(fetchedData, placeholderID);
+    
+    //This is where the labels and data can be shown
+    const chartDataPie = {
+        labels: filteredData.Label,
+        datasets: [{
+            data: filteredData.Percentage,
+            backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
+        }]
+    };
+
+    const pieChartOptions = {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'right', // Position the legend to the right
+                labels: {
+                    boxWidth: 20, // Size of the color box in the legend
+                    padding: 15 // Space between legend items
+                    
+                }
+            },
+            datalabels: {
+                color: 'white',
+                formatter: (value, ctx) => {
+                    let sum = 0;
+                    let dataArr = ctx.chart.data.datasets[0].data;
+                    dataArr.forEach(data => {
+                        sum += data;
+                    });
+                    let percentage = (value * 100 / sum).toFixed(1) + "%";
+                    return percentage;
+                },
+                font: {
+                    weight: 'bold',
+                    size: 12
+                }
+            }
+        }
+    };
+
+
+    // Initialize the pie chart with the right-positioned legend
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(pieCtx, {
+    type: 'pie',
+    data: chartDataPie,
+    options: pieChartOptions,
+    plugins: [ChartDataLabels] // Register the data labels plugin if used
+    });
+
+}
+initPieChart();
+/*
 const chartDataPie = {
     labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners '],
     datasets: [{
@@ -285,6 +412,7 @@ const energyData = {
     }
 };
 
+//Piechart filter
 // Function to apply default filter on page load
 window.onload = function() {
     filterPieData(); // Calls the filter function with the default "Locations" option
@@ -344,25 +472,76 @@ const pieChart = new Chart(pieCtx, {
     options: pieChartOptions,
     plugins: [ChartDataLabels] // Register the data labels plugin if used
 });
-
+*/
 
 // ==================== Line Graph ====================
 async function initCarbonFootprintChart() {
     const fetchedData = await fetchCarbonFootprintData();
 
-    const schID = fetchedData.map(item => item.school_id);
-    const totalCarbonFoot = fetchedData.map(item => item.total_carbon_tons);
-    const month = fetchedData.map(item => new Date(item.timestamp).getMonth() + 1);
+    function filterDataByIdandMonth(fetchedData, selectedId, year) {
+        const monthlyData = {};
+        const yearlyData = {};
+        const filteredData = fetchedData.filter(item => item.school_id === selectedId);
+
+        filteredData.forEach(item => {
+            const date = new Date(item.timestamp)
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; //0 = January, 11 = December
+            const year = date.getFullYear();
+    
+            if (!monthlyData[monthIndex]) {
+                monthlyData[monthIndex] = 0;
+            }
+            monthlyData[monthIndex] += item.total_carbon_tons;
+            if (!yearlyData[year]) {
+                yearlyData[year] = 0;
+            }
+            yearlyData[year] += item.total_carbon_tons;
+        });
+    
+        return {
+            labels: Object.keys(monthlyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
+            yearLabels: Object.keys(yearlyData).map(year => year),
+            totalCarbonTons: Object.values(monthlyData),
+            totalCarbonYear: Object.values(yearlyData)
+        };
+    }
+
+    const filteredCarbonData = filterDataByIdandMonth(fetchedData, placeholderID, placeholderYear);
+
+    function filterData() {
+        const selection = document.getElementById('yearMonthSelect').value;
+        let filteredLabels;
+        let filteredData;
+        
+    
+        if (selection === 'years') {
+            filteredLabels = filteredCarbonData.yearLabels;
+            filteredData = filteredCarbonData.totalCarbonYear;
+        } else if (selection === 'months') {
+            filteredLabels = filteredCarbonData.labels;
+            filteredData = filteredCarbonData.totalCarbonTons;
+        }
+    
+        // Update the chart with the selected data
+        carbonFootprintGraph.data.labels = filteredLabels;
+        carbonFootprintGraph.data.datasets[0].data = filteredData;
+        
+        // Calculate the maximum value for the y-axis
+        const maxDataValue = Math.max(...filteredData); // Get the maximum data value
+        carbonFootprintGraph.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
+    
+        carbonFootprintGraph.update();
+    }
 
     const carbonFootprintConfig = {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: filteredCarbonData.labels,
             datasets: [
                 {
                     label: 'Carbon Footprint (tonnes)',
                     type: 'line',
-                    data: totalCarbonFoot,
+                    data: filteredCarbonData.totalCarbonTons,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     fill: true,
@@ -379,7 +558,7 @@ async function initCarbonFootprintChart() {
                     type: 'linear',
                     position: 'left',
                     beginAtZero: true,
-                    max: 300, // Adjust based on expected maximum carbon footprint
+                    max: 250, // Adjust based on expected maximum carbon footprint
                     ticks: {
                         callback: function(value) {
                             return value + ' tonnes'; // Add unit to tick labels
@@ -393,6 +572,7 @@ async function initCarbonFootprintChart() {
     // Initialize the chart
     const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
     const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
+    filterData();
 }
 initCarbonFootprintChart();
 //test
@@ -412,6 +592,7 @@ function filterData() {
     const selection = document.getElementById('yearMonthSelect').value;
     let filteredLabels;
     let filteredData;
+    
 
     if (selection === 'years') {
         filteredLabels = carbonFootprintData.years.labels;
