@@ -22,7 +22,7 @@
         <div class="carpet-container">
             <div class="allContent-container">
                 <div class="card-container">
-                    <!-- <div class="content-card">
+                    <div class="content-card">
                         <div class="header" style="font-size: 1.2rem;">
                             <span>Progress Towards Goal</span>
                             <span class="menu-icon">...</span>
@@ -45,7 +45,7 @@
                             <span class="change-text">+35%</span>
                             <span class="last-month">from last month</span> 
                         </div>
-                   </div> -->
+                   </div>
     
                    <div class="content-card">
                         <div class="header" style="font-size: 1.2rem;">
@@ -73,7 +73,7 @@
                         </div>
                     </div>
     
-                    <!-- <div class="content-card">
+                    <div class="content-card">
                         <div class="header" style="font-size: 1.2rem;">
                             <span>Progress Towards Goal</span>
                             <span class="menu-icon">...</span>
@@ -96,7 +96,7 @@
                             <span class="change-text">+35%</span>
                             <span class="last-month">from last month</span> 
                         </div>
-                   </div>  -->
+                   </div>
                 </div>
             
                 <div class="middle-graphs-container">
@@ -118,15 +118,21 @@
                             </div>
                         </div>
                     </div>
-
-
-                    <!-- ============ Pie Chart ============ -->
-                    <div class="pieChart-container">
-                        <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;" width="340" height="340"></canvas>
-                        <div class="filter-container">
-                            <label for="filter">Filter by:</label>
-                            <select id="locationSelect">
-                            </select>
+                    
+                    <div class="pieChart">
+                        <div class="graph-name-container2">
+                            <span class="energyBreakdown"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown</span>
+                        </div>
+                        <div class="pieChart-wrapper">
+                        <!-- ============ Pie Chart ============ -->
+                            <div class="pieChart-container">
+                                <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;"></canvas>
+                                <div class="filter-container">
+                                    <label for="filter">Filter by:</label>
+                                    <select id="locationSelect">
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,25 +143,17 @@
                         <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
                         <div class="filter" style="font-size: 0.9rem;">
                                 <label for="filter" style="font-size: 1rem;">Filter by: </label>
-                                <select id="yearMonthSelect" onchange="filterData()">
+                                <select id="yearMonthSelect">
                                     <option value="years" selected>Years</option>
                                     <option value="months" selected>Months</option>
                                 </select>
                             </div>
                     </div>
 
-           <div class="bottom-graphs-container">
-                <div class="bottom-graph-name-container">
-                    <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
-                    <div class="filter" style="font-size: 0.9rem;">
-                            <label for="filter" style="font-size: 1rem;">Filter by: </label>
-                            <select id="yearMonthSelect">
-                                <option value="years" selected>Years</option>
-                                <option value="months" selected>Months</option>
-                            </select>
                     <div class="line-graph-container">
                         <div style="position: relative; display: inline-block; width: 100%;">
                             <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
+                            
                         </div>
                     </div>
                 </div>
