@@ -271,83 +271,125 @@ const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 */
 
 // ==================== Pie Chart ====================
+let currentChart; // Global variable to hold the current chart instance
 
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
-
-
-    function filterDataById(fetchedData, selectedId) {
-        const filteredData = fetchedData.filter(item => item.energyusage_id === selectedId);
     
-        // Extract unique categories and their corresponding percentages
+    // TO POPULATE DROPDOWN-------------------------
+    let uniqueLocations = [];
+    fetchedData.forEach(data => {
+        if (!uniqueLocations.includes(data.location)) {
+            uniqueLocations.push(data.location);
+        }
+    });
+
+    // Adding "All Locations" to the dropdown
+    uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
+
+    const locationDropdown = document.getElementById('locationSelect');
+
+    uniqueLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location; // Set the value to the location
+        option.textContent = location === "all_locations" ? "All Locations" : location; // Set display text
+        locationDropdown.appendChild(option);
+    });
+    // End populate dropdown--------------------
+
+    // Function to filter data by location
+    function filterDataByLocation(fetchedData, selectedLocation) {
+        let filteredData;
+        if (selectedLocation === "all_locations") {
+            filteredData = fetchedData; // Use all data if "all_locations" is selected
+        } else {
+            filteredData = fetchedData.filter(item => item.location === selectedLocation);
+        }
+
         const Label = [];
         const Percentage = [];
-    
+
         filteredData.forEach(item => {
             if (!Label.includes(item.category)) {
                 Label.push(item.category);
                 Percentage.push(item.percentage);
             }
         });
-    
+
         return { Label, Percentage };
     }
 
-    const filteredData = filterDataById(fetchedData, placeholderID);
-    
-    //This is where the labels and data can be shown
-    const chartDataPie = {
-        labels: filteredData.Label,
-        datasets: [{
-            data: filteredData.Percentage,
-            backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
-        }]
-    };
+    // Function to initialize the pie chart
+    function initializePieChart(data) {
+        // Destroy the current chart if it exists
+        if (currentChart) {
+            currentChart.destroy();
+        }
 
-    const pieChartOptions = {
-        responsive: false,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'right', // Position the legend to the right
-                labels: {
-                    boxWidth: 20, // Size of the color box in the legend
-                    padding: 15 // Space between legend items
-                    
-                }
-            },
-            datalabels: {
-                color: 'white',
-                formatter: (value, ctx) => {
-                    let sum = 0;
-                    let dataArr = ctx.chart.data.datasets[0].data;
-                    dataArr.forEach(data => {
-                        sum += data;
-                    });
-                    let percentage = (value * 100 / sum).toFixed(1) + "%";
-                    return percentage;
+        const chartDataPie = {
+            labels: data.Label,
+            datasets: [{
+                data: data.Percentage,
+                backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
+            }]
+        };
+
+        const pieChartOptions = {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 15
+                    }
                 },
-                font: {
-                    weight: 'bold',
-                    size: 12
+                datalabels: {
+                    color: 'white',
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.forEach(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    }
                 }
             }
-        }
-    };
+        };
 
+        // Initialize the pie chart with the right-positioned legend
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        currentChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: chartDataPie,
+            options: pieChartOptions,
+            plugins: [ChartDataLabels]
+        });
+    }
 
-    // Initialize the pie chart with the right-positioned legend
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    const pieChart = new Chart(pieCtx, {
-    type: 'pie',
-    data: chartDataPie,
-    options: pieChartOptions,
-    plugins: [ChartDataLabels] // Register the data labels plugin if used
+    // Initialize the pie chart with data for "All Locations" by default
+    const allData = filterDataByLocation(fetchedData, "all_locations");
+    initializePieChart(allData);
+
+    // Event listener for location dropdown change
+    locationDropdown.addEventListener('change', function() {
+        const selectedLocation = this.value; // Get the selected location
+        const filteredData = filterDataByLocation(fetchedData, selectedLocation);
+        initializePieChart(filteredData); // Update the pie chart with filtered data
     });
-
 }
+
 initPieChart();
+
+
 /*
 const chartDataPie = {
     labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners '],
@@ -484,10 +526,10 @@ async function initCarbonFootprintChart() {
         const filteredData = fetchedData.filter(item => item.school_id === selectedId);
 
         filteredData.forEach(item => {
-            const date = new Date(item.timestamp)
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; //0 = January, 11 = December
+            const date = new Date(item.timestamp);
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
             const year = date.getFullYear();
-    
+
             if (!monthlyData[monthIndex]) {
                 monthlyData[monthIndex] = 0;
             }
@@ -497,7 +539,7 @@ async function initCarbonFootprintChart() {
             }
             yearlyData[year] += item.total_carbon_tons;
         });
-    
+
         return {
             labels: Object.keys(monthlyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
             yearLabels: Object.keys(yearlyData).map(year => year),
@@ -512,8 +554,7 @@ async function initCarbonFootprintChart() {
         const selection = document.getElementById('yearMonthSelect').value;
         let filteredLabels;
         let filteredData;
-        
-    
+
         if (selection === 'years') {
             filteredLabels = filteredCarbonData.yearLabels;
             filteredData = filteredCarbonData.totalCarbonYear;
@@ -521,15 +562,15 @@ async function initCarbonFootprintChart() {
             filteredLabels = filteredCarbonData.labels;
             filteredData = filteredCarbonData.totalCarbonTons;
         }
-    
+
         // Update the chart with the selected data
         carbonFootprintGraph.data.labels = filteredLabels;
         carbonFootprintGraph.data.datasets[0].data = filteredData;
-        
+
         // Calculate the maximum value for the y-axis
         const maxDataValue = Math.max(...filteredData); // Get the maximum data value
         carbonFootprintGraph.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
-    
+
         carbonFootprintGraph.update();
     }
 
@@ -572,9 +613,18 @@ async function initCarbonFootprintChart() {
     // Initialize the chart
     const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
     const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
+
+    // Call filterData initially to set the default chart
     filterData();
+
+    // Add event listener to the dropdown to call filterData on change
+    const yearMonthSelect = document.getElementById('yearMonthSelect');
+    yearMonthSelect.addEventListener('change', filterData);
 }
+
+// Call the function to initialize everything
 initCarbonFootprintChart();
+
 //test
 /*
 const carbonFootprintData = {

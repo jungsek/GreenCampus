@@ -3,9 +3,10 @@ const sql = require("mssql");
 const dbConfig = require("../database/dbConfig");
 
 class EnergyBreakdown {
-    constructor(id, energyusage_id, category, percentage) {
+    constructor(id, energyusage_id, location, category, percentage) {
         this.id = id;
         this.energyusage_id = energyusage_id;
+        this.location = location;
         this.category = category;
         this.percentage = percentage;
     }
@@ -14,6 +15,7 @@ class EnergyBreakdown {
         return new EnergyBreakdown(
             row.id,
             row.energyusage_id,
+            row.location,
             row.category,
             row.percentage
         );
