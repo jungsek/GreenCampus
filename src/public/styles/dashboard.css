@@ -4,11 +4,13 @@
     padding: 15px; /* Fixed padding */
     position: relative;
     display: flex; 
+    flex-direction: column;
     justify-content: center; 
     align-items: center; 
     box-sizing: border-box;
-    width: 100%; /* Full width without accounting for the scrollbar */
-    height: calc(100vh - 40px - 28px); /* Full height minus navbar and footer heights */
+    width: 100%;
+     /* height: calc(100vh - 40px - 28px);  */
+    overflow-y: hidden; /* Manage overflow */
 }  
 
 /* ================== White Layered Background ================== */
@@ -21,6 +23,8 @@
     box-sizing: border-box;
 }
 
+
+
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
@@ -31,7 +35,6 @@
 
 .content-card {
     padding: 15px;
-    height: 150px; 
     border-radius: 10px;
     box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
     text-align: left;
@@ -84,11 +87,11 @@
 }
 
 .increase-icon {
-    font-size: 20px; /* Adjust the size of the icon */
+    font-size: 20px; 
     color: rgb(25, 176, 25); 
     margin-right: 5px; /* Add some space between the icon and the text */
     vertical-align: middle; /* Align the icon with the text */
-    display: inline-block; /* Ensure it behaves like an inline element */
+    display: inline-block; 
 }
 
 .change-text {
@@ -99,7 +102,7 @@
 .content-card:hover .header span,
 .content-card:hover .value span,
 .content-card:hover .last-month {
-    color: white; /* Make text white on hover */
+    color: white; 
 }
 
 .value {
@@ -111,20 +114,28 @@
     margin-left: 10px; 
 }
 
-/* ================== Graphs ================== */
+/* ================== Line Bar Graph ================== */
 .middle-graphs-container {
-    margin-top: 5px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
-    gap: 20px; /* Space between cards */
-    width: 100%; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+    display: flex; 
+    gap: 20px; /* Space between bar and pie charts */
+    justify-content: space-between; 
     align-items: flex-start;
+    flex-wrap: nowrap; /* Wrap items on smaller screens */
+    width: 100%;
+    height: 100%;
 }
 
-.graph-names-container {
+.barChart {
+    width: 70%;
+    height: 100%;
+}
+
+.barChart-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.graph-name-container1 {
     display: flex; 
     justify-content: space-between; 
     align-items: center; /* Vertically center the elements */
@@ -132,36 +143,22 @@
     max-width: 100%; /* Ensure container scales */
     font-size: 1.3rem;
     font-weight: bold;
-    padding: 5px 10px;
+    padding: 5px;
 }
 
-.energyBreakdown {
-    margin-right: 290px;
-}
-
-.charts-wrapper {
-    display: flex; /* Flex layout to place bar and pie charts side by side */
-    gap: 20px; /* Space between the two charts */
-    width: 100%;
-}
-
-
-/* ================== Bar Chart ================== */
 .barChart-container {
     display: flex;
-    flex-grow: 1;
-    padding: 3px; 
-    height: 290px; 
+    min-height: 273px;/* Set a minimum height */
+    height: 100%; 
     width: 100%; 
-    max-width: 1800px; 
-    margin-top: -20px;
     border-radius: 8px; /* Slightly smaller border radius */
-    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
     text-align: left;
     border: 1px solid #ddd;
     background-color: white;
     transition: background-color 0.3s, color 0.3s;
     justify-content: space-between;
+    align-items: stretch; /* Ensure children fit height */
 }
 
 .barChart-info {
@@ -182,36 +179,54 @@
 }
 
 /* ================== Pie Chart ================== */
-.pieChart-container {
-    display: flex;
-    padding: 5px;
-    height: 290px; 
-    width: 100%;
-    max-width: 498px;
-    margin-top: -20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
-    text-align: left;
-    border: 1px solid #ddd; 
-    background-color: white;
-    transition: background-color 0.3s, color 0.3s;
-    justify-content: space-between; /* Push chart and info to opposite sides */
+.pieChart {
+    width: 30%;
+    height: 100%;
 }
 
+.pieChart-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.graph-name-container2 {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; /* Vertically center the elements */
+    width: 100%; /* Full width of container */
+    max-width: 100%; /* Ensure container scales */
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.pieChart-container {
+    display: flex;
+    height: 100%; 
+    width: 100%; 
+    border-radius: 8px; /* Slightly smaller border radius */
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between;
+    align-items: stretch; /* Ensure children fit height */
+}
+
+
+
 .filter-container {
-    margin-bottom: 15px;
+    margin-top: 15px;
+    margin-right: 10px;
 }
 
 .filter-container label {
-    margin-right: 10px;
+    margin-right: 5px;
     font-weight: bold;
+    
 }
 
-#filter {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
 
 /* ================== Line Graph ================== */
 .bottom-graph-name-container {
@@ -230,7 +245,7 @@
     display: flex;
     flex-grow: 1;
     padding: 3px; 
-    height: 210px; 
+    height: 215px; 
     width: 100%; 
     border-radius: 8px; /* Slightly smaller border radius */
     box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
@@ -242,4 +257,226 @@
 }
 
 
+/* Medium screens (tablets, smaller laptops) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        padding-bottom: 20px;
+    }
 
+    /* ===============  First row =============== */
+    .card-container {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column grid */
+        gap: 20px; /* Space between cards */
+        justify-items: center; /* Center each card horizontally */
+    }
+
+    .content-card {
+        width: 100%; /* Full width of container */
+        padding: 20px;
+        display: flex;
+        flex-direction: column; /* Stack elements vertically within the card */
+        align-items: flex-start;
+        gap: 10px; /* Space between elements within the card */
+        box-sizing: border-box;
+    }
+
+    .content-card .header {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .content-card .value {
+        display: flex;
+        flex-direction: column; /* Stack elements within .value vertically */
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .content-card .value div {
+        font-size: 1rem;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .menu-icon {
+        cursor: pointer;
+        margin-top: -10px;
+        margin-right: 10px;
+    }
+
+    .amount {
+        font-size: 2rem;
+    }
+    
+    /* ===============  Bar Chart =============== */
+    .middle-graphs-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .barChart-wrapper {
+        display: flex;
+        width: 91.5vw; /* Full viewport width */
+    }
+
+    /* ===============  Bar Chart =============== */
+    .barChart-container {
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        padding: 15px; /* Adjust as needed */
+        box-sizing: border-box;
+    }
+
+    .barChart-info {
+        padding: 15px;
+        font-size: 15px;
+    }
+
+    /* ===============  Pie Chart =============== */
+    .pieChart-wrapper {
+        display: flex;
+        width: 91.5vw; /* Full viewport width */
+    }
+
+    .pieChart-container {
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        padding: 15px; /* Adjust as needed */
+        box-sizing: border-box;
+    }
+
+    .graph-names-container, .bottom-graph-name-container {
+        flex-direction: column; /* Stack items on smaller screens */
+        align-items: flex-start; /* Align to the left */
+    }
+}
+
+/* Smaller screens (phones) */
+@media (max-width: 767px) {
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        padding-bottom: 20px;
+    }
+
+    /* ===============  First row =============== */
+    .card-container {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column grid */
+        gap: 15px; /* Space between cards */
+    }
+
+    .content-card {
+        width: 100%; 
+        padding: 15px; 
+        display: flex;
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 8px; /* Space between elements within the card */
+        box-sizing: border-box;
+        border-radius: 8px; /* Optional: rounded corners */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for depth */
+    }
+
+    .content-card .header {
+        font-size: 1.1rem; /* Slightly smaller header */
+        margin-bottom: 8px; /* Reduced margin */
+    }
+
+    .content-card .value {
+        display: flex;
+        flex-direction: column; /* Stack elements within .value vertically */
+        align-items: flex-start;
+        gap: 3px; /* Reduced gap */
+    }
+
+    .content-card .value div {
+        font-size: 0.9rem; /* Smaller font size for mobile */
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px; /* Smaller font size */
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .menu-icon {
+        cursor: pointer;
+        margin-top: -5px; /* Reduced margin */
+        margin-right: 5px; /* Reduced margin */
+    }
+
+    .amount {
+        font-size: 1.5rem; /* Reduced amount size for mobile */
+    }
+    
+    /* ===============  Bar Chart =============== */
+    .middle-graphs-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .barChart-wrapper {
+        display: flex;
+        width: 87vw; 
+    }
+
+    /* ===============  Bar Chart =============== */
+    .barChart-container {
+        width: 100%; /* Full width */
+        height: 200px; /* Fixed height for mobile */
+        box-sizing: border-box;
+    }
+
+    .barChart-info {
+        padding: 10px; /* Reduced padding */
+        font-size: 14px; /* Smaller font size */
+    }
+
+    /* ===============  Pie Chart =============== */
+    .pieChart-wrapper {
+        display: flex;
+        width: 87vw; /* Full width */
+    }
+
+    .pieChart-container {
+        width: 100%; /* Full width */
+        height: 200px; /* Fixed height for mobile */
+        padding: 10px; /* Reduced padding */
+        box-sizing: border-box;
+    }
+
+    .graph-name-container2 {
+        width: 87vw;
+        white-space: nowrap; /* Prevent text from wrapping */
+        margin-top: -20px;
+    }
+    
+
+    #pieChart {
+        height: 120px;
+    }
+
+    .graph-name-container1,
+    .bottom-graph-name-container {
+        flex-direction: column; /* Stack items on smaller screens */
+        align-items: flex-start; /* Align to the left */
+    }
+}
