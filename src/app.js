@@ -10,9 +10,6 @@ const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
 
-const energyUsageController = require("./controllers/energyUsageController");
-const carbonFootprintController = require("./controllers/carbonFootprintController");
-
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, './uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -52,12 +49,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setup routes
 route(app, upload);
-app.get("/dashboard/energyusage", energyUsageController.getAllEnergyUsage);
-app.get("/dashboard/energyusage/:school", energyUsageController.getEnergyUsageBySchool);
-app.get("/dashboard/energyusage/:month", energyUsageController.getMonthlyEnergyUsage);
-app.get("/dashboard/carbonfootprint", carbonFootprintController.getAllCarbonFootprints);
-app.get("/dashboard/carbonfootprint/:school",carbonFootprintController.getCarbonFootprintsBySchool);
-app.get("/dashboard/carbonfootprint/:year", carbonFootprintController.getYearlyCarbonFootprint);
 
 // Error handling middleware for Multer errors
 app.use((err, req, res, next) => {
