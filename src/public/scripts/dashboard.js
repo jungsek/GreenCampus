@@ -80,12 +80,12 @@ const chartOptions = {
 };
 
 // Initialize the doughnut charts
-const ctx1 = document.getElementById('doughnutChart1').getContext('2d');
-const doughnutChart1 = new Chart(ctx1, {
-    type: 'doughnut',
-    data: chartData,
-    options: chartOptions
-});
+// const ctx1 = document.getElementById('doughnutChart1').getContext('2d');
+// const doughnutChart1 = new Chart(ctx1, {
+//     type: 'doughnut',
+//     data: chartData,
+//     options: chartOptions
+// });
 
 const ctx2 = document.getElementById('doughnutChart2').getContext('2d');
 const doughnutChart2 = new Chart(ctx2, {
@@ -94,12 +94,12 @@ const doughnutChart2 = new Chart(ctx2, {
     options: chartOptions
 });
 
-const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
-const doughnutChart3 = new Chart(ctx3, {
-    type: 'doughnut',
-    data: chartData,
-    options: chartOptions
-});
+// const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
+// const doughnutChart3 = new Chart(ctx3, {
+//     type: 'doughnut',
+//     data: chartData,
+//     options: chartOptions
+// });
 
 // ==================== Bar + Line Graph ====================
 
