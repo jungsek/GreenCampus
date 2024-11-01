@@ -20,142 +20,151 @@
 
     <div class="dashboard-content">
         <div class="carpet-container">
-            <div class="card-container">
-               <div class="content-card">
-                    <div class="header" style="font-size: 1.2rem;">
-                        <span>Progress Towards Goal</span>
-                        <span class="menu-icon">...</span>
-                    </div>
-                    <div class="value" style="display: flex; align-items: center; margin-top: -30px;">
-                        <!-- Values on the left side of the doughnut -->
-                        <div style="margin-right: 250px;">
-                            <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70%</div>
-                            <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
+            <div class="allContent-container">
+                <div class="card-container">
+                    <!-- <div class="content-card">
+                        <div class="header" style="font-size: 1.2rem;">
+                            <span>Progress Towards Goal</span>
+                            <span class="menu-icon">...</span>
                         </div>
-                
-                        <div style="position: relative; display: inline-block;">
-                            <canvas id="doughnutChart1" width="100" height="100" style="margin-left: 10px;"></canvas>
-                            <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
-                                70%
+                        <div class="value" style="display: flex; align-items: center; margin-top: -30px;">
+                            <div style="margin-right: 250px;">
+                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70%</div>
+                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
+                            </div>
+                    
+                            <div style="position: relative; display: inline-block;">
+                                <canvas id="doughnutChart1" width="100" height="100" style="margin-left: 10px;"></canvas>
+                                <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
+                                    70%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="change">
+                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
+                            <span class="change-text">+35%</span>
+                            <span class="last-month">from last month</span> 
+                        </div>
+                   </div> -->
+    
+                   <div class="content-card">
+                        <div class="header" style="font-size: 1.2rem;">
+                            <span>Overall System Carbon Footprint</span>
+                            <span class="menu-icon">...</span>
+                        </div>
+                        <div class="value" style="display: flex; align-items: center; margin-top: -20px;">
+                            <!-- Values on the left side of the doughnut -->
+                            <div style="margin-right: 250px;">
+                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">150 metric tons CO2/year</div>
+                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 metric tons CO2/year</div>
+                            </div>
+                    
+                            <div style="position: relative; display: inline-block;">
+                                <canvas id="doughnutChart2" width="100" height="100"></canvas>
+                                <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
+                                    70%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="change">
+                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
+                            <span class="change-text">+35%</span>
+                            <span class="last-month">from last month</span> 
+                        </div>
+                    </div>
+    
+                    <!-- <div class="content-card">
+                        <div class="header" style="font-size: 1.2rem;">
+                            <span>Progress Towards Goal</span>
+                            <span class="menu-icon">...</span>
+                        </div>
+                        <div class="value" style="display: flex; align-items: center; margin-top: -30px;">
+                            <div style="margin-right: 250px;">
+                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70%</div>
+                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
+                            </div>
+                    
+                            <div style="position: relative; display: inline-block;">
+                                <canvas id="doughnutChart3" width="100" height="100" style="margin-left: 10px;"></canvas>
+                                <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
+                                    70%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="change">
+                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
+                            <span class="change-text">+35%</span>
+                            <span class="last-month">from last month</span> 
+                        </div>
+                   </div>  -->
+                </div>
+            
+                <div class="middle-graphs-container">
+                    <div class="barChart">
+                        <div class="graph-name-container1">
+                            <span class="energyUsage"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;" ></i> Energy Usage</span>
+                        </div>
+                        <div class="barChart-wrapper">
+                            <!-- ============ Bar Chart ============ -->
+                            <div class="barChart-container">
+                                <div style="position: relative; display: inline-block; width: 100%;">
+                                    <canvas id="energyTemperatureChart" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
+                                </div>
+                                
+                                <div class="barChart-info">
+                                    <p>Energy consumption:<br><strong> 137.23 kWh/month</strong></p>
+                                    <p>Average Temperature:<br><strong>50°C</strong></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="change">
-                        <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                        <span class="change-text">+35%</span>
-                        <span class="last-month">from last month</span> 
-                    </div>
-               </div>
-
-               <div class="content-card">
-                    <div class="header" style="font-size: 1.2rem;">
-                        <span>Overall System Carbon Footprint</span>
-                        <span class="menu-icon">...</span>
-                    </div>
-                    <div class="value" style="display: flex; align-items: center; margin-top: -20px;">
-                        <!-- Values on the left side of the doughnut -->
-                        <div style="margin-right: 250px;">
-                            <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">150 metric tons CO2/year</div>
-                            <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 metric tons CO2/year</div>
+                    
+                    <div class="pieChart">
+                        <div class="graph-name-container2">
+                            <span class="energyBreakdown"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown</span>
                         </div>
-                
-                        <div style="position: relative; display: inline-block;">
-                            <canvas id="doughnutChart2" width="100" height="100" style="margin-left: 10px;"></canvas>
-                            <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
-                                70%
+                        <div class="pieChart-wrapper">
+                        <!-- ============ Pie Chart ============ -->
+                            <div class="pieChart-container">
+                                <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;"></canvas>
+                                <div class="filter-container">
+                                    <label for="filter">Filter by:</label>
+                                    <select id="locationSelect" onchange="filterData()">
+                                        <option value="all_locations" selected>Locations</option>
+                                        <option value="all_appliances">Appliances</option>
+                                        <option value="canteen">Canteen</option>
+                                        <option value="classroom">Classroom</option>
+                                        <option value="lab">Lab</option>
+                                        <option value="library">Library</option>
+                                        <option value="staffroom">Staffroom</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="change">
-                        <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                        <span class="change-text">+35%</span>
-                        <span class="last-month">from last month</span> 
                     </div>
                 </div>
-
-                <div class="content-card">
-                    <div class="header" style="font-size: 1.2rem;">
-                        <span>Progress Towards Goal</span>
-                        <span class="menu-icon">...</span>
-                    </div>
-                    <div class="value" style="display: flex; align-items: center; margin-top: -30px;">
-                        <!-- Values on the left side of the doughnut -->
-                        <div style="margin-right: 250px;">
-                            <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70%</div>
-                            <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
-                        </div>
-                
-                        <div style="position: relative; display: inline-block;">
-                            <canvas id="doughnutChart3" width="100" height="100" style="margin-left: 10px;"></canvas>
-                            <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
-                                70%
+            
+            
+                <div class="bottom-graphs-container">
+                    <div class="bottom-graph-name-container">
+                        <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
+                        <div class="filter" style="font-size: 0.9rem;">
+                                <label for="filter" style="font-size: 1rem;">Filter by: </label>
+                                <select id="yearMonthSelect" onchange="filterData()">
+                                    <option value="years" selected>Years</option>
+                                    <option value="months" selected>Months</option>
+                                </select>
                             </div>
-                        </div>
                     </div>
-                    <div class="change">
-                        <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                        <span class="change-text">+35%</span>
-                        <span class="last-month">from last month</span> 
-                    </div>
-               </div> 
-           </div>
 
-           <div class="middle-graphs-container">
-                <div class="graph-names-container">
-                    <span class="energyUsage"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;" ></i> Energy Usage</span>
-                    <span class="energyBreakdown">Energy Breakdown</span>
-                </div>
-                <div class="charts-wrapper">
-                    <!-- ============ Bar Chart ============ -->
-                    <div class="barChart-container">
+                    <div class="line-graph-container">
                         <div style="position: relative; display: inline-block; width: 100%;">
-                            <canvas id="energyTemperatureChart" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
-                        </div>
-                        
-                        <div class="barChart-info">
-                            <p>Energy consumption:<br><strong> 137.23 kWh/month</strong></p>
-                            <p>Average Temperature:<br><strong>50°C</strong></p>
-                        </div>
-                    </div>
-
-                    <!-- ============ Pie Chart ============ -->
-                    <div class="pieChart-container">
-                        <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;" width="340" height="340"></canvas>
-                        <div class="filter-container">
-                            <label for="filter">Filter by:</label>
-                            <select id="locationSelect" onchange="filterData()">
-                                <option value="all_locations" selected>Locations</option>
-                                <option value="all_appliances">Appliances</option>
-                                <option value="canteen">Canteen</option>
-                                <option value="classroom">Classroom</option>
-                                <option value="lab">Lab</option>
-                                <option value="library">Library</option>
-                                <option value="staffroom">Staffroom</option>
-                            </select>
+                            <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
+                            
                         </div>
                     </div>
                 </div>
-           </div>
-
-           <div class="bottom-graphs-container">
-                <div class="bottom-graph-name-container">
-                    <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
-                    <div class="filter" style="font-size: 0.9rem;">
-                            <label for="filter" style="font-size: 1rem;">Filter by: </label>
-                            <select id="yearMonthSelect" onchange="filterData()">
-                                <option value="years" selected>Years</option>
-                                <option value="months" selected>Months</option>
-                            </select>
-                        </div>
-                </div>
-
-                <div class="line-graph-container">
-                    <div style="position: relative; display: inline-block; width: 100%;">
-                        <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
-                        
-                    </div>
-                </div>
-           </div>
+            </div>
         </div> 
     </div>
 
