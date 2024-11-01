@@ -118,28 +118,15 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="pieChart">
-                        <div class="graph-name-container2">
-                            <span class="energyBreakdown"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown</span>
-                        </div>
-                        <div class="pieChart-wrapper">
-                        <!-- ============ Pie Chart ============ -->
-                            <div class="pieChart-container">
-                                <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;"></canvas>
-                                <div class="filter-container">
-                                    <label for="filter">Filter by:</label>
-                                    <select id="locationSelect" onchange="filterData()">
-                                        <option value="all_locations" selected>Locations</option>
-                                        <option value="all_appliances">Appliances</option>
-                                        <option value="canteen">Canteen</option>
-                                        <option value="classroom">Classroom</option>
-                                        <option value="lab">Lab</option>
-                                        <option value="library">Library</option>
-                                        <option value="staffroom">Staffroom</option>
-                                    </select>
-                                </div>
-                            </div>
+
+
+                    <!-- ============ Pie Chart ============ -->
+                    <div class="pieChart-container">
+                        <canvas id="pieChart" style="margin-top: -30px; margin-left: 20px;" width="340" height="340"></canvas>
+                        <div class="filter-container">
+                            <label for="filter">Filter by:</label>
+                            <select id="locationSelect">
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -157,10 +144,18 @@
                             </div>
                     </div>
 
+           <div class="bottom-graphs-container">
+                <div class="bottom-graph-name-container">
+                    <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
+                    <div class="filter" style="font-size: 0.9rem;">
+                            <label for="filter" style="font-size: 1rem;">Filter by: </label>
+                            <select id="yearMonthSelect">
+                                <option value="years" selected>Years</option>
+                                <option value="months" selected>Months</option>
+                            </select>
                     <div class="line-graph-container">
                         <div style="position: relative; display: inline-block; width: 100%;">
                             <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
-                            
                         </div>
                     </div>
                 </div>
