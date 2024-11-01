@@ -1,0 +1,110 @@
+/* report.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #cccccc;
+}
+
+h1 {
+    text-align: center;
+    color: #333333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555555;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#loading {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.report, .error {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.report {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* In your CSS file or within a <style> tag */
+#reportOutput {
+    width: 800px; /* Fixed width suitable for PDF */
+    margin: 0 auto; /* Center the content */
+}
+
+#reportOutput h1, #reportOutput h2, #reportOutput h3 {
+    color: #333;
+}
+
+#reportOutput table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+#reportOutput th, #reportOutput td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+#reportOutput th {
+    background-color: #f4f4f4;
+}

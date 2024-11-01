@@ -40,8 +40,26 @@ const getAllSchools = async (req, res) => {
     }
   }
 
+  const getSchoolsByName = async (req, res) => {
+    const name = req.query.name;
+    if (!name) {
+        return res.status(400).json({ error: 'Name query parameter is required.' });
+    }
+    try {
+        const schools = await School.getSchoolsByName(name);
+        if (!schools) {
+            return res.status(404).json({ error: 'No schools found with the provided name.' });
+        }
+        res.json(schools);
+    } catch (error) {
+        console.error('Error fetching schools by name:', error);
+        res.status(500).json({ error: 'An error occurred while fetching schools.' });
+    }
+  }
+
 module.exports = {
     getAllSchools,
     getSchoolById,
-    getSchoolByStudentId
+    getSchoolByStudentId,
+    getSchoolsByName
 }

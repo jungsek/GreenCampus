@@ -26,6 +26,8 @@ IF OBJECT_ID('FK_Schools_PrincipalID', 'F') IS NOT NULL
   ALTER TABLE Schools DROP CONSTRAINT FK_Schools_PrincipalID;
 IF OBJECT_ID('FK_Users_Schools', 'F') IS NOT NULL
   ALTER TABLE Users DROP CONSTRAINT FK_Users_Schools;
+IF OBJECT_ID('FK_Reports_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE Reports DROP CONSTRAINT FK_Reports_SchoolID;
 
 -- Drop all tables if they exist
 IF OBJECT_ID('EnergyBreakdown', 'U') IS NOT NULL DROP TABLE EnergyBreakdown;
@@ -33,6 +35,7 @@ IF OBJECT_ID('CarbonFootprint', 'U') IS NOT NULL DROP TABLE CarbonFootprint;
 IF OBJECT_ID('EnergyUsage', 'U') IS NOT NULL DROP TABLE EnergyUsage;
 IF OBJECT_ID('Schools', 'U') IS NOT NULL DROP TABLE Schools;
 IF OBJECT_ID('Users', 'U') IS NOT NULL DROP TABLE Users;
+IF OBJECT_ID('Reports', 'U') IS NOT NULL DROP TABLE Reports;
 
 -- Create Users table
 CREATE TABLE Users (
@@ -91,6 +94,17 @@ CREATE TABLE EnergyBreakdown (
     percentage INT CHECK (percentage >= 0 AND percentage <= 100),
     FOREIGN KEY (energyusage_id) REFERENCES EnergyUsage(id) ON DELETE CASCADE
 );
+
+-- Create Reports table
+CREATE TABLE Reports (
+    id INT PRIMARY KEY IDENTITY,
+    school_id INT NOT NULL,
+    year INT NOT NULL,
+    content NVARCHAR(MAX) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
+);
+
 
 `;
 
