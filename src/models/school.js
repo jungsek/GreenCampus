@@ -88,6 +88,14 @@ class School{
         //return null if no user found
         return result ? this.toSchoolObj(result) : null
     }
+
+    static async getSchoolsByName(name) {
+        const params = { "name": `%${name}%` };
+        const result = (await this.query(
+            "SELECT * FROM Schools WHERE school_name LIKE @name", params
+        )).recordset;
+        return result.length ? result.map((x) => this.toSchoolObj(x)) : null;
+    }
 }
 
 module.exports = School;
