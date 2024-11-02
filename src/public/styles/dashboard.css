@@ -9,8 +9,7 @@
     align-items: center; 
     box-sizing: border-box;
     width: 100%;
-     /* height: calc(100vh - 40px - 28px);  */
-    overflow-y: hidden; /* Manage overflow */
+    overflow-y: visible; /* Manage overflow */
 }  
 
 /* ================== White Layered Background ================== */
@@ -23,14 +22,54 @@
     box-sizing: border-box;
 }
 
-
-
+/* ================== First Row of Graphs ================== */
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
-    gap: 20px; /* Space between cards */
-    width: 100%; /* Full width of the container */
+    width: 100%; 
     box-sizing: border-box;
+    display: flex;
+    gap: 15px; /* Controls the space between smallCard-container and content-card */
+}
+
+/* ========== Small Cards ========== */
+.smallCard-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    width: 25%; 
+    flex-wrap: wrap;
+    gap: 15px;  
+}
+
+.card {
+    padding: 15px;
+    gap: 15px;
+    width: 100%;
+    border-radius: 8px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+}
+
+/* Impact number styling */
+.impact-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* ========== Medium Size Cards ========== */
+.mediumCard-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    width: 60%; 
+    height: 100%;
+    gap: 15px;  
 }
 
 .content-card {
@@ -40,12 +79,31 @@
     text-align: left;
     border: 1px solid #ddd; 
     background-color: white;
+    flex-direction: row;
     transition: background-color 0.3s, color 0.3s;
-    width: 100%; /* Allow the card to take full width of its container */
+    width: 100%; 
 }
 
 .content-card:hover {
     background-color: #245D51;
+}
+
+.doughnut-chart-container {
+    position: relative;
+    display: inline-block;
+    margin-left: auto;
+    padding-right: 20px;
+}
+
+/* Styles for the percentage text */
+.percentage-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%, -50%); /* Center the text */
+    font-size: 1.0rem; /* Base font size */
+    color: #000;
+    font-weight: bold;
 }
 
 .header {
@@ -107,6 +165,7 @@
 
 .value {
     display: flex;
+    margin-top: -10px;
     align-items: center; 
 }
 
@@ -114,10 +173,106 @@
     margin-left: 10px; 
 }
 
+
+/* =============== Filters  =============== */
+.filter-container {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px;
+}
+
+.filter {
+    display: flex;
+    align-items: flex-start; /* Align items vertically centered */
+}
+
+.filter i {
+    margin-right: 5px; /* Space between the icon and the select */
+    font-size: 1.2rem; 
+}
+
+
+/* ========= Filter by Years  ========= */
+#yearsFilter {
+    padding: 8px 16px 8px 16px; 
+    font-size: 14px;
+    margin-right: 15px;
+    font-weight: bold;
+    color: #333;
+    background-color: #c8e6deba;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative; /* Positioning for custom arrow */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the dropdown */
+#yearsFilter:hover {
+    background-color: #c3e7deea;
+}
+
+/* Dropdown options styling */
+#yearsFilter option {
+    background-color: #f0efefe7; 
+}
+
+/* ========= Filter by Locations  ========= */
+#locationSelect {
+    padding: 8px 16px 8px 16px; 
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    background-color: #c8e6deba;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative; /* Positioning for custom arrow */
+    transition: background-color 0.3s ease;
+}
+
+#locationSelect option {
+    background-color: #f0efefe7; 
+}
+
+#locationSelect:hover {
+    background-color: #c3e7deea;
+}
+
+/* ========= Filter by Month / Years  ========= */
+#yearMonthSelect {
+    padding: 8px 16px 8px 16px; 
+    font-size: 14px;
+    margin-right: -5px;
+    font-weight: bold;
+    color: #333;
+    background-color: #c8e6deba;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative; /* Positioning for custom arrow */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the dropdown */
+#yearMonthSelect:hover {
+    background-color: #c3e7deea;
+}
+
+/* Dropdown options styling */
+#yearMonthSelect option {
+    background-color: #f0efefe7; 
+}
+
+#yearMonthSelect:hover {
+    background-color: #c3e7deea;
+}
+
 /* ================== Line Bar Graph ================== */
 .middle-graphs-container {
     display: flex; 
-    gap: 20px; /* Space between bar and pie charts */
+    gap: 15px; /* Space between bar and pie charts */
     justify-content: space-between; 
     align-items: flex-start;
     flex-wrap: nowrap; /* Wrap items on smaller screens */
@@ -148,7 +303,7 @@
 
 .barChart-container {
     display: flex;
-    min-height: 273px;/* Set a minimum height */
+    min-height: 271px;/* Set a minimum height */
     height: 100%; 
     width: 100%; 
     border-radius: 8px; /* Slightly smaller border radius */
@@ -178,17 +333,12 @@
     font-weight: normal;
 }
 
+.yearMonthSelect-filter i {
+    margin-right: 5px; /* Space between the icon and the select */
+    font-size: 1.2rem; /* Adjust icon size if necessary */
+}
+
 /* ================== Pie Chart ================== */
-.pieChart {
-    width: 30%;
-    height: 100%;
-}
-
-.pieChart-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
 .graph-name-container2 {
     display: flex; 
     justify-content: space-between; 
@@ -200,31 +350,28 @@
     padding: 5px;
 }
 
+.pieChart {
+    width: 30%;
+    height: 100%;
+}
+
+.pieChart-wrapper {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .pieChart-container {
     display: flex;
     height: 100%; 
     width: 100%; 
+    min-height: 270px;/* Set a minimum height */
     border-radius: 8px; /* Slightly smaller border radius */
     box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
-    text-align: left;
     border: 1px solid #ddd;
     background-color: white;
     transition: background-color 0.3s, color 0.3s;
-    justify-content: space-between;
-    align-items: stretch; /* Ensure children fit height */
-}
-
-
-
-.filter-container {
-    margin-top: 15px;
-    margin-right: 10px;
-}
-
-.filter-container label {
-    margin-right: 5px;
-    font-weight: bold;
-    
 }
 
 
@@ -258,7 +405,7 @@
 
 
 /* Medium screens (tablets, smaller laptops) */
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 767px) and (max-width: 1024px) {
     .dashboard-content {
         flex-direction: column;
         align-items: center;
@@ -269,9 +416,34 @@
     /* ===============  First row =============== */
     .card-container {
         display: grid;
-        grid-template-columns: 1fr; /* Single column grid */
+        grid-template-columns: repeat(2, 1fr); /* Two columns for side-by-side layout */
         gap: 20px; /* Space between cards */
         justify-items: center; /* Center each card horizontally */
+    }
+
+    /* Adjusting small cards container */
+    .smallCard-container {
+        width: 100%; /* Full width within each grid cell */
+        padding: 10px; /* Optional: Add padding for spacing */
+        display: flex; /* Ensure flex layout */
+        gap: 10px; /* Add some space between elements inside the small cards */
+        flex-direction: row; /* Stack items within the small card container */
+    }
+
+
+    /* Styling impact number for medium screens */
+    .impact-number {
+        font-size: 1.8rem; /* Slightly smaller font size for better fit */
+    }
+
+    /* Subtitle styling for medium screens */
+    .subtitle {
+        font-size: 0.9rem; /* Adjust subtitle size for readability */
+    }
+
+    /* ========== Medium Cards ========== */
+    .mediumCard-container {
+        width: 100%; /* Full width for small screens */
     }
 
     .content-card {
@@ -372,11 +544,32 @@
         padding-bottom: 20px;
     }
 
-    /* ===============  First row =============== */
+    /* ====================  First row ==================== */
     .card-container {
         display: grid;
         grid-template-columns: 1fr; /* Single column grid */
         gap: 15px; /* Space between cards */
+    }
+
+    /* ========== Small Cards ========== */
+    .smallCard-container {
+        width: 100%; 
+        flex-direction: row;
+    }
+
+
+    .impact-number {
+        font-size: 2.1rem; /* Make impact number smaller */
+    }
+
+    .subtitle {
+        font-size: 0.8rem; /* Adjust subtitle size */
+    }
+
+    /* ========== Medium Cards ========== */
+    .mediumCard-container {
+        width: 100%; /* Full width for small screens */
+        grid-template-columns: 1fr; /* Stack cards in a single column */
     }
 
     .content-card {
@@ -407,25 +600,41 @@
         font-size: 0.9rem; /* Smaller font size for mobile */
     }
 
+    .doughnut-chart-container {
+        width: 100%; 
+        position: relative;
+        top: -60px;
+        left: 320px; 
+    }
+
+    .change {
+        margin-top: -60px;
+    }
+
+    .value {
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .percentage-text {
+        font-size: 0.9rem; /* Smaller font size for percentage text */
+    }
+    
     .header {
         display: flex;
         justify-content: space-between;
-        font-size: 12px; /* Smaller font size */
+        font-size: 14px;
         color: #666;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-weight: bold;
     }
-    
+
     .menu-icon {
         cursor: pointer;
-        margin-top: -5px; /* Reduced margin */
-        margin-right: 5px; /* Reduced margin */
+        margin-top: -10px;
+        margin-right: 100px;
     }
 
-    .amount {
-        font-size: 1.5rem; /* Reduced amount size for mobile */
-    }
-    
     /* ===============  Bar Chart =============== */
     .middle-graphs-container {
         display: flex;
