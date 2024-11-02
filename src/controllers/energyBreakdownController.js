@@ -42,6 +42,21 @@ const getEnergyBreakdownBySchool = async (req, res) => {
     }
 };
 
+const getEnergyBreakdownPerYearBySchool = async (req, res) => {
+    const schoolId = parseInt(req.params.schoolId);
+    const year = parseInt(req.params.year)
+    try {
+        const breakdowns = await EnergyBreakdown.getEnergyBreakdownPerYearBySchool(schoolId, year);
+        if (!breakdowns) {
+            return res.status(404).send("No energy breakdown data found for this school in this year");
+        }
+        res.json(breakdowns);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving energy breakdown data");
+    }
+};
+
 // Create new energy breakdown
 const createEnergyBreakdown = async (req, res) => {
     try {
@@ -88,6 +103,7 @@ module.exports = {
     getAllEnergyBreakdowns,
     getEnergyBreakdownByUsage,
     getEnergyBreakdownBySchool,
+    getEnergyBreakdownPerYearBySchool,
     createEnergyBreakdown,
     getBreakdownByCategory,
     getPercentageByCategory
