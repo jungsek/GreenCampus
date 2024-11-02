@@ -60,6 +60,18 @@ class EnergyBreakdown {
 
         return result.recordset.length ? result.recordset.map((x) => this.toEnergyBreakdownObj(x)) : null;
     }
+
+    static async getEnergyBreakdownPerYearBySchool(schoolId, year){
+        const params = { "schoolId": schoolId, "year": year };
+        const result = await this.query(`
+            SELECT eb.*
+            FROM EnergyBreakdown eb
+            JOIN EnergyUsage eu ON eb.energyusage_id = eu.id
+            WHERE eu.school_id = @schoolId and YEAR(eu.timestamp) = @year
+        `, params);
+
+        return result.recordset.length ? result.recordset.map((x) => this.toEnergyBreakdownObj(x)) : null;
+    }
     
     static async createEnergyBreakdown(data) {
         const params = {
