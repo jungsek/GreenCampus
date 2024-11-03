@@ -49,10 +49,22 @@ const getMonthlyEnergyUsage = async (req, res) => {
     }
 };
 
+const getAvailableYears = async (req, res) => {
+    const schoolId = parseInt(req.params.schoolId);
+    try {
+        const years = await EnergyUsage.getAvailableYears(schoolId);
+        res.json({ years });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving available years");
+    }
+};
+
 
 module.exports = {
     getAllEnergyUsage,
     getEnergyUsageBySchool,
     createEnergyUsage,
-    getMonthlyEnergyUsage
+    getMonthlyEnergyUsage,
+    getAvailableYears
 };

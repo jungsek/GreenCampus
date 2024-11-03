@@ -80,6 +80,17 @@ class EnergyUsage {
         `, params)).recordset;
         return result.length ? result : null;
     }
+
+    static async getAvailableYears(schoolId) {
+        const params = { "schoolId": schoolId };
+        const result = await this.query(`
+            SELECT DISTINCT YEAR(timestamp) as year
+            FROM EnergyUsage
+            WHERE school_id = @schoolId
+            ORDER BY year DESC
+        `, params);
+        return result.recordset.map(row => row.year);
+    }
 }
 
 module.exports = EnergyUsage;
