@@ -1,7 +1,7 @@
 placeholderID = 1; //placeholder until school id can be transferred from login
 placeholderYear = 2024
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; //For labeling of charts
-
+const yearSelect = document.getElementById("yearsFilter")
 function getMonthFromTimestamp(timestamp) {
     const date = new Date(timestamp);
     return date.getMonth() + 1; // Adding 1 because JavaScript months are zero-indexed (0 = January, 11 = December)
@@ -102,16 +102,19 @@ const doughnutChart2 = new Chart(ctx2, {
 // });
 
 // ==================== Bar + Line Graph ====================
-async function initEnergyTempChart(){
+let energyTemperatureChart; // Global variable for the energy temperature chart
+
+async function initEnergyTempChart() {
     const fetchedData = await fetchEnergyUsageData();
 
     function filterDataById(fetchedData, selectedId) {
-        const filteredData = fetchedData.filter(item => item.school_id === selectedId);
+        let filteredData = fetchedData.filter(item => item.school_id === selectedId);
+        filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
         const monthlyEnergyData = {};
         const monthlyTempData = {};
-    
+
         filteredData.forEach(item => {
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; //0 = January, 11 = December
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
 
             if (!monthlyEnergyData[monthIndex]) {
                 monthlyEnergyData[monthIndex] = 0;
@@ -122,24 +125,23 @@ async function initEnergyTempChart(){
             }
             monthlyTempData[monthIndex] += item.avg_temperature_c;
         });
-    
+
         return {
             labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
             totalEnergy: Object.values(monthlyEnergyData),
             totalTemp: Object.values(monthlyTempData)
         };
     }
-    //call the function
-    const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
 
+    const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
     const energyData = filteredEnergyTempData.totalEnergy;
     const temperatureData = filteredEnergyTempData.totalTemp;
-    
-    //to calculate sum of energy/temperature
-    const totalEnergy = energyData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    const totalTemp = temperatureData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-    
+    // Destroy the existing chart if it exists
+    if (energyTemperatureChart) {
+        energyTemperatureChart.destroy();
+    }
+
     // Define the chart configuration
     const energyTemperatureConfig = {
         type: 'bar',
@@ -196,15 +198,11 @@ async function initEnergyTempChart(){
         }
     };
 
-    //calculate average energy usage and temperature
-    const avgEnergyTemp = document.querySelector('.barChart-info')
-    avgEnergyTemp.innerHTML = `<p>Energy consumption:<br><strong> ${(totalEnergy/12).toFixed(2)} kWh/month</strong></p>
-                            <p>Average Temperature:<br><strong>${(totalTemp/12).toFixed(1)}°C</strong></p>`
-
     // Initialize the energy vs. temperature chart
     const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
-    const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
+    energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 }
+
 initEnergyTempChart();
 
 /*const energyTemperatureData = {
@@ -305,6 +303,7 @@ async function initPieChart() {
             filteredData = fetchedData.filter(item => item.location === selectedLocation);
         }
 
+        filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
         const Label = [];
         const Percentage = [];
 
@@ -514,15 +513,23 @@ const pieChart = new Chart(pieCtx, {
     plugins: [ChartDataLabels] // Register the data labels plugin if used
 });
 */
-
 // ==================== Line Graph ====================
+let carbonFootprintChart;
 async function initCarbonFootprintChart() {
     const fetchedData = await fetchCarbonFootprintData();
 
-    function filterDataByIdandMonth(fetchedData, selectedId, year) {
+    function filterDataByIdandMonth(fetchedData, selectedId) {
         const monthlyData = {};
         const yearlyData = {};
-        const filteredData = fetchedData.filter(item => item.school_id === selectedId);
+        let filteredData = fetchedData.filter(item => item.school_id === selectedId);
+
+        // Determine which filtering is needed based on the dropdown value
+        const selection = document.getElementById('yearMonthSelect').value;
+
+        if (selection === 'months') {
+            // Filter to only include data for the specified placeholderYear
+            filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
+        }
 
         filteredData.forEach(item => {
             const date = new Date(item.timestamp);
@@ -533,6 +540,7 @@ async function initCarbonFootprintChart() {
                 monthlyData[monthIndex] = 0;
             }
             monthlyData[monthIndex] += item.total_carbon_tons;
+
             if (!yearlyData[year]) {
                 yearlyData[year] = 0;
             }
@@ -541,13 +549,11 @@ async function initCarbonFootprintChart() {
 
         return {
             labels: Object.keys(monthlyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
-            yearLabels: Object.keys(yearlyData).map(year => year),
+            yearLabels: Object.keys(yearlyData),
             totalCarbonTons: Object.values(monthlyData),
             totalCarbonYear: Object.values(yearlyData)
         };
     }
-
-    const filteredCarbonData = filterDataByIdandMonth(fetchedData, placeholderID, placeholderYear);
 
     function filterData() {
         const selection = document.getElementById('yearMonthSelect').value;
@@ -555,74 +561,101 @@ async function initCarbonFootprintChart() {
         let filteredData;
 
         if (selection === 'years') {
-            filteredLabels = filteredCarbonData.yearLabels;
-            filteredData = filteredCarbonData.totalCarbonYear;
+            // Use the full fetched data to filter for all years
+            const yearlyData = {};
+            fetchedData.filter(item => item.school_id === placeholderID).forEach(item => {
+                const year = new Date(item.timestamp).getFullYear();
+                if (!yearlyData[year]) {
+                    yearlyData[year] = 0;
+                }
+                yearlyData[year] += item.total_carbon_tons; // Aggregate by year
+            });
+
+            filteredLabels = Object.keys(yearlyData); // Year labels
+            filteredData = Object.values(yearlyData); // Yearly carbon data
         } else if (selection === 'months') {
-            filteredLabels = filteredCarbonData.labels;
-            filteredData = filteredCarbonData.totalCarbonTons;
+            // Re-filter based on the placeholderYear for monthly data
+            const updatedFilteredData = filterDataByIdandMonth(fetchedData, placeholderID);
+            filteredLabels = updatedFilteredData.labels;
+            filteredData = updatedFilteredData.totalCarbonTons;
         }
 
         // Update the chart with the selected data
-        carbonFootprintGraph.data.labels = filteredLabels;
-        carbonFootprintGraph.data.datasets[0].data = filteredData;
-
-        // Calculate the maximum value for the y-axis
-        const maxDataValue = Math.max(...filteredData); // Get the maximum data value
-        carbonFootprintGraph.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
-
-        carbonFootprintGraph.update();
+        if (carbonFootprintChart) {
+            carbonFootprintChart.data.labels = filteredLabels;
+            carbonFootprintChart.data.datasets[0].data = filteredData;
+            // Calculate the maximum value for the y-axis
+            const maxDataValue = Math.max(...filteredData); // Get the maximum data value
+            carbonFootprintChart.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
+            carbonFootprintChart.update();
+        } else {
+            createChart(filteredLabels, filteredData); // Create chart if it doesn't exist
+        }
     }
 
-    const carbonFootprintConfig = {
-        type: 'line',
-        data: {
-            labels: filteredCarbonData.labels,
-            datasets: [
-                {
-                    label: 'Carbon Footprint (tonnes)',
-                    type: 'line',
-                    data: filteredCarbonData.totalCarbonTons,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: true,
-                    borderWidth: 2,
-                    yAxisID: 'y1'
-                },
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y1: {
-                    type: 'linear',
-                    position: 'left',
-                    beginAtZero: true,
-                    max: 250, // Adjust based on expected maximum carbon footprint
-                    ticks: {
-                        callback: function(value) {
-                            return value + ' tonnes'; // Add unit to tick labels
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    // Initialize the chart
-    const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
-    const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
-
-    // Call filterData initially to set the default chart
-    filterData();
+    // Initialize the chart with the default data
+    const filteredCarbonData = filterDataByIdandMonth(fetchedData, placeholderID);
+    createChart(filteredCarbonData.labels, filteredCarbonData.totalCarbonTons);
 
     // Add event listener to the dropdown to call filterData on change
     const yearMonthSelect = document.getElementById('yearMonthSelect');
     yearMonthSelect.addEventListener('change', filterData);
+
+    function createChart(labels, data) {
+        // Destroy the current chart if it exists
+        if (carbonFootprintChart) {
+            carbonFootprintChart.destroy();
+        }
+
+        const maxDataValue = Math.max(...data);
+        const dynamicMax = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
+
+        const carbonFootprintConfig = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Carbon Footprint (tonnes)',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: true,
+                        borderWidth: 2,
+                        yAxisID: 'y1'
+                    },
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y1: {
+                        type: 'linear',
+                        position: 'left',
+                        beginAtZero: true,
+                        max: dynamicMax, // Adjust based on expected maximum carbon footprint
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' tonnes'; // Add unit to tick labels
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Initialize the chart
+        const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
+        carbonFootprintChart = new Chart(carbonCtx, carbonFootprintConfig);
+    }
 }
 
 // Call the function to initialize everything
 initCarbonFootprintChart();
+
+
+
 
 //test
 /*
@@ -709,3 +742,10 @@ function toggleDropdown() {
     const dropdownMenu = document.getElementById("dropdownMenu");
     dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
 }
+
+yearSelect.addEventListener('change', function() {
+    placeholderYear = parseInt(this.value);
+    initEnergyTempChart();
+    initPieChart();
+    initCarbonFootprintChart(); 
+});
