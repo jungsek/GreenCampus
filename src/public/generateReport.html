@@ -13,20 +13,34 @@
     <!--navbar-->
     <div class="nav-placeholder"></div>
 
+    <nav class="mini-navbar">
+      <ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="generateReport.html">Generate Report</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="reports.html">Saved Reports</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="statistics.html">View Statistics</a>
+        </li>
+      </ul>
+    </nav>
+
     <div class="container">
       <h1>School Sustainability Report Generator</h1>
       <div class="form-group">
-          <label for="schoolName">Enter School Name:</label>
-          <input type="text" id="schoolName" placeholder="e.g., Lincoln High School">
+        <label for="year">Select Year:</label>
+        <select id="year">
+            <!-- Options will be populated dynamically -->
+        </select>
       </div>
-      <button id="generateReportBtn">Generate Report</button>
-      <a href="reports.html" >View Saved Reports</a>
+      <button id="generateReportBtn" class="btn btn-primary">Generate Report</button>
       <div id="loading" class="hidden">Generating report, please wait...</div>
-      <div id="reportOutput" class="report"></div>
-      <div id="errorOutput" class="error"></div>
-      <button id="downloadPdfBtn" class="hidden">Download Report as PDF</button>
-      
-  </div>
+      <div id="reportOutput" class="report hidden"></div>
+      <div id="errorOutput" class="alert alert-danger hidden"></div>
+      <button id="downloadPdfBtn" class="hidden btn btn-success">Download Report as PDF</button>
+    </div>
 
      <!--footer-->
      <div class="footer-placeholder"></div>

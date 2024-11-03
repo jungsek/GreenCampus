@@ -8,6 +8,7 @@ const energyRoute = (app) => {
     app.get("/energy-usage/school/:schoolId", energyController.getEnergyUsageBySchool); // Get energy usage by school
     app.post("/energy-usage", energyController.createEnergyUsage); // Create new energy usage record
     app.get("/energy-usage/school/:schoolId/month/:year", energyController.getMonthlyEnergyUsage); // Get monthly energy usage for a school
+    app.get("/api/energy-usage/:schoolId/years", energyController.getAvailableYears);
 };
 
 module.exports = energyRoute;
