@@ -10,6 +10,7 @@ const energyBreakdownRoute = (app) => {
     app.post("/energy-breakdowns", energyBreakdownController.createEnergyBreakdown); // Create new energy breakdown
     app.get("/energy-breakdowns/usage/:energyUsageId/category/:category", energyBreakdownController.getBreakdownByCategory); // Get breakdown by category
     app.get("/energy-breakdowns/usage/:energyUsageId/percentage", energyBreakdownController.getPercentageByCategory); // Get percentage by category
+    app.get("/api/energy-breakdown/:schoolId/year/:year", energyBreakdownController.getEnergyBreakdownPerYearBySchool);
 };
 
 module.exports = energyBreakdownRoute;

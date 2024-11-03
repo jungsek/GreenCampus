@@ -63,16 +63,25 @@ class EnergyBreakdown {
         return result.recordset.length ? result.recordset.map((x) => this.toEnergyBreakdownObj(x)) : null;
     }
 
-    static async getEnergyBreakdownPerYearBySchool(schoolId, year){
-        const params = { "schoolId": schoolId, "year": year };
+    static async getEnergyBreakdownPerYearBySchool(schoolId, year) {
+        const params = { schoolId, year };
         const result = await this.query(`
-            SELECT eb.*
-            FROM EnergyBreakdown eb
-            JOIN EnergyUsage eu ON eb.energyusage_id = eu.id
-            WHERE eu.school_id = @schoolId and YEAR(eu.timestamp) = @year
+            SELECT 
+                EB.location, 
+                EB.category, 
+                EB.percentage, 
+                EU.[month] AS month
+            FROM EnergyBreakdown EB
+            JOIN EnergyUsage EU ON EB.energyusage_id = EU.id
+            WHERE EU.school_id = @schoolId AND YEAR(EU.timestamp) = @year
+            ORDER BY EU.timestamp
         `, params);
-
-        return result.recordset.length ? result.recordset.map((x) => this.toEnergyBreakdownObj(x)) : null;
+        return result.recordset.map(row => ({
+            location: row.location,
+            category: row.category,
+            percentage: row.percentage,
+            month: row.month
+        }));
     }
     
     static async createEnergyBreakdown(data) {

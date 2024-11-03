@@ -35,7 +35,7 @@ module.exports.generateReport = async (req, res) => {
     try {
         const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
         const openai = new OpenAI(OPENAI_API_KEY); 
-        const aiModel = "gpt-4o"; 
+        const aiModel = "gpt-3.5-turbo"; 
 
         const schoolId = parseInt(req.params.schoolId);
         const year = parseInt(req.query.year) || new Date().getFullYear();
