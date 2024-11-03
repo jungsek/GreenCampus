@@ -12,6 +12,7 @@ const carbonFootprintRoute = (app) => {
     app.post("/carbon-footprints", carbonFootprintController.createCarbonFootprint); // Create new carbon footprint
     app.put("/carbon-footprints/:id", carbonFootprintController.updateCarbonFootprint); // Update carbon footprint
     app.delete("/carbon-footprints/:id", carbonFootprintController.deleteCarbonFootprint); // Delete carbon footprint
+    app.get("/api/carbon-footprint/:schoolId/year/:year", carbonFootprintController.getYearlyCarbonFootprint);
 };
 
 module.exports = carbonFootprintRoute;

@@ -1,16 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const generateReportBtn = document.getElementById('generateReportBtn');
-    const schoolNameInput = document.getElementById('schoolName');
+    const yearInput = document.getElementById('year');
     const loadingIndicator = document.getElementById('loading');
     const reportOutput = document.getElementById('reportOutput');
     const errorOutput = document.getElementById('errorOutput');
-    const downloadPdfBtn = document.getElementById('downloadPdfBtn'); 
-    
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+    // Assume the user is the principal of Lincoln High School with schoolId = 1
+    const schoolId = 1;
+
+    // Fetch available years on page load
+    fetchAvailableYears(schoolId);
 
     generateReportBtn.addEventListener('click', async () => {
-        const schoolName = schoolNameInput.value.trim();
-        if (!schoolName) {
-            displayError('Please enter a school name.');
+        const year = parseInt(yearInput.value.trim());
+        if (!year || isNaN(year)) {
+            displayError('Please enter a valid year.');
             return;
         }
 
@@ -18,16 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading(true);
 
         try {
-            // Step 1: Get School ID by Name
-            const schoolId = await getSchoolIdByName(schoolName);
-            if (!schoolId) {
-                displayError('School not found. Please check the name and try again.');
-                showLoading(false);
-                return;
-            }
-
-            // Step 2: Generate Report
-            const report = await generateReport(schoolId);
+            // Generate Report with schoolId and year
+            const report = await generateReport(schoolId, year);
 
             // Display the report
             displayReport(report);
@@ -39,6 +36,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    async function fetchAvailableYears(schoolId) {
+        try {
+            const response = await fetch(`/api/energy-usage/${schoolId}/years`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch available years.');
+            }
+            const data = await response.json();
+            populateYearDropdown(data.years);
+        } catch (error) {
+            console.error('Error fetching available years:', error);
+            displayError('An error occurred while fetching available years.');
+        }
+    }
+
+    function populateYearDropdown(years) {
+        const yearSelect = document.getElementById('year');
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        });
+    }
+
     function showLoading(isLoading) {
         loadingIndicator.classList.toggle('hidden', !isLoading);
     }
@@ -48,11 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reportOutput.innerHTML = cleanHTML;
         reportOutput.classList.remove('hidden');
         downloadPdfBtn.classList.remove('hidden'); // Show the download button when report is displayed
-    
-        // Log the content to the console
-        console.log('Report Content:', reportOutput.innerHTML);
     }
-    
 
     function displayError(message) {
         errorOutput.textContent = message;
@@ -67,28 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfBtn.classList.add('hidden'); // Hide the download button
     }
 
-    async function getSchoolIdByName(schoolName) {
-        const response = await fetch(`/api/schools?name=${encodeURIComponent(schoolName)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-    
-        if (!response.ok) {
-            throw new Error('Failed to fetch school ID');
-        }
-    
-        const data = await response.json();
-        if (data && data.length > 0) {
-            return data[0].id; // Return the first matching school's ID
-        } else {
-            return null;
-        }
-    }
-
-    async function generateReport(schoolId) {
-        const response = await fetch(`/api/reports/${schoolId}`, {
+    async function generateReport(schoolId, year) {
+        // Include the year as a query parameter
+        const response = await fetch(`/api/reports/${schoolId}?year=${year}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,5 +123,4 @@ document.addEventListener('DOMContentLoaded', () => {
         // Generate and save the PDF
         html2pdf().set(opt).from(reportContent).save();
     }
-
 });
