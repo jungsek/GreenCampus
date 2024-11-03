@@ -6,10 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingIndicator = document.getElementById('loading');
     const errorOutput = document.getElementById('errorOutput');
     const recommendationsOutput = document.getElementById('recommendationsOutput');
-    const greenScoreSpan = document.getElementById('greenScore');
-    const areasOfConcernList = document.getElementById('areasOfConcern');
-    const personalizedRecommendationsList = document.getElementById('personalizedRecommendations');
-    const strengthsList = document.getElementById('strengths');
+    const recommendationsContainer = document.getElementById('recommendationsContainer'); // Ensure this exists in your HTML
 
     // Assume the user is the principal of Lincoln High School with schoolId = 1
     const schoolId = 1;
@@ -28,17 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading(true);
 
         try {
-            // Fetch data for the selected year
-            const data = await fetchDataForYear(schoolId, selectedYear);
-
-            // Prepare data for OpenAI
-            const promptData = formatDataForAI(data);
-
             // Call backend to generate recommendations
-            const recommendations = await generateRecommendations(promptData);
+            const recommendationsHTML = await generateRecommendations(selectedYear);
 
             // Display Recommendations
-            displayRecommendations(recommendations);
+            displayRecommendations(recommendationsHTML);
 
         } catch (error) {
             console.error('Error:', error);
@@ -61,10 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         errorOutput.textContent = '';
         errorOutput.classList.add('hidden');
         recommendationsOutput.classList.add('hidden');
-        greenScoreSpan.textContent = '';
-        areasOfConcernList.innerHTML = '';
-        personalizedRecommendationsList.innerHTML = '';
-        strengthsList.innerHTML = '';
+        if (recommendationsContainer) {
+            recommendationsContainer.innerHTML = '';
+        }
     }
 
     async function fetchAvailableYears(schoolId) {
@@ -96,96 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function fetchDataForYear(schoolId, year) {
-        // Fetch all relevant data needed for recommendations
-        // This may include energy usage, carbon footprint, energy breakdown, etc.
-
-        // Example: Fetch Energy Usage
-        const energyUsageResponse = await fetch(`/api/energy-usage/${schoolId}/monthly/${year}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!energyUsageResponse.ok) {
-            throw new Error('Failed to fetch energy usage data.');
-        }
-
-        const energyUsageData = await energyUsageResponse.json();
-
-        // Fetch Carbon Footprint
-        const carbonFootprintResponse = await fetch(`/api/carbon-footprint/${schoolId}/year/${year}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!carbonFootprintResponse.ok) {
-            throw new Error('Failed to fetch carbon footprint data.');
-        }
-
-        const carbonFootprintData = await carbonFootprintResponse.json();
-
-        // Fetch Energy Breakdown
-        const energyBreakdownResponse = await fetch(`/api/energy-breakdown/${schoolId}/year/${year}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!energyBreakdownResponse.ok) {
-            throw new Error('Failed to fetch energy breakdown data.');
-        }
-
-        const energyBreakdownData = await energyBreakdownResponse.json();
-
-        return {
-            energyUsage: energyUsageData,
-            carbonFootprint: carbonFootprintData,
-            energyBreakdown: energyBreakdownData
-        };
-    }
-
-    function formatDataForAI(data) {
-        // Format the fetched data into a structured prompt for OpenAI
-        // This can be in JSON format or as a detailed text
-
-        // Example: Creating a summary of data
-        let summary = `Yearly Sustainability Data Summary:
-        
-        Energy Usage:
-        `;
-        data.energyUsage.forEach(item => {
-            summary += `- ${item.month}: ${item.energy_kwh} kWh, Avg Temp: ${item.avg_temperature_c}°C\n`;
-        });
-
-        summary += `\nCarbon Footprint:
-        `;
-        data.carbonFootprint.forEach(item => {
-            const date = new Date(item.timestamp).toISOString().split('T')[0];
-            summary += `- ${date}: ${item.total_carbon_tons} tons\n`;
-        });
-
-        summary += `\nEnergy Breakdown:
-        `;
-        data.energyBreakdown.forEach(item => {
-            summary += `- ${item.month}: ${item.location} - ${item.category} (${item.percentage}%)\n`;
-        });
-
-        return summary;
-    }
-
-    async function generateRecommendations(prompt) {
-        // Send the formatted data to the backend to call OpenAI API
-        const response = await fetch(`/api/recommendations`, {
+    async function generateRecommendations(year) {
+        // Send the request to the backend to generate recommendations
+        const response = await fetch(`/api/generate-recommendations`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ schoolId, year: yearSelect.value, data: prompt }),
+            body: JSON.stringify({ schoolId, year }),
         });
 
         if (!response.ok) {
@@ -194,56 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const data = await response.json();
-        return data.recommendations;
+        return data.recommendation; // This is the HTML string
     }
 
-    function displayRecommendations(recommendations) {
-        // Assuming recommendations is a structured JSON object
-        // Example structure:
-        /*
-            {
-                greenScore: 90,
-                areasOfConcern: [
-                    "Month with highest emissions: July",
-                    "Location with highest consumption: Laboratory"
-                ],
-                personalizedRecommendations: [
-                    "Implement energy-efficient lighting in the Laboratory.",
-                    "Optimize HVAC systems in the Library."
-                ],
-                strengths: [
-                    "Month with lowest emissions: January",
-                    "Effective waste management in Cafeteria."
-                ]
-            }
-        */
-
-        greenScoreSpan.textContent = `${recommendations.greenScore}/100`;
-
-        // Populate Areas of Concern
-        recommendations.areasOfConcern.forEach(area => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            listItem.textContent = area;
-            areasOfConcernList.appendChild(listItem);
-        });
-
-        // Populate Personalized Recommendations
-        recommendations.personalizedRecommendations.forEach(rec => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            listItem.textContent = rec;
-            personalizedRecommendationsList.appendChild(listItem);
-        });
-
-        // Populate Strengths
-        recommendations.strengths.forEach(strength => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            listItem.textContent = strength;
-            strengthsList.appendChild(listItem);
-        });
-
-        recommendationsOutput.classList.remove('hidden');
+    function displayRecommendations(recommendationHTML) {
+        if (recommendationsContainer) {
+            // Sanitize the HTML before inserting to prevent XSS attacks
+            const sanitizedHTML = DOMPurify.sanitize(recommendationHTML);
+            recommendationsContainer.innerHTML = sanitizedHTML;
+            recommendationsOutput.classList.remove('hidden');
+        }
     }
 });

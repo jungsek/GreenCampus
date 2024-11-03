@@ -4,6 +4,7 @@ const energyBreakdownRoute = require("./energyBreakdownRoute.js");
 const carbonFootprintRoute = require("./carbonFootprintRoute.js");
 const reportRoute = require("./reportRoute.js"); 
 const schoolRoute = require("./schoolRoute.js");
+const recommendationsRoute = require("./recommendationsRoute.js");
 
 const route = (app, upload) => {
     userRoute(app, upload);
@@ -12,6 +13,7 @@ const route = (app, upload) => {
     carbonFootprintRoute(app, upload);
     reportRoute(app, upload); 
     schoolRoute(app, upload);
+    recommendationsRoute(app, upload);
 };
 
 module.exports = route;
