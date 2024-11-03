@@ -94,15 +94,14 @@ const doughnutChart2 = new Chart(ctx2, {
     options: chartOptions
 });
 
-const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
-const doughnutChart3 = new Chart(ctx3, {
-    type: 'doughnut',
-    data: chartData,
-    options: chartOptions
-});
+// const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
+// const doughnutChart3 = new Chart(ctx3, {
+//     type: 'doughnut',
+//     data: chartData,
+//     options: chartOptions
+// });
 
 // ==================== Bar + Line Graph ====================
-
 async function initEnergyTempChart(){
     const fetchedData = await fetchEnergyUsageData();
 
@@ -704,3 +703,9 @@ const carbonFootprintConfig = {
 const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
 const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
 */
+
+// Function to toggle dropdown visibility
+function toggleDropdown() {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+}
