@@ -748,4 +748,8 @@ yearSelect.addEventListener('change', function() {
     initEnergyTempChart();
     initPieChart();
     initCarbonFootprintChart(); 
+
+    // Reset the location filter to its default value
+    const locationDropdown = document.getElementById('locationSelect');
+    locationDropdown.value = 'all_locations'; // Change this to your default value
 });
