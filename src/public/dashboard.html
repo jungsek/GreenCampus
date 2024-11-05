@@ -118,16 +118,17 @@
                         <div style="display: flex; align-items: center;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
                             <select id="yearsFilter" class="years-filter">
-                                <option value="" class="placeholder" disabled selected hidden>Year</option>
-                                <option value="year2024">2024</option>
-                                <option value="year2023">2023</option>
-                                <option value="year2022">2022</option>
+                                <option value="" class="placeholder" disabled hidden>Year</option>
+                                <option value="2024" selected>2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
                             </select>
                         </div>
 
                         <div class="filter" style="font-size: 0.9rem;">
                             <select id="locationSelect">
-                                <option value="" class="placeholder" disabled selected hidden>Locations</option>
+                                <option value="" class="placeholder" disabled hidden>Locations</option>
                             </select>
                         </div>
                     </div>
@@ -144,12 +145,12 @@
                             <!-- ============ Bar Chart ============ -->
                             <div class="barChart-container">
                                 <div style="position: relative; display: inline-block; width: 100%;">
-                                    <canvas id="energyTemperatureChart" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
+                                    <canvas id="energyTemperatureChart" style="margin-left: 10px; width: 100%; max-height: 250px; height: auto;"></canvas>
                                 </div>
                                 
                                 <div class="barChart-info">
-                                    <p>Energy Consumption:<br><strong> 137.23 kWh/month</strong></p>
-                                    <p>Average Temperature:<br><strong>50°C</strong></p>
+                                    <p>Energy Consumption:<br><strong>kWh/month</strong></p>
+                                    <p>Average Temperature:<br><strong>°C</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -175,7 +176,7 @@
                         <div class="yearMonthSelect-filter" style="font-size: 0.9rem;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
                             <select id="yearMonthSelect">
-                                <option value="years" selected>Years</option>
+                                <option value="years">Years</option>
                                 <option value="months" selected>Months</option>
                             </select>
                         </div>

@@ -27,6 +27,9 @@
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="recommendations.html">Generate Recommendations</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="predictions.html">Predictions</a>
+            </li>
         </ul>
     </nav>
 
@@ -50,22 +53,9 @@
         
         <!-- Recommendations Display -->
         <div id="recommendationsOutput" class="mt-4 hidden">
-            <h2>Green Score: <span id="greenScore"></span></h2>
-            <h3>Areas of Concern</h3>
-            <ul id="areasOfConcern" class="list-group mb-3">
-                <!-- Areas of concern will be listed here -->
-            </ul>
-            <h3>Personalized Recommendations</h3>
-            <ul id="personalizedRecommendations" class="list-group mb-3">
-                <!-- Recommendations will be listed here -->
-            </ul>
-            <h3>Strengths</h3>
-            <ul id="strengths" class="list-group mb-3">
-                <!-- Strengths will be listed here -->
-            </ul>
+            <div id="recommendationsContainer"></div>
         </div>
     </div>
-
     <!-- Footer -->
     <div class="footer-placeholder"></div>
 
