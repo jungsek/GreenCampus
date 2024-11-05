@@ -1,0 +1,161 @@
+/* styles/predictions.css */
+
+/* ================== Predictions Dashboard Background ================== */
+.dashboard-content { 
+    background-color: #59c19b69; 
+    padding: 20px; 
+    position: relative;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: visible;
+}  
+
+/* ================== White Layered Background ================== */
+.carpet-container { 
+    background-color: #ffffff; 
+    padding: 20px; 
+    border-radius: 13px; 
+    width: 100%; 
+    box-sizing: border-box;
+}
+
+/* ================== Header Section ================== */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.header-section h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+}
+
+/* ================== Prediction Cards ================== */
+.prediction-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.prediction-cards-container .card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.2);
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.prediction-cards-container .card:hover {
+    background-color: #245D51;
+    color: #ffffff;
+}
+
+.prediction-cards-container .card .title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-align: center;
+    color: inherit;
+}
+
+/* ================== Net Zero Estimation ================== */
+.net-zero-container {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.2);
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+}
+
+.net-zero-container:hover {
+    background-color: #245D51;
+    color: #ffffff;
+}
+
+.net-zero-container h3 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.net-zero-container p {
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* ================== Additional Charts ================== */
+.additional-charts-container {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.additional-charts-container .chart-card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.2);
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.additional-charts-container .chart-card:hover {
+    background-color: #245D51;
+    color: #ffffff;
+}
+
+.additional-charts-container .chart-card .title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-align: center;
+    color: inherit;
+}
+
+/* ================== Loading and Error Messages ================== */
+#loadingIndicator, #errorMessage {
+    margin-top: 20px;
+}
+
+#loadingIndicator p {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#errorMessage p {
+    font-size: 1.2rem;
+}
+
+/* ================== Responsive Design ================== */
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-section h1 {
+        margin-bottom: 10px;
+    }
+
+    .prediction-cards-container, .additional-charts-container {
+        grid-template-columns: 1fr;
+    }
+
+    .net-zero-container {
+        padding: 15px;
+    }
+
+    .prediction-cards-container .card, .additional-charts-container .chart-card {
+        padding: 15px;
+    }
+}
