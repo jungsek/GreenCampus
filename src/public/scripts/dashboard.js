@@ -369,7 +369,7 @@ async function initPieChart() {
                             const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0; // Fallback to 0 if not found
                             if (previousValue){
                                 const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1); // Calculate percentage change
-                                return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}%) from last year`;
+                                return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}% from last year)`;
                             }
                             else {
                                 return `${category}: ${currentValue}% (last year's data unavailable)`;
