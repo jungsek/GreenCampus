@@ -269,18 +269,18 @@ const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 
 // ==================== Pie Chart ====================
 let currentChart; // Global variable to hold the current chart instance
-
+let uniqueLocations = [];
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
     
     // TO POPULATE DROPDOWN-------------------------
-    let uniqueLocations = [];
+    
     fetchedData.forEach(data => {
         if (!uniqueLocations.includes(data.location)) {
             uniqueLocations.push(data.location);
         }
     });
-
+    
     // Adding "All Locations" to the dropdown
     uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
 
@@ -304,6 +304,23 @@ async function initPieChart() {
         }
 
         filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
+        return aggregateData(filteredData);
+    }
+
+    // Function to get previous year's data for comparison
+    function getPreviousYearData(fetchedData, selectedLocation) {
+        let previousYearData;
+        if (selectedLocation === "all_locations") {
+            previousYearData = fetchedData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear - 1);
+        } else {
+            previousYearData = fetchedData.filter(item => item.location === selectedLocation && new Date(item.timestamp).getFullYear() === placeholderYear - 1);
+        }
+
+        return aggregateData(previousYearData);
+    }
+
+    // Function to aggregate data for a specific year
+    function aggregateData(filteredData) {
         const Label = [];
         const Percentage = [];
 
@@ -318,16 +335,16 @@ async function initPieChart() {
     }
 
     // Function to initialize the pie chart
-    function initializePieChart(data) {
+    function initializePieChart(currentData, previousData) {
         // Destroy the current chart if it exists
         if (currentChart) {
             currentChart.destroy();
         }
 
         const chartDataPie = {
-            labels: data.Label,
+            labels: currentData.Label,
             datasets: [{
-                data: data.Percentage,
+                data: currentData.Percentage,
                 backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
             }]
         };
@@ -342,6 +359,23 @@ async function initPieChart() {
                     labels: {
                         boxWidth: 20,
                         padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const currentValue = tooltipItem.raw;
+                            const category = currentData.Label[tooltipItem.dataIndex];
+                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0; // Fallback to 0 if not found
+                            if (previousValue){
+                                const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1); // Calculate percentage change
+                                return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}%) from last year`;
+                            }
+                            else {
+                                return `${category}: ${currentValue}% (last year's data unavailable)`;
+                            }
+                            
+                        }
                     }
                 },
                 datalabels: {
@@ -375,17 +409,20 @@ async function initPieChart() {
 
     // Initialize the pie chart with data for "All Locations" by default
     const allData = filterDataByLocation(fetchedData, "all_locations");
-    initializePieChart(allData);
+    const previousYearData = getPreviousYearData(fetchedData, "all_locations");
+    initializePieChart(allData, previousYearData);
 
     // Event listener for location dropdown change
     locationDropdown.addEventListener('change', function() {
         const selectedLocation = this.value; // Get the selected location
-        const filteredData = filterDataByLocation(fetchedData, selectedLocation);
-        initializePieChart(filteredData); // Update the pie chart with filtered data
+        const currentFilteredData = filterDataByLocation(fetchedData, selectedLocation);
+        const previousYearFilteredData = getPreviousYearData(fetchedData, selectedLocation);
+        initializePieChart(currentFilteredData, previousYearFilteredData); // Update the pie chart with filtered data
     });
 }
 
 initPieChart();
+
 
 
 /*
