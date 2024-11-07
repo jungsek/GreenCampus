@@ -281,7 +281,7 @@
 }
 
 .barChart {
-    width: 70%;
+    width: 75%;
     height: 100%;
 }
 
@@ -318,7 +318,7 @@
 
 .barChart-info {
     padding: 35px;
-    width: 23%; 
+    width: 24%; 
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -335,8 +335,13 @@
 
 .yearMonthSelect-filter i {
     margin-right: 5px; /* Space between the icon and the select */
-    font-size: 1.2rem; /* Adjust icon size if necessary */
+    font-size: 1.2rem; 
 }
+
+#energyTemperatureChart {
+    cursor: pointer;  /* Changes cursor to pointer when hovering over the chart */
+}
+
 
 /* ================== Pie Chart ================== */
 .graph-name-container2 {
@@ -344,13 +349,13 @@
     justify-content: space-between; 
     align-items: center; /* Vertically center the elements */
     width: 100%; /* Full width of container */
-    max-width: 100%; /* Ensure container scales */
+    max-width: 100%; 
     font-size: 1.3rem;
     font-weight: bold;
     padding: 5px;
 }
 
-.pieChart {
+.pie {
     width: 30%;
     height: 100%;
 }
@@ -358,21 +363,109 @@
 .pieChart-wrapper {
     width: 100%;
     height: 100%;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .pieChart-container {
-    display: flex;
     height: 100%; 
     width: 100%; 
-    min-height: 270px;/* Set a minimum height */
-    border-radius: 8px; /* Slightly smaller border radius */
-    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
+    min-height: 270px;
+    border-radius: 8px; 
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); 
     border: 1px solid #ddd;
     background-color: white;
+    display: flex;
     transition: background-color 0.3s, color 0.3s;
+    position: relative; 
 }
+
+#legendButtons {
+    display: grid;
+    position: absolute;
+    margin-left: 290px;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 7px; 
+    margin-top: 10px;
+    height: 50%;
+    justify-items: center;
+}
+
+#legendButtons button {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+    width: 100px; 
+    height: 50px; /* Fixed height for consistent size */
+}
+
+.legend-button {
+    display: none; /* Hide buttons by default */
+}
+
+/* Make the buttons visible when their corresponding data is matched */
+.legend-button.show {
+    display: inline-block;
+}
+
+/* Hover effect for buttons */
+#legendButtons button:hover {
+    background-color: #ddd;
+}
+
+
+/* ================== Popup Modal ================== */
+.popup-modal {
+    position: fixed;
+    top: 305px;
+    left: 700px;
+    width: 33%;
+    height: 38%;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: #7d898469; 
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: start;
+    width: 600px;
+    height: 100%;
+}
+
+.popup-content h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    font-size: 16px;
+}
+
+.close-btn {
+    font-size: 50px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    color: black;
+    background-color: 0.3s;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
 
 
 /* ================== Line Graph ================== */
@@ -505,9 +598,9 @@
 
     /* ===============  Bar Chart =============== */
     .barChart-container {
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        padding: 15px; /* Adjust as needed */
+        width: 100%;
+        height: 100%; 
+        padding: 15px; 
         box-sizing: border-box;
     }
 

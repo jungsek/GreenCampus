@@ -114,7 +114,7 @@ async function initEnergyTempChart() {
         const monthlyTempData = {};
 
         filteredData.forEach(item => {
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1;
 
             if (!monthlyEnergyData[monthIndex]) {
                 monthlyEnergyData[monthIndex] = 0;
@@ -127,7 +127,7 @@ async function initEnergyTempChart() {
         });
 
         return {
-            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
+            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]),
             totalEnergy: Object.values(monthlyEnergyData),
             totalTemp: Object.values(monthlyTempData)
         };
@@ -137,12 +137,10 @@ async function initEnergyTempChart() {
     const energyData = filteredEnergyTempData.totalEnergy;
     const temperatureData = filteredEnergyTempData.totalTemp;
 
-    // Destroy the existing chart if it exists
     if (energyTemperatureChart) {
         energyTemperatureChart.destroy();
     }
 
-    // Define the chart configuration
     const energyTemperatureConfig = {
         type: 'bar',
         data: {
@@ -152,10 +150,10 @@ async function initEnergyTempChart() {
                     label: 'Energy (kWh)',
                     type: 'bar',
                     data: energyData,
-                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
+                    backgroundColor: energyData.map(() => 'rgba(255, 159, 64, 0.5)'), // Default color for all bars
+                    borderColor: energyData.map(() => 'rgba(255, 159, 64, 1)'),
                     borderWidth: 1,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
                 },
                 {
                     label: 'Temperature (°C)',
@@ -194,16 +192,44 @@ async function initEnergyTempChart() {
                         }
                     }
                 }
+            },
+            onClick: function(event, activeElements) {
+                if (activeElements.length > 0) {
+                    const clickedIndex = activeElements[0].index;
+                    const dataset = this.data.datasets[0];
+            
+                    // Reset the background color for all bars and apply the transition
+                    dataset.backgroundColor = dataset.backgroundColor.map((color, index) => {
+                        return index === clickedIndex
+                            ? 'rgba(255, 159, 64, 1)'  // Highlight clicked bar with orange color
+                            : 'rgba(255, 159, 64, 0.3)'; // Dim other bars
+                    });
+            
+                    // Reset the border color and apply transition
+                    dataset.borderColor = dataset.borderColor.map((color, index) => {
+                        return index === clickedIndex
+                            ? 'rgba(255, 159, 64, 1)'  // Orange color for clicked bar border
+                            : 'rgba(255, 159, 64, 1)'; // Keeping the same border color for others
+                    });
+            
+                    // Update the chart with a transition for smooth animation
+                    this.update({
+                        duration: 300, // 0.3s transition duration
+                        easing: 'easeInOutQuad', // Smooth easing function for animation
+                    });
+                }
             }
+            
         }
     };
 
-    // Initialize the energy vs. temperature chart
     const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
     energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 }
 
 initEnergyTempChart();
+
+
 
 /*const energyTemperatureData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -267,20 +293,23 @@ const energyCtx = document.getElementById('energyTemperatureChart').getContext('
 const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 */
 
-// ==================== Pie Chart ====================
 let currentChart; // Global variable to hold the current chart instance
 let uniqueLocations = [];
+let uniqueCategories = []; // Store unique categories for button visibility
+
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
     
     // TO POPULATE DROPDOWN-------------------------
-    
     fetchedData.forEach(data => {
         if (!uniqueLocations.includes(data.location)) {
             uniqueLocations.push(data.location);
         }
+        if (!uniqueCategories.includes(data.category)) {
+            uniqueCategories.push(data.category);
+        }
     });
-    
+
     // Adding "All Locations" to the dropdown
     uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
 
@@ -345,7 +374,7 @@ async function initPieChart() {
             labels: currentData.Label,
             datasets: [{
                 data: currentData.Percentage,
-                backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
+                backgroundColor: ['#3498db', '#5bc7a0', '#9b59b6', '#f1c40f', '#ff7f50', '#e74c3c', '#FFC0CB']
             }]
         };
 
@@ -354,7 +383,7 @@ async function initPieChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: true,
+                    display: false,
                     position: 'right',
                     labels: {
                         boxWidth: 20,
@@ -374,7 +403,6 @@ async function initPieChart() {
                             else {
                                 return `${category}: ${currentValue}% (last year's data unavailable)`;
                             }
-                            
                         }
                     }
                 },
@@ -405,6 +433,41 @@ async function initPieChart() {
             options: pieChartOptions,
             plugins: [ChartDataLabels]
         });
+
+        // Function to convert a hex color to RGBA with specified opacity
+        function hexToRGBA(hex, opacity) {
+            const num = parseInt(hex.slice(1), 16);
+            const r = (num >> 16) & 255;
+            const g = (num >> 8) & 255;
+            const b = num & 255;
+            return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        }
+
+        // Update the legend button colors dynamically with 60% opacity
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach((button, index) => {
+            const baseColor = chartDataPie.datasets[0].backgroundColor[index];
+            button.style.backgroundColor = hexToRGBA(baseColor, 0.65); // Set background colour to 65% opacity
+            button.style.borderColor = baseColor; // Border uses the original color
+            button.style.borderWidth = '3px';
+            button.style.borderStyle = 'solid';
+        });
+
+        // Show or hide legend buttons based on current data
+        showHideLegendButtons(currentData.Label);
+    }
+
+    // Function to show/hide legend buttons based on the categories in current data
+    function showHideLegendButtons(currentLabels) {
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            if (currentLabels.includes(category)) {
+                button.style.display = 'inline-block'; // Show button
+            } else {
+                button.style.display = 'none'; // Hide button
+            }
+        });
     }
 
     // Initialize the pie chart with data for "All Locations" by default
@@ -424,132 +487,39 @@ async function initPieChart() {
 initPieChart();
 
 
+// Function to show the popup and update its content
+function highlightSegment(segment) {
+    const popupTitle = document.getElementById("popupTitle");
+    const popupMessage = document.getElementById("popupMessage");
 
-/*
-const chartDataPie = {
-    labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners '],
-    datasets: [{
-        data: [40, 15, 25, 10, 10], // Sample data
-        backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
-    }]
-};
+    // // Update the popup content based on the clicked segment
+    // popupTitle.textContent = segment;
+    // popupMessage.textContent = `Details about ${segment} will go here.`;  
 
-const pieChartOptions = {
-    responsive: false,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            display: true,
-            position: 'right', // Position the legend to the right
-            labels: {
-                boxWidth: 20, // Size of the color box in the legend
-                padding: 15 // Space between legend items
-                
-            }
-        },
-        datalabels: {
-            color: 'white',
-            formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.forEach(data => {
-                    sum += data;
-                });
-                let percentage = (value * 100 / sum).toFixed(1) + "%";
-                return percentage;
-            },
-            font: {
-                weight: 'bold',
-                size: 12
-            }
-        }
-    }
-};
+    // Use innerHTML to display the HTML content properly
+    popupTitle.textContent = popupMessages[segment].title;
+    popupMessage.innerHTML = popupMessages[segment].message;
 
-const energyData = {
-    'classroom': {
-        labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners'],
-        data: [40, 15, 25, 10, 10]
-    },
-    'library': {
-        labels: ['Lights', 'Computers', 'Air Conditioners'],
-        data: [50, 30, 20]
-    },
-    'lab': {
-        labels: ['Lights', 'Microscopes', 'Lab Freezers', 'Fans'],
-        data: [30, 35, 50, 15]
-    },
-    'staffroom': {
-        labels: ['Lights', 'Printers', 'Air Conditioners'],
-        data: [60, 20, 20]
-    },
-    'canteen': {
-        labels: ['Lights', 'Fans', 'Refrigerators', 'Stove'],
-        data: [20, 15, 35, 25,]
-    }
-};
-
-//Piechart filter
-// Function to apply default filter on page load
-window.onload = function() {
-    filterPieData(); // Calls the filter function with the default "Locations" option
-};
-
-
-// Update the filterData function
-function filterPieData() {
-    const locationSelect = document.getElementById('locationSelect');
-    const selectedValue = locationSelect.value;
-
-    let filteredLabels = [];
-    let filteredData = [];
-
-    if (selectedValue === 'all_locations') {
-        // Combine total energy consumption per location
-        filteredLabels = Object.keys(energyData); // Labels will be the location names
-        filteredData = Object.values(energyData).map(location => {
-            return location.data.reduce((acc, val) => acc + val, 0); // Sum of all appliances in the location
-        });
-
-    } else if (selectedValue === 'all_appliances') {
-        // Group data by appliance type across all locations
-        const applianceTotals = {};
-
-        Object.values(energyData).forEach(location => {
-            location.labels.forEach((label, index) => {
-                applianceTotals[label] = (applianceTotals[label] || 0) + location.data[index];
-            });
-        });
-
-        filteredLabels = Object.keys(applianceTotals);
-        filteredData = Object.values(applianceTotals);
-
-    } else {
-        // Filter for a specific location
-        filteredLabels = energyData[selectedValue].labels;
-        filteredData = energyData[selectedValue].data;
-    }
-
-    // Update chart with filtered data
-    pieChart.data.labels = filteredLabels;
-    pieChart.data.datasets[0].data = filteredData;
-    pieChart.update();
+    // Show the popup modal
+    document.getElementById("popupModal").style.display = "flex"; 
 }
 
+// Function to close the popup
+function closePopup() {
+    document.getElementById("popupModal").style.display = "none"; 
+}
 
-// Add event listener to filter dropdown
-document.getElementById('locationSelect').addEventListener('change', filterPieData);
-
-
-// Initialize the pie chart with the right-positioned legend
-const pieCtx = document.getElementById('pieChart').getContext('2d');
-const pieChart = new Chart(pieCtx, {
-    type: 'pie',
-    data: chartDataPie,
-    options: pieChartOptions,
-    plugins: [ChartDataLabels] // Register the data labels plugin if used
+// Close the popup when clicking outside of the popup content
+document.getElementById("popupModal").addEventListener("click", function(event) {
+    const popupContent = document.querySelector(".popup-content");
+    if (!popupContent.contains(event.target)) {
+        closePopup();
+    }
 });
-*/
+
+
+
+
 // ==================== Line Graph ====================
 let carbonFootprintChart;
 async function initCarbonFootprintChart() {
@@ -691,88 +661,6 @@ async function initCarbonFootprintChart() {
 // Call the function to initialize everything
 initCarbonFootprintChart();
 
-
-
-
-//test
-/*
-const carbonFootprintData = {
-    months: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        data: [2.7, 1.8, 2.0, 1.0, 1.2, 0.5, 0.6, 1.3, 0.7, 0.5, 0.9, 1.9], // Monthly data in tonnes
-    },
-    years: {
-        labels: ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
-        data: [19.8 ,22.4, 27.6, 25.8, 27.9, 30.8, 18.9, 27.4, 29.8, 30.0], // Yearly data in tonnes
-    }
-};
-
-function filterData() {
-    const selection = document.getElementById('yearMonthSelect').value;
-    let filteredLabels;
-    let filteredData;
-    
-
-    if (selection === 'years') {
-        filteredLabels = carbonFootprintData.years.labels;
-        filteredData = carbonFootprintData.years.data;
-    } else if (selection === 'months') {
-        filteredLabels = carbonFootprintData.months.labels;
-        filteredData = carbonFootprintData.months.data;
-    }
-
-    // Update the chart with the selected data
-    carbonFootprintGraph.data.labels = filteredLabels;
-    carbonFootprintGraph.data.datasets[0].data = filteredData;
-    
-    // Calculate the maximum value for the y-axis
-    const maxDataValue = Math.max(...filteredData); // Get the maximum data value
-    carbonFootprintGraph.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
-
-    carbonFootprintGraph.update();
-}
-
-
-const carbonFootprintConfig = {
-    type: 'line',
-    data: {
-        labels: carbonFootprintData.months.labels,
-        datasets: [
-            {
-                label: 'Carbon Footprint (tonnes)',
-                type: 'line',
-                data: carbonFootprintData.months.data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: true,
-                borderWidth: 2,
-                yAxisID: 'y1'
-            },
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y1: {
-                type: 'linear',
-                position: 'left',
-                beginAtZero: true,
-                max: 20, // Adjust based on expected maximum carbon footprint
-                ticks: {
-                    callback: function(value) {
-                        return value + ' tonnes'; // Add unit to tick labels
-                    }
-                }
-            }
-        }
-    }
-};
-
-// Initialize the chart
-const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
-const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
-*/
 
 // Function to toggle dropdown visibility
 function toggleDropdown() {
