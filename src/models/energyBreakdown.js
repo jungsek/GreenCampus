@@ -3,11 +3,12 @@ const sql = require("mssql");
 const dbConfig = require("../database/dbConfig");
 
 class EnergyBreakdown {
-    constructor(id, energyusage_id, location, category, percentage) {
+    constructor(id, energyusage_id, location, category, timestamp, percentage) {
         this.id = id;
         this.energyusage_id = energyusage_id;
         this.location = location;
         this.category = category;
+        this.timestamp = timestamp;
         this.percentage = percentage;
     }
 
@@ -17,6 +18,7 @@ class EnergyBreakdown {
             row.energyusage_id,
             row.location,
             row.category,
+            row.timestamp,
             row.percentage
         );
     }
@@ -59,6 +61,27 @@ class EnergyBreakdown {
         `, params);
 
         return result.recordset.length ? result.recordset.map((x) => this.toEnergyBreakdownObj(x)) : null;
+    }
+
+    static async getEnergyBreakdownPerYearBySchool(schoolId, year) {
+        const params = { schoolId, year };
+        const result = await this.query(`
+            SELECT 
+                EB.location, 
+                EB.category, 
+                EB.percentage, 
+                EU.[month] AS month
+            FROM EnergyBreakdown EB
+            JOIN EnergyUsage EU ON EB.energyusage_id = EU.id
+            WHERE EU.school_id = @schoolId AND YEAR(EU.timestamp) = @year
+            ORDER BY EU.timestamp
+        `, params);
+        return result.recordset.map(row => ({
+            location: row.location,
+            category: row.category,
+            percentage: row.percentage,
+            month: row.month
+        }));
     }
     
     static async createEnergyBreakdown(data) {
