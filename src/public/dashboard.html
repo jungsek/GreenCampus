@@ -176,14 +176,35 @@
                         </div>
                     </div>
                     
-                    <div class="pieChart">
+                    <div class="pie">
                         <div class="graph-name-container2">
-                            <span class="energyBreakdown"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown</span>
+                            <span class="energyBreakdown">
+                                <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown
+                            </span>
                         </div>
                         <div class="pieChart-wrapper">
-                        <!-- ============ Pie Chart ============ -->
+                            <!-- ============ Pie Chart ============ -->
                             <div class="pieChart-container">
-                                <canvas id="pieChart" style="margin-left: 90px; width: 75%; height: auto;"></canvas>
+                                <canvas id="pieChart" style="margin-left: -25px; margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
+
+                                <div id="legendButtons">
+                                    <button onclick="highlightSegment('Lighting')" class="legend-button" data-segment="Lighting">Lighting</button>
+                                    <button onclick="highlightSegment('Computers')" class="legend-button" data-segment="Computers">Computers</button>
+                                    <button onclick="highlightSegment('HVAC')" class="legend-button" data-segment="HVAC">HVAC</button>
+                                    <button onclick="highlightSegment('Equipment')" class="legend-button" data-segment="Equipment">Equipment</button>
+                                    <button onclick="highlightSegment('Refrigeration')" class="legend-button" data-segment="Refrigeration">Refrigeration</button>
+                                    <button onclick="highlightSegment('Appliances')" class="legend-button" data-segment="Appliances">Appliances</button>
+                                    <button onclick="highlightSegment('FoodWasteManagement')" class="legend-button" data-segment="Food Waste Management">Food Waste Management</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ============ Modal Popup ============ -->
+                        <div id="popupModal" class="popup-modal" style="display:none;">
+                            <div class="popup-content">
+                                <span class="close-btn" onclick="closePopup()">&times;</span>
+                                <h2 style="text-align: center;"><span id="popupTitle"></span></h2>
+                                <br><p id="popupMessage"></p>
                             </div>
                         </div>
                     </div>
@@ -205,7 +226,6 @@
                     <div class="line-graph-container">
                         <div style="position: relative; display: inline-block; width: 100%;">
                             <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
-                            
                         </div>
                     </div>
                 </div>
@@ -294,5 +314,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="../scripts/dashboard.js"></script>
+    <script src="../scripts/pieChart-popup.js"></script>
   </body>
 </html>

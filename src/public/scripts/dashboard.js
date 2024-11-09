@@ -292,7 +292,7 @@ async function initEnergyTempChart() {
         const monthlyTempData = {};
 
         filteredData.forEach(item => {
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1;
 
             if (!monthlyEnergyData[monthIndex]) {
                 monthlyEnergyData[monthIndex] = 0;
@@ -305,7 +305,7 @@ async function initEnergyTempChart() {
         });
 
         return {
-            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
+            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]),
             totalEnergy: Object.values(monthlyEnergyData),
             totalTemp: Object.values(monthlyTempData)
         };
@@ -315,12 +315,10 @@ async function initEnergyTempChart() {
     const energyData = filteredEnergyTempData.totalEnergy;
     const temperatureData = filteredEnergyTempData.totalTemp;
 
-    // Destroy the existing chart if it exists
     if (energyTemperatureChart) {
         energyTemperatureChart.destroy();
     }
 
-    // Define the chart configuration
     const energyTemperatureConfig = {
         type: 'bar',
         data: {
@@ -330,10 +328,10 @@ async function initEnergyTempChart() {
                     label: 'Energy (kWh)',
                     type: 'bar',
                     data: energyData,
-                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
+                    backgroundColor: energyData.map(() => 'rgba(255, 159, 64, 0.5)'), // Default color for all bars
+                    borderColor: energyData.map(() => 'rgba(255, 159, 64, 1)'),
                     borderWidth: 1,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
                 },
                 {
                     label: 'Temperature (°C)',
@@ -424,10 +422,12 @@ async function initEnergyTempChart() {
 // Initialize the energy temperature chart
 initEnergyTempChart();
 
-// ==================== Pie Chart ====================
+
 let currentChart; // Global variable to hold the current chart instance
 let uniqueLocations = [];
+let uniqueCategories = []; // Store unique categories for button visibility
 let prepended = false;
+
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
 
@@ -436,33 +436,35 @@ async function initPieChart() {
         if (!uniqueLocations.includes(data.location)) {
             uniqueLocations.push(data.location);
         }
+        if (!uniqueCategories.includes(data.category)) {
+            uniqueCategories.push(data.category);
+        }
     });
 
     // Adding "All Locations" to the dropdown
-    if (!prepended){
+    if (!prepended) {
         uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
-        prepended = true
+        prepended = true;
     }
 
     const locationDropdown = document.getElementById('locationSelect');
     const yearDropdown = document.getElementById('yearsFilter'); // Assuming you have a year filter
 
-    locationDropdown.innerHTML = ''
+    locationDropdown.innerHTML = '';
     uniqueLocations.forEach(location => {
         const option = document.createElement('option');
         option.value = location; // Set the value to the location
         option.textContent = location === "all_locations" ? "All Locations" : location; // Set display text
         locationDropdown.appendChild(option);
     });
-    // End populate dropdown--------------------
 
     // Function to filter data by year
-    function filterDataByYear(fetchedData, selectedYear){
+    function filterDataByYear(fetchedData, selectedYear) {
         return fetchedData.filter(item => new Date(item.timestamp).getFullYear() === selectedYear);
     }
 
     // Function to filter data by month
-    function filterDataByMonth(fetchedData, selectedYear, selectedMonth){
+    function filterDataByMonth(fetchedData, selectedYear, selectedMonth) {
         return fetchedData.filter(item => {
             const date = new Date(item.timestamp);
             return date.getFullYear() === selectedYear && date.getMonth() === selectedMonth;
@@ -471,14 +473,10 @@ async function initPieChart() {
 
     // Function to filter data by location
     function filterDataByLocation(fetchedData, selectedLocation) {
-        let filteredData;
         if (selectedLocation === "all_locations") {
-            filteredData = fetchedData; // Use all data if "all_locations" is selected
-        } else {
-            filteredData = fetchedData.filter(item => item.location === selectedLocation);
+            return fetchedData;
         }
-
-        return filteredData;
+        return fetchedData.filter(item => item.location === selectedLocation);
     }
 
     // Function to get previous year's data for comparison
@@ -490,7 +488,6 @@ async function initPieChart() {
             previousYearData = fetchedData.filter(item => item.location === selectedLocation && new Date(item.timestamp).getFullYear() === year - 1);
         }
 
-        // Filter for the same month if needed
         if (month !== null) {
             previousYearData = previousYearData.filter(item => new Date(item.timestamp).getMonth() === month);
         }
@@ -500,22 +497,22 @@ async function initPieChart() {
 
     // Function to aggregate data for a specific year
     function aggregateData(filteredData) {
-        const Label = [];
-        const Percentage = [];
+        const aggregated = {};
         
         filteredData.forEach(item => {
-            if (!Label.includes(item.category)) {
-                Label.push(item.category);
-                Percentage.push(item.percentage);
+            if (!aggregated[item.category]) {
+                aggregated[item.category] = item.percentage;
             }
         });
 
-        return { Label, Percentage };
+        return {
+            Label: Object.keys(aggregated),
+            Percentage: Object.values(aggregated)
+        };
     }
 
     // Function to initialize the pie chart
     function initializePieChart(currentData, previousData) {
-        // Destroy the current chart if it exists
         if (currentChart) {
             currentChart.destroy();
         }
@@ -524,7 +521,7 @@ async function initPieChart() {
             labels: currentData.Label,
             datasets: [{
                 data: currentData.Percentage,
-                backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
+                backgroundColor: ['#3498db', '#5bc7a0', '#9b59b6', '#f1c40f', '#ff7f50', '#e74c3c', '#FFC0CB']
             }]
         };
 
@@ -533,7 +530,7 @@ async function initPieChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: true,
+                    display: false,
                     position: 'right',
                     labels: {
                         boxWidth: 20,
@@ -545,20 +542,19 @@ async function initPieChart() {
                         label: function(tooltipItem) {
                             const currentValue = tooltipItem.raw;
                             const category = currentData.Label[tooltipItem.dataIndex];
-                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0; // Fallback to 0 if not found
-                            const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1); // Calculate percentage change
-                            return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}% from last year)`;
+                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0;
+                            if (previousValue) {
+                                const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1);
+                                return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}% from last year)`;
+                            }
+                            return `${category}: ${currentValue}% (last year's data unavailable)`;
                         }
                     }
                 },
                 datalabels: {
                     color: 'white',
                     formatter: (value, ctx) => {
-                        let sum = 0;
-                        let dataArr = ctx.chart.data.datasets[0].data;
-                        dataArr.forEach(data => {
-                            sum += data;
-                        });
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                         let percentage = (value * 100 / sum).toFixed(1) + "%";
                         return percentage;
                     },
@@ -570,7 +566,6 @@ async function initPieChart() {
             }
         };
 
-        // Initialize the pie chart with the right-positioned legend
         const pieCtx = document.getElementById('pieChart').getContext('2d');
         currentChart = new Chart(pieCtx, {
             type: 'pie',
@@ -578,49 +573,100 @@ async function initPieChart() {
             options: pieChartOptions,
             plugins: [ChartDataLabels]
         });
+
+        // Function to convert hex to RGBA
+        function hexToRGBA(hex, opacity) {
+            const num = parseInt(hex.slice(1), 16);
+            const r = (num >> 16) & 255;
+            const g = (num >> 8) & 255;
+            const b = num & 255;
+            return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        }
+
+        // Update legend buttons
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach((button, index) => {
+            const baseColor = chartDataPie.datasets[0].backgroundColor[index];
+            button.style.backgroundColor = hexToRGBA(baseColor, 0.65);
+            button.style.borderColor = baseColor;
+            button.style.borderWidth = '3px';
+            button.style.borderStyle = 'solid';
+        });
+
+        // Show/hide legend buttons based on current data
+        showHideLegendButtons(currentData.Label);
     }
 
-    // Function to update the pie chart based on selected year and month
+    // Function to show/hide legend buttons
+    function showHideLegendButtons(currentLabels) {
+        if (!currentLabels) return; // Guard clause to prevent undefined errors
+        
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            button.style.display = currentLabels.includes(category) ? 'inline-block' : 'none';
+        });
+    }
+
+    // Function to update the pie chart
     function updatePieChart() {
         const selectedLocation = locationDropdown.value;
-        const selectedYear = placeholderYear; // Use the placeholderYear variable for the selected year
-        const currentFilteredData = filterDataByLocation(fetchedData, selectedLocation);
+        const selectedYear = placeholderYear;
         
-        // Check if a month is selected
-        if (selectedMonth !== null) {
-            const monthFilteredData = filterDataByMonth(currentFilteredData, selectedYear, selectedMonth);
-            const monthPreviousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, selectedMonth);
-            initializePieChart(aggregateData(monthFilteredData), aggregateData(monthPreviousYearData));
-        } else {
+        let filteredData = filterDataByLocation(fetchedData, selectedLocation);
+        let previousYearData;
 
-            // Yearly data
-            const currentYearData = filterDataByYear(fetchedData, selectedYear);
-            const previousYearFilteredData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, null);
-            initializePieChart(aggregateData(currentYearData), aggregateData(previousYearFilteredData));
+        if (selectedMonth !== null) {
+            filteredData = filterDataByMonth(filteredData, selectedYear, selectedMonth);
+            previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, selectedMonth);
+        } else {
+            filteredData = filterDataByYear(filteredData, selectedYear);
+            previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, null);
         }
+
+        const aggregatedCurrentData = aggregateData(filteredData);
+        const aggregatedPreviousData = aggregateData(previousYearData);
+        
+        initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
     }
 
-    // Initialize the pie chart with data for "All Locations" and the current year by default
+    // Initialize with default data
     let allData = filterDataByLocation(fetchedData, "all_locations");
-    allData = filterDataByYear(allData, placeholderYear)
+    allData = filterDataByYear(allData, placeholderYear);
     const previousYearData = getPreviousYearData(fetchedData, "all_locations", placeholderYear, null);
-    initializePieChart(aggregateData(allData), aggregateData(previousYearData));
+    
+    const aggregatedCurrentData = aggregateData(allData);
+    const aggregatedPreviousData = aggregateData(previousYearData);
+    
+    initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
 
-    // Event listener for location dropdown change
-    locationDropdown.addEventListener('change', function(){
-        //console.log("Location is changin")
-        updatePieChart();
-    });
-
-    // Event listener for year dropdown change
-    yearDropdown.addEventListener('change', function(){
-        updatePieChart()});
-
-    // Event listener for month picker change
-    monthPicker.addEventListener('change', function() {
-        updatePieChart(); // Refresh the pie chart based on the selected month
-    });
+    // Event listeners
+    locationDropdown.addEventListener('change', updatePieChart);
+    yearDropdown.addEventListener('change', updatePieChart);
+    monthPicker.addEventListener('change', updatePieChart);
 }
+
+// Popup functions
+function highlightSegment(segment) {
+    const popupTitle = document.getElementById("popupTitle");
+    const popupMessage = document.getElementById("popupMessage");
+
+    popupTitle.textContent = popupMessages[segment].title;
+    popupMessage.innerHTML = popupMessages[segment].message;
+
+    document.getElementById("popupModal").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("popupModal").style.display = "none";
+}
+
+document.getElementById("popupModal").addEventListener("click", function(event) {
+    const popupContent = document.querySelector(".popup-content");
+    if (!popupContent.contains(event.target)) {
+        closePopup();
+    }
+});
 
 initPieChart();
 // ==================== Line Graph ====================
