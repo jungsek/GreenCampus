@@ -15,9 +15,26 @@
     <title>Dashboard</title>
   </head>
   <body> 
+    <!--dun remove this even tho its invisible, it is used-->
+    <select id="monthPicker" style="display: none;">
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <option value="2">March</option>
+        <option value="3">April</option>
+        <option value="4">May</option>
+        <option value="5">June</option>
+        <option value="6">July</option>
+        <option value="7">August</option>
+        <option value="8">September</option>
+        <option value="9">October</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+    </select>
+    
     <!--navbar-->
     <div class="nav-placeholder"></div>
 
+    
     <div class="dashboard-content">
         <div class="carpet-container">
             <div class="allContent-container">
@@ -114,7 +131,8 @@
                         </div>
                    </div> -->
                    
-                   <div class="filter" style="font-size: 0.9rem;">
+                   <div class="filter" style="font-size: 0.9rem; display: flex; flex-direction: column;">
+                    <div class="filterSelect" style="font-size: 0.9rem; display: flex;">
                         <div style="display: flex; align-items: center;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
                             <select id="yearsFilter" class="years-filter">
@@ -132,8 +150,10 @@
                             </select>
                         </div>
                     </div>
-                
-                
+
+                    <button id="setGoalButton" class="btn-set-goal">Set Goal</button>
+                    </div>
+                    
                 </div>
             
                 <div class="middle-graphs-container">
@@ -191,6 +211,76 @@
                 </div>
             </div>
         </div> 
+
+        <!-- The Popup Structure -->
+<div id="confirmationPopup" class="popup" style="z-index: 100000;">
+    <div class="popup-content" style="display: flex; align-items: center; justify-content: center; flex-direction: column; max-width: 70%;">
+        <h3>This will override your previous response for <span id="itemName">Item Name</span> of <span id="itemValue">Value</span>. Do you want to continue?</h3>
+        <div class="button-group">
+            <button id="yesconfirmButton" class="btn-set-goal">Yes</button>
+            <button id="noconfirmButton" class="btn-set-goal">No</button>
+        </div>
+    </div>
+</div>
+
+<div id="goalPopup" class="popup">
+    <div class="popup-content">
+        <button id="cancelButton" class="cancel-button">✖</button> <!-- Cancel button -->
+        <h1>Set Energy Usage/Carbon Footprint Goal</h1>
+
+        <form id="goalForm">
+            <div class="form-group">
+                <label for="goalSelect">Select Goal:</label>
+                <select id="goalSelect" name="goalSelect">
+                    <option value="pctgdecrease" selected>Percentage Decrease</option>
+                    <option value="tgtvalue">Custom Target Value</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="typeSelection">
+                <label>Choose Type:</label>
+                <div>
+                    <input type="radio" id="energyUsage" name="type" value="energy" />
+                    <label for="energyUsage" selected>Energy Usage</label>
+                </div>
+                <div>
+                    <input type="radio" id="carbonEmissions" name="type" value="carbon" />
+                    <label for="carbonEmissions">Carbon Emissions</label>
+                </div>
+            </div>
+
+            <div id="percentageInput" class="form-group">
+                <label for="goalPercentage">Enter Percentage:</label>
+                <input type="number" id="goalPercentage" class="form-control" min="1" max="100" placeholder="__%">
+            </div>
+
+            <div id="kwhInput" class="form-group hidden">
+                <label for="goalkwh">Enter target kWh:</label>
+                <input type="number" id="goalkwh" class="form-control" min="0" max="1000000" placeholder="__kWh">
+            </div>
+
+            <div id="tonInput" class="form-group hidden">
+                <label for="goalton">Enter target tonnes:</label>
+                <input type="number" id="goalton" class="form-control" min="0" max="1000" placeholder="__tonnes">
+            </div>
+
+            <div class="form-group">
+                <label for="goalYear">Select Year:</label>
+                <input type="number" id="goalYear" class="form-control" min="2024" max="2100" placeholder="Enter Year">
+            </div>
+
+            <button type="submit" id="submitnewgoalbtn">Set Goal</button>
+        </form>
+
+        
+
+    </div>
+</div>
+
+
+</div>
+
+    
     </div>
 
 
