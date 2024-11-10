@@ -40,18 +40,43 @@
             <div class="allContent-container">
                 <div class="card-container">
                     <div class="smallCard-container">
-                        <div class="card">
-                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2024's Impact</div>
+                        <div class="impact-card" onclick="flipCard(this)">
+                            <div class="card-front">
+                                <div class="title">2024's Impact</div>
+                                <div class="metric">
+                                    <div class="metric-title carbon-footprint">Total Carbon Footprint: <span class="metric-value1" style="font-size: 1rem; font-weight: bold;">5534.44</span> tons
+                                        <span class="trend1"><br><i class='bx bx-trending-up'></i> +20% from last year</span>
+                                    </div> 
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-title energy-usage">Total Energy Usage: <span class="metric-value2" style="font-size: 1rem; font-weight: bold">5534.44</span> kWh
+                                        <span class="trend2"><br><i class='bx bx-trending-down'></i> +20% from last year</span>
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-title">Top Contributor(s): <span class="metric-value3" style="font-size: 0.9rem; font-weight: bold">HVAC, Lighting</span>
+                                    <!-- <a href="#" class="see-why"><br>See why</a> -->
+                                    </div>
+                                </div>
+
+                                <div class="card-back">
+                                    <!-- Blank back side content -->
+                                </div>
+                            </div>    
+                        </div>    
+                        
+                        <!-- <div class="card">
+                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2023's Impact</div>
                             <div class="impact-number">55354.44</div>
                             <div class="subtitle">CO₂e </div>
                         </div>  
 
                         <div class="card">
-                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2023's Impact</div>
+                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2024's Impact</div>
                             <div class="impact-number">55354.44</div>
                             <div class="subtitle">CO₂e </div>
-                        </div>  
-                    </div>       
+                        </div>   -->
+                    </div>        
                     
                     <div class="mediumCard-container">
                         <div class="content-card">
@@ -195,6 +220,7 @@
                                     <button onclick="highlightSegment('Refrigeration')" class="legend-button" data-segment="Refrigeration">Refrigeration</button>
                                     <button onclick="highlightSegment('Appliances')" class="legend-button" data-segment="Appliances">Appliances</button>
                                     <button onclick="highlightSegment('FoodWasteManagement')" class="legend-button" data-segment="Food Waste Management">Food Waste Management</button>
+                                    <button onclick="highlightSegment('SoundEquipment')" class="legend-button" data-segment="Sound Equipment">Sound Equipment</button>
                                 </div>
                             </div>
                         </div>
