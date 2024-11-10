@@ -884,9 +884,6 @@ async function initCarbonFootprintChart() {
                 ? Array(labels.length).fill(goalton * 12) // For year, multiply by 12
                 : Array(labels.length).fill(goalton); // For months, use goalton directly
 
-                if (goalLineData[0] == goalton * 12) {
-                    console.log(goalton * 12)
-                }
             datasets.push({
                 label: 'Goal Line (tonnes)',
                 type: 'line',
