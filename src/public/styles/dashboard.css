@@ -192,6 +192,144 @@
     font-size: 1.2rem; 
 }
 
+/* ========= Set Goal ========*/
+/* Set Goal Button */
+.btn-set-goal {
+    padding: 16px 32px; /* Padding for the button */
+    font-size: 14px; /* Font size */
+    font-weight: bold; /* Bold text */
+    color: #333; /* Text color */
+    background-color: #c8e6deba; /* Background color */
+    border: none; /* Remove default border */
+    border-radius: 6px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-top: 10px; /* Space above the button */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+/* Hover effect for the Set Goal button */
+.btn-set-goal:hover {
+    background-color: #c3e7deea; /* Darker background on hover */
+}
+
+/* Set Goal Button option styling */
+.btn-set-goal:focus {
+    outline: none; /* Remove outline on focus */
+    box-shadow: 0 0 0 2px rgba(75, 192, 192, 0.5); /* Optional: Add focus shadow */
+}
+/* Popup Container */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+/* Popup Content */
+.popup-content {
+    background-color: #ffffff; /* White background */
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 20px; /* Padding */
+    border: 1px solid #888; /* Border */
+    width: 80%; /* Could be more or less, depending on screen size */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: relative; /* For positioning the cancel button */
+}
+
+/* Cancel Button */
+.cancel-button {
+    position: absolute; /* Position in the top right corner */
+    top: 10px;
+    right: 10px;
+    background: none; /* No background */
+    border: none; /* No border */
+    font-size: 20px; /* Adjust font size */
+    cursor: pointer; /* Pointer cursor */
+    color: #5bc7a0; /* Match theme color */
+}
+
+/* Header Styles */
+h1 {
+    text-align: center; /* Center the title */
+    color: #5bc7a0; /* Primary color */
+    margin-bottom: 20px; /* Space below header */
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px; /* Space between form elements */
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 5px; /* Space below labels */
+    font-weight: bold; /* Bold labels */
+    color: #333; /* Dark color for text */
+}
+
+.select, .form-control {
+    padding: 10px; /* Padding for inputs */
+    font-size: 16px; /* Font size */
+    width: 100%; /* Full width */
+    border: 1px solid #ddd; /* Border */
+    border-radius: 4px; /* Rounded corners */
+    transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+/* Hover effect for selects */
+.select:hover, .form-control:hover {
+    border-color: #5bc7a0; /* Highlight border on hover */
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: #5bc7a0; /* Primary button color */
+    color: white; /* Button text color */
+    padding: 10px 15px; /* Button padding */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Pointer cursor */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    width: 100%; /* Full width */
+}
+
+button[type="submit"]:hover {
+    background-color: #4a9b82; /* Darker shade on hover */
+}
+
+/* Hidden Class */
+.hidden {
+    display: none; /* Hide element */
+}
+
+/* Radio Button Styles */
+input[type="radio"] {
+    margin-right: 10px; /* Space between radio and label */
+}
+
+/* Additional styling for the type selection */
+#typeSelection {
+    margin-top: 10px; /* Space above type selection */
+    display: flex; /* Flexbox for radio buttons */
+    gap: 20px; /* Space between radio buttons */
+    align-items: center; /* Center align */
+}
+
+#typeSelection label {
+    font-weight: normal; /* Normal weight for radio labels */
+    color: #333; /* Dark color for text */
+}
+
 
 /* ========= Filter by Years  ========= */
 #yearsFilter {
@@ -432,6 +570,7 @@
     display: none; /* Initially hidden */
     justify-content: center;
     align-items: center;
+    z-index: 800;
 }
 
 .popup-content {
