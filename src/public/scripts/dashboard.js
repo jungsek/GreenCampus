@@ -72,12 +72,9 @@ cancelButton.addEventListener('click', function() {
 
 
 submitgoalbtn.addEventListener('click', async (event) => {
-    
     event.preventDefault();
-
     const selectedType = document.querySelector('input[name="type"]:checked');
     let metric_value;
-
     if (goalSelect.value === "pctgdecrease") {
         metric_value = parseFloat(document.getElementById('goalPercentage').value);
     } else {
@@ -87,7 +84,7 @@ submitgoalbtn.addEventListener('click', async (event) => {
             metric_value = parseFloat(tonGoal.value);
         }
     }
-
+    
     // Validation
     if (!metric_value || !goalSelect.value || !selectedType.value || !yearinput.value) {
         alert("Please fill in all form details.");
@@ -95,7 +92,6 @@ submitgoalbtn.addEventListener('click', async (event) => {
     }
 
     async function createGoal() {
-            
         const newGoal = {
             school_id: parseInt(placeholderID),
             year: parseInt(yearinput.value),
@@ -103,7 +99,6 @@ submitgoalbtn.addEventListener('click', async (event) => {
             metric: selectedType.value,
             metric_value: metric_value,
         };
-
         let response = await fetch('/goals', {
             method: 'POST',
             headers: {
@@ -111,34 +106,30 @@ submitgoalbtn.addEventListener('click', async (event) => {
             },
             body: JSON.stringify(newGoal)
         });
-
         if (!response.ok) throw new Error('Network response was not ok');
         alert("Goal created");
-        document.getElementById('goalPopup').style.display = 'none'; // Close the goal setting form
+        document.getElementById('goalPopup').style.display = 'none';
     }
-    
+   
     // Fetch previous goals
     let prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
     let prevdata;
     if (prevCheckresponse.status === 404) {
-        // No previous goals found, continue as needed
         console.log("No previous goals found.");
     } else if (prevCheckresponse.ok) {
-        // If the response is successful, parse the JSON data
         prevdata = await prevCheckresponse.json();
     } else {
-        // Handle any other errors (e.g., 500 server errors, etc.)
         throw new Error('Network response to get previous goals was not ok');
     }
 
-
     let goalNeedsOverride = false;
+    let goalToDelete = null;  // Add this to store the goal that needs to be deleted
 
     if (prevdata) {
         prevdata.forEach(goal => {
             if (goal.metric === selectedType.value) {
                 goalNeedsOverride = true;
-                // If it's the same type of goal, show the confirmation popup
+                goalToDelete = goal;  // Store the entire goal object
                 document.getElementById('itemValue').innerText = (selectedType.value === 'energy') ? 'Energy Usage' : 'Carbon Emissions';
                 document.getElementById('itemName').innerText = (goalSelect.value === 'pctgdecrease') ? 'Percentage Decrease' : 'Target Value';
                 document.getElementById('confirmationPopup').style.display = 'block';
@@ -146,31 +137,50 @@ submitgoalbtn.addEventListener('click', async (event) => {
         });
     }
 
+    // Remove any existing event listeners to prevent duplicates
+    const yesButton = document.getElementById('yesconfirmButton');
+    const noButton = document.getElementById('noconfirmButton');
+    const newYesButton = yesButton.cloneNode(true);
+    const newNoButton = noButton.cloneNode(true);
+    yesButton.parentNode.replaceChild(newYesButton, yesButton);
+    noButton.parentNode.replaceChild(newNoButton, noButton);
+
     // If the goal needs an override, wait for confirmation
-    if (goalNeedsOverride) {
-        document.getElementById('yesconfirmButton').addEventListener('click', async function () {
-            // Hide confirmation popup
-            document.getElementById('confirmationPopup').style.display = 'none';
-
-            // Delete the old goal (same type)
-            let deleteGoalresponse = await fetch(`/goals/${prevdata[0].id}`, {
-                method: "DELETE"
-            });
-            if (!deleteGoalresponse.ok) throw new Error('Network response to delete old goal was not ok');
-
-            // Now create the new goal
-            createGoal();
+    if (goalNeedsOverride && goalToDelete) {
+        newYesButton.addEventListener('click', async function () {
+            try {
+                // Hide confirmation popup
+                document.getElementById('confirmationPopup').style.display = 'none';
+                
+                console.log('Attempting to delete goal with ID:', goalToDelete.id);
+                
+                // Delete the old goal (same type)
+                let deleteGoalresponse = await fetch(`/goals/${goalToDelete.id}`, {
+                    method: "DELETE"
+                });
+                
+                if (!deleteGoalresponse.ok) {
+                    throw new Error('Network response to delete old goal was not ok');
+                }
+                
+                console.log('Successfully deleted old goal');
+                // Now create the new goal
+                await createGoal();
+                
+                // Optionally refresh the page or update the UI
+                window.location.reload();
+            } catch (error) {
+                console.error('Error in goal deletion/creation:', error);
+                alert('There was an error updating the goal. Please try again.');
+            }
         });
 
-        document.getElementById('noconfirmButton').addEventListener('click', function () {
+        newNoButton.addEventListener('click', function () {
             document.getElementById('confirmationPopup').style.display = 'none';
-            // Close the goal setting form if user cancels
             document.getElementById('goalPopup').style.display = 'none';
         });
     } else {
-        // Function to create the new goal
-
-        // If no override is needed (i.e., different type of goal or no previous goal), just create the new goal
+        // If no override is needed, just create the new goal
         createGoal();
     }
 });
@@ -207,6 +217,22 @@ async function fetchCarbonFootprintData() {
     return Edata;
 }
 
+async function fetchGoals() {
+    let prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
+    let prevdata;
+    if (prevCheckresponse.status === 404) {
+        // No previous goals found, continue as needed
+        console.log("No previous goals found.");
+        return [];
+    } else if (prevCheckresponse.ok) {
+        // If the response is successful, parse the JSON data
+        prevdata = await prevCheckresponse.json();
+        return prevdata;
+    } else {
+        // Handle any other errors (e.g., 500 server errors, etc.)
+        throw new Error('Network response to get previous goals was not ok');
+    }
+}
 async function fetchEnergyBreakdownData() {
     let response = await fetch(`/energy-breakdowns`, {
         method: 'GET',
@@ -276,28 +302,65 @@ const doughnutChart2 = new Chart(ctx2, {
 // });
 
 // ==================== Bar + Line Graph ====================
-let energyTemperatureChart; // Global variable for the energy temperature chart
-let backgroundColor = ['rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 1)']
+let energyTemperatureChart;
+let backgroundColor = Array(12).fill('rgba(255, 159, 64, 0.5)');
 let selectedIndex = null;
 let selectedMonth = null;
 const monthPicker = document.getElementById('monthPicker');
+
 async function initEnergyTempChart() {
     const fetchedData = await fetchEnergyUsageData();
-
+    let goalkwh = 0;
+    
+    // Check for goal data
+    const goalData = await fetchGoals();
+    if (goalData && goalData.length > 0) {
+        for (const goal of goalData) {
+            if (goal.metric === 'energy') {
+                if (goal.goal === 'tgtvalue') {
+                    goalkwh = goal.metric_value/12;
+                } else {
+                    try {
+                        const currentkwhresponse = await fetch(`/energy-usage/school/${placeholderID}`);
+                        if (!currentkwhresponse.ok) {
+                            throw new Error("Network response to get energy usage was not OK");
+                        }
+                        let currentkwhdata = await currentkwhresponse.json();
+                        let currentkwhtotal = 0;
+                        currentkwhdata = currentkwhdata.filter(item => 
+                            new Date(item.timestamp).getFullYear() === new Date().getFullYear()
+                        );
+                        currentkwhdata.forEach(item => {
+                            currentkwhtotal += item.energy_kwh;
+                        });
+                        currentkwhtotal = (1 - (goal.metric_value / 100)) * currentkwhtotal;
+                        goalkwh = currentkwhtotal / 12;
+                    } catch (error) {
+                        console.error('Error fetching current energy usage:', error);
+                    }
+                }
+                break; // Exit loop after finding energy goal
+            }
+        }
+    }
 
     function filterDataById(fetchedData, selectedId) {
-        let filteredData = fetchedData.filter(item => item.school_id === selectedId);
-        filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
+        let filteredData = fetchedData.filter(item => 
+            item.school_id === selectedId && 
+            new Date(item.timestamp).getFullYear() === placeholderYear
+        );
+        
         const monthlyEnergyData = {};
         const monthlyTempData = {};
 
         filteredData.forEach(item => {
             const monthIndex = getMonthFromTimestamp(item.timestamp) - 1;
-
+            
             if (!monthlyEnergyData[monthIndex]) {
                 monthlyEnergyData[monthIndex] = 0;
             }
             monthlyEnergyData[monthIndex] += item.energy_kwh;
+            
             if (!monthlyTempData[monthIndex]) {
                 monthlyTempData[monthIndex] = 0;
             }
@@ -305,44 +368,61 @@ async function initEnergyTempChart() {
         });
 
         return {
-            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]),
-            totalEnergy: Object.values(monthlyEnergyData),
-            totalTemp: Object.values(monthlyTempData)
+            labels: monthNames,
+            totalEnergy: Array(12).fill(0).map((_, i) => monthlyEnergyData[i] || 0),
+            totalTemp: Array(12).fill(0).map((_, i) => monthlyTempData[i] || 0)
         };
     }
 
     const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
-    const energyData = filteredEnergyTempData.totalEnergy;
-    const temperatureData = filteredEnergyTempData.totalTemp;
-
+    
     if (energyTemperatureChart) {
         energyTemperatureChart.destroy();
+    }
+
+    // Prepare datasets array
+    const datasets = [
+        {
+            label: 'Energy (kWh)',
+            type: 'bar',
+            data: filteredEnergyTempData.totalEnergy,
+            backgroundColor: backgroundColor,
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            yAxisID: 'y1',
+        },
+        {
+            label: 'Temperature (°C)',
+            type: 'line',
+            data: filteredEnergyTempData.totalTemp,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: false,
+            yAxisID: 'y2'
+        }
+    ];
+
+    // Add goal line dataset if goal exists
+    if (goalkwh > 0) {
+        datasets.push({
+            label: 'Goal Line (kWh)',
+            type: 'line',
+            data: Array(12).fill(goalkwh), // All months will have the same value for the goal line
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 2,
+            fill: false,
+            yAxisID: 'y1',
+            pointRadius: 0,
+            lineTension: 0
+        });
     }
 
     const energyTemperatureConfig = {
         type: 'bar',
         data: {
             labels: monthNames,
-            datasets: [
-                {
-                    label: 'Energy (kWh)',
-                    type: 'bar',
-                    data: energyData,
-                    backgroundColor: energyData.map(() => 'rgba(255, 159, 64, 0.5)'), // Default color for all bars
-                    borderColor: energyData.map(() => 'rgba(255, 159, 64, 1)'),
-                    borderWidth: 1,
-                    yAxisID: 'y1',
-                },
-                {
-                    label: 'Temperature (°C)',
-                    type: 'line',
-                    data: temperatureData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: false,
-                    yAxisID: 'y2'
-                }
-            ]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -352,7 +432,7 @@ async function initEnergyTempChart() {
                     type: 'linear',
                     position: 'left',
                     beginAtZero: true,
-                    max: 2000,
+                    max: Math.max(2000, goalkwh * 1.2), // Adjust max to accommodate goal line
                     ticks: {
                         callback: function(value) {
                             return value + ' kWh';
@@ -372,54 +452,39 @@ async function initEnergyTempChart() {
                 }
             },
             onClick: (e) => {
-                // Get the clicked element
-                let element = energyTemperatureChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                const element = energyTemperatureChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
                 if (element.length) {
-                    const index = element[0].index; // Get the index of the clicked bar
+                    const index = element[0].index;
 
-                    // Check if the clicked bar is already selected
                     if (selectedIndex === index) {
-                        // Deselecting the bar
-                        backgroundColor[index] = 'rgba(255, 159, 64, 0.5)'; // Change back to default color
-                        selectedIndex = null; // Reset selected index
+                        backgroundColor[index] = 'rgba(255, 159, 64, 0.5)';
+                        selectedIndex = null;
                         selectedMonth = null;
-                        const event = new Event('change', {
-                            bubbles: true, // Allow the event to bubble up through the DOM
-                            cancelable: true // Allow the event to be canceled
-                        });
-                        monthPicker.dispatchEvent(event); // Trigger the change event
                     } else {
-                        // Selecting a new bar
-                        // Reset all bars to default color
                         backgroundColor.fill('rgba(255, 159, 64, 0.5)');
-
-                        // Highlight the clicked bar
-                        backgroundColor[index] = 'rgba(255, 99, 132, 1)'; // Change to a different color for highlight
-                        selectedIndex = index; // Update selected index
+                        backgroundColor[index] = 'rgba(255, 99, 132, 1)';
+                        selectedIndex = index;
                         selectedMonth = index;
-                        const event = new Event('change', {
-                            bubbles: true, // Allow the event to bubble up through the DOM
-                            cancelable: true // Allow the event to be canceled
-                        });
-                        monthPicker.dispatchEvent(event); // Trigger the change event
                     }
 
-                    // Update the chart with new background colors
                     energyTemperatureChart.data.datasets[0].backgroundColor = backgroundColor;
-                    energyTemperatureChart.update(); // Refresh the chart
+                    energyTemperatureChart.update();
+
+                    const event = new Event('change', {
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    monthPicker.dispatchEvent(event);
                 }
             }
-
-            }
         }
-    
+    };
 
     // Initialize the energy vs. temperature chart
     const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
     energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
 }
 
-// Initialize the energy temperature chart
 initEnergyTempChart();
 
 
@@ -674,6 +739,41 @@ let carbonFootprintChart;
 async function initCarbonFootprintChart() {
     const fetchedData = await fetchCarbonFootprintData();
 
+    let goalton = 0;
+    
+    // Check for goal data
+    const goalData = await fetchGoals();
+    if (goalData && goalData.length > 0) {
+        for (const goal of goalData) {
+            if (goal.metric === 'carbon') {
+                if (goal.goal === 'tgtvalue') {
+                    goalton = goal.metric_value / 12 ;
+                    console.log("target goalton: ", goalton)
+                } else {
+                    try {
+                        const currenttonresponse = await fetch(`/carbon-footprints/school/${placeholderID}`);
+                        if (!currenttonresponse.ok) {
+                            throw new Error("Network response to get carbon footprint was not OK");
+                        }
+                        let currenttondata = await currenttonresponse.json();
+                        let currenttontotal = 0;
+                        currenttondata = currenttondata.filter(item => 
+                            new Date(item.timestamp).getFullYear() === new Date().getFullYear()
+                        );
+                        currenttondata.forEach(item => {
+                            currenttontotal += item.total_carbon_tons;
+                        });
+                        currenttontotal = (1 - (goal.metric_value / 100)) * currenttontotal;
+                        goalton = currenttontotal / 12;
+                    } catch (error) {
+                        console.error('Error fetching current carbon footprint:', error);
+                    }
+                }
+                break; // Exit loop after finding carbon goal
+            }
+        }
+    }
+
     function filterDataByIdandMonth(fetchedData, selectedId) {
         const monthlyData = {};
         const yearlyData = {};
@@ -766,21 +866,46 @@ async function initCarbonFootprintChart() {
         const maxDataValue = Math.max(...data);
         const dynamicMax = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
 
+        const datasets = [
+            {
+                label: 'Carbon Footprint (tonnes)',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: true,
+                borderWidth: 2,
+                yAxisID: 'y1'
+            }
+        ];
+
+        // If goalton exists, add goal line to datasets
+        if (goalton > 0) {
+            const goalLineData = (document.getElementById('yearMonthSelect').value === 'years') 
+                ? Array(labels.length).fill(goalton * 12) // For year, multiply by 12
+                : Array(labels.length).fill(goalton); // For months, use goalton directly
+
+                if (goalLineData[0] == goalton * 12) {
+                    console.log(goalton * 12)
+                }
+            datasets.push({
+                label: 'Goal Line (tonnes)',
+                type: 'line',
+                data: goalLineData,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderWidth: 2,
+                fill: false,
+                yAxisID: 'y1',
+                pointRadius: 0,
+                lineTension: 0
+            });
+        }
+
         const carbonFootprintConfig = {
             type: 'line',
             data: {
                 labels: labels,
-                datasets: [
-                    {
-                        label: 'Carbon Footprint (tonnes)',
-                        data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        fill: true,
-                        borderWidth: 2,
-                        yAxisID: 'y1'
-                    },
-                ]
+                datasets: datasets
             },
             options: {
                 responsive: true,
