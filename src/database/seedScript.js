@@ -30,6 +30,8 @@ IF OBJECT_ID('FK_Reports_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Reports DROP CONSTRAINT FK_Reports_SchoolID;
 IF OBJECT_ID('FK_Goals_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Goals DROP CONSTRAINT FK_Goals_SchoolID;
+  IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE Campaigns DROP CONSTRAINT FK_Campaigns_SchoolID;
 
 -- Drop all tables if they exist
 IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
@@ -39,6 +41,7 @@ IF OBJECT_ID('dbo.Schools', 'U') IS NOT NULL DROP TABLE dbo.Schools;
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
 IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
+IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
 
 -- Create the tables here...
 
@@ -120,6 +123,16 @@ CREATE TABLE Goals (
 	metric_value FLOAT NOT NULL,
 	FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
 )
+
+CREATE TABLE Campaigns (
+   id INT PRIMARY KEY IDENTITY(1,1),
+   school_id INT NOT NULL,
+   name NVARCHAR(100) NOT NULL,
+   description NVARCHAR(255) NULL,
+   image VARCHAR(MAX) NULL,
+   points INT NOT NULL,
+   FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
+   )
 
 `;
 
