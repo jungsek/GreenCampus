@@ -35,32 +35,90 @@
 /* ========== Small Cards ========== */
 .smallCard-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    width: 25%; 
+    /* grid-template-columns: repeat(2, 1fr);  */
+    width: 30%; 
     flex-wrap: wrap;
     gap: 15px;  
 }
 
-.card {
-    padding: 15px;
-    gap: 15px;
-    width: 100%;
-    border-radius: 8px;
-    text-align: center;
-    font-family: Arial, sans-serif;
+.impact-card {
     box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 100%;
+    height: 172px;
+    color: #000;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    cursor: pointer;
 }
 
-/* Impact number styling */
-.impact-number {
-    font-size: 1.8rem;
+.impact-card.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card-front {
+    background-color: #fff;
+    color: #000;
+}
+
+.card-back {
+    background-color: #245D51;
+    transform: rotateY(180deg);
+}
+
+/* Title */
+.title {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
     font-weight: bold;
 }
 
-/* Subtitle */
-.subtitle {
-    font-size: 1rem;
-    color: #666;
+/* Metric */
+.metric {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+    align-items: flex-start;
+}
+
+.metric-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+
+/* Trend and Link */
+.trend1 {
+    color: red;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.trend2 {
+    color: red;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.see-why {
+    color: blue;
+    text-decoration: underline;
+    font-size: 0.75rem;
 }
 
 /* ========== Medium Size Cards ========== */
@@ -653,24 +711,66 @@ input[type="radio"] {
         justify-items: center; /* Center each card horizontally */
     }
 
-    /* Adjusting small cards container */
     .smallCard-container {
-        width: 100%; /* Full width within each grid cell */
-        padding: 10px; /* Optional: Add padding for spacing */
-        display: flex; /* Ensure flex layout */
-        gap: 10px; /* Add some space between elements inside the small cards */
-        flex-direction: row; /* Stack items within the small card container */
+        width: 100%; 
+        height: 100%;
     }
 
-
-    /* Styling impact number for medium screens */
-    .impact-number {
-        font-size: 1.8rem; /* Slightly smaller font size for better fit */
+    .impact-card {
+        height: 305px; 
+        width: 100%; 
     }
 
-    /* Subtitle styling for medium screens */
-    .subtitle {
-        font-size: 0.9rem; /* Adjust subtitle size for readability */
+    .title {
+        margin-top: -70px;
+        margin-bottom: 40px;
+        font-size: 25px; 
+    }
+
+    .metric-title {
+        font-size: 0.75rem; 
+    }
+
+    .trend1 {
+        margin-left: 15px; 
+    }
+    
+    .trend2 {
+        margin-left: 47px; 
+    }
+
+    .see-why {
+        font-size: 0.8rem; 
+        margin-left: 120px; 
+    }
+
+    /* ===== popup modal ===== */
+    .popup-modal {
+        width: 90%; 
+        height: auto; /* Allow the height to adjust according to content */
+        top: 20%; 
+        left: 50%;
+        transform: translateX(-50%); /* Keep it centered horizontally */
+        padding: 10px;
+    }
+
+    .popup-content {
+        width: 100%; 
+        padding: 10px;
+    }
+
+    .popup-content h2 {
+        font-size: 18px; 
+    }
+
+    .popup-content p {
+        font-size: 14px; 
+    }
+
+    .close-btn {
+        font-size: 40px; 
+        right: 15px; 
+        top: 5px; 
     }
 
     /* ========== Medium Cards ========== */
@@ -755,15 +855,26 @@ input[type="radio"] {
     }
 
     .pieChart-container {
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        padding: 15px; /* Adjust as needed */
+        width: 100%; 
+        height: 100%; 
+        padding: 15px; 
         box-sizing: border-box;
     }
 
     .graph-names-container, .bottom-graph-name-container {
         flex-direction: column; /* Stack items on smaller screens */
         align-items: flex-start; /* Align to the left */
+    }
+
+    #legendButtons {
+        margin-top: 25px;
+        height: auto;
+    }
+
+    #legendButtons button {
+        width: 80%;
+        height: 40px;
+        font-size: 14px; 
     }
 }
 
@@ -796,6 +907,35 @@ input[type="radio"] {
 
     .subtitle {
         font-size: 0.8rem; /* Adjust subtitle size */
+    }
+
+    /* ====== popup modal ====== */
+    .popup-modal {
+        width: 90%; /* Make the modal wider for small screens */
+        height: auto; /* Allow the height to adjust according to content */
+        top: 20%; /* Move the modal slightly down for better visibility */
+        left: 50%;
+        transform: translateX(-50%); /* Keep it centered horizontally */
+        padding: 10px;
+    }
+
+    .popup-content {
+        width: 100%; /* Full width of the modal */
+        padding: 10px;
+    }
+
+    .popup-content h2 {
+        font-size: 18px; /* Smaller font size for titles */
+    }
+
+    .popup-content p {
+        font-size: 14px; /* Smaller font size for paragraphs */
+    }
+
+    .close-btn {
+        font-size: 40px; /* Slightly smaller close button */
+        right: 15px; /* Move it closer to the edge */
+        top: 5px; /* Adjust its position slightly */
     }
 
     /* ========== Medium Cards ========== */
@@ -919,5 +1059,17 @@ input[type="radio"] {
     .bottom-graph-name-container {
         flex-direction: column; /* Stack items on smaller screens */
         align-items: flex-start; /* Align to the left */
+    }
+
+    #legendButtons {
+        margin-top: 25px;
+        height: auto;
+    }
+
+    #legendButtons button {
+        width: 80%;
+        height: 40px;
+        font-size: 14px; 
+        margin-left: -15px;
     }
 }
