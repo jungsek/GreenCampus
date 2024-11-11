@@ -194,7 +194,7 @@ submitgoalbtn.addEventListener('click', async (event) => {
 // 
 
 async function fetchEnergyUsageData() {
-    let response = await fetch(`/energy-usage`, {
+    let response = await fetch(`/energy-usage/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ async function fetchEnergyUsageData() {
 }
 
 async function fetchCarbonFootprintData() {
-    let response = await fetch(`/carbon-footprints`, {
+    let response = await fetch(`/carbon-footprints/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ async function fetchGoals() {
     }
 }
 async function fetchEnergyBreakdownData() {
-    let response = await fetch(`/energy-breakdowns`, {
+    let response = await fetch(`/energy-breakdowns/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
