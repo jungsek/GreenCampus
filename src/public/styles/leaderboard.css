@@ -5,15 +5,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* body {
-    background: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-} */
-
 .leaderboard {
     background: #89cdb4;  
     padding: 24px;
@@ -94,16 +85,11 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     background: #ddd;
     overflow: hidden;
 }
 
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
 .player-name {
     color: white;
@@ -112,10 +98,17 @@
     text-align: center;
 }
 
-.player-points {
+.player-points-container {
+    display: flex;     
+    gap: 16px;            
+    justify-content: center; 
+    margin-bottom: 10px;
+}
+
+.winnerMetricsCF,
+.winnerMetricsEU {
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
-    margin-bottom: 8px;
 }
 
 .podium-step {
@@ -172,6 +165,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative; 
 }
 
 .list-rank {
@@ -181,20 +175,22 @@
 }
 
 .list-profile {
+    display: flex;  
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ddd;
+    background-color: #007bff;  
+    align-items: center;  
+    justify-content: center;  
+    color: white;  
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
     overflow: hidden;
 }
 
-.list-profile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .list-info {
+    flex: 1; /* Added */
     display: flex;
     flex-direction: column;
 }
@@ -209,3 +205,60 @@
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
 }
+
+.metrics-container {
+    display: flex;
+    justify-content: space-evenly; 
+    align-items: center;
+    flex-grow: 0.5;
+    margin-right: 560px;
+}
+
+.CFmetrics,
+.EUmetrics {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center; /* Centers text inside each metric item */
+}
+
+
+.metric-item {
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto; /* Added */
+  }
+  
+  .score-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .score-value {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .score-icon {
+    font-size: 12px;
+    color: #444;
+  }
+  
+  .score-icon.fa-arrow-up {
+    color: green;
+  }
+  
+  .score-icon.fa-arrow-down {
+    color: #F44336;
+  }
