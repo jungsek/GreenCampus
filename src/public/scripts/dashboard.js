@@ -542,7 +542,15 @@ async function initEnergyTempChart() {
             item.school_id === selectedId && 
             new Date(item.timestamp).getFullYear() === placeholderYear
         );
-        
+
+        let kwhtotal = 0;
+        let temptotal = 0;
+        filteredData.forEach(row => {
+            kwhtotal += row.energy_kwh;
+            temptotal += row.avg_temperature_c;
+        });
+        document.getElementById('avgenergy').innerText = `${(kwhtotal/12).toFixed(2)} kWh/month`
+        document.getElementById('avgtemp').innerText = `${(temptotal/12).toFixed(2)} °C/month`
         const monthlyEnergyData = {};
         const monthlyTempData = {};
 
