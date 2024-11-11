@@ -7,8 +7,194 @@ function getMonthFromTimestamp(timestamp) {
     return date.getMonth() + 1; // Adding 1 because JavaScript months are zero-indexed (0 = January, 11 = December)
 }
 
+// ==================== Goal Setting ====================
+const setgoalbtn = document.querySelector('#setGoalButton');
+const goalSelect = document.getElementById('goalSelect');
+const percentageInput = document.getElementById('percentageInput');
+const typeSelect = document.getElementById('typeSelection');
+const kwhinput = document.getElementById('kwhInput');
+const kwhGoal = document.getElementById('goalkwh')
+const tonGoal = document.getElementById('goalton')
+const toninput = document.getElementById('tonInput');
+const yearinput = document.getElementById('goalYear')
+const submitgoalbtn = document.querySelector('#submitnewgoalbtn')
+
+
+ // Show the goal popup when the button is clicked
+ setgoalbtn.addEventListener('click', function() {
+    document.getElementById('goalPopup').style.display = 'block';
+});
+
+// Hide/show percentage input based on goal selection
+goalSelect.addEventListener('change', function() {
+    if (this.value === 'pctgdecrease') {
+        percentageInput.classList.remove('hidden');
+        kwhinput.classList.add('hidden');
+        toninput.classList.add('hidden');
+    } else {
+        percentageInput.classList.add('hidden');
+        // Check the currently selected type and show the appropriate input
+        const selectedType = document.querySelector('input[name="type"]:checked');
+        if (selectedType) {
+            if (selectedType.value === 'energy') {
+                kwhinput.classList.remove('hidden');
+                toninput.classList.add('hidden');
+            } else {
+                toninput.classList.remove('hidden');
+                kwhinput.classList.add('hidden');
+            }
+        }
+    }
+});
+
+// Show/hide kWh and ton inputs based on type selection
+typeSelect.addEventListener('change', function() {
+    if (goalSelect.value === 'tgtvalue') {
+        const selectedType = document.querySelector('input[name="type"]:checked');
+        if (selectedType) {
+            if (selectedType.value === 'energy') {
+                kwhinput.classList.remove('hidden');
+                toninput.classList.add('hidden');
+            } else {
+                toninput.classList.remove('hidden');
+                kwhinput.classList.add('hidden');
+            }
+        }
+    }
+});
+
+// Cancel button functionality to close the popup
+const cancelButton = document.getElementById('cancelButton');
+cancelButton.addEventListener('click', function() {
+    document.getElementById('goalPopup').style.display = 'none'; // Close popup
+});
+
+
+
+submitgoalbtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const selectedType = document.querySelector('input[name="type"]:checked');
+    let metric_value;
+    if (goalSelect.value === "pctgdecrease") {
+        metric_value = parseFloat(document.getElementById('goalPercentage').value);
+    } else {
+        if (selectedType.value === 'energy') {
+            metric_value = parseFloat(kwhGoal.value);
+        } else {
+            metric_value = parseFloat(tonGoal.value);
+        }
+    }
+    
+    // Validation
+    if (!metric_value || !goalSelect.value || !selectedType.value || !yearinput.value) {
+        alert("Please fill in all form details.");
+        return;
+    }
+
+    async function createGoal() {
+        const newGoal = {
+            school_id: parseInt(placeholderID),
+            year: parseInt(yearinput.value),
+            goal: goalSelect.value,
+            metric: selectedType.value,
+            metric_value: metric_value,
+        };
+        let response = await fetch('/goals', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(newGoal)
+        });
+        if (!response.ok) throw new Error('Network response was not ok');
+        alert("Goal created");
+        document.getElementById('goalPopup').style.display = 'none';
+    }
+   
+    // Fetch previous goals
+    let prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
+    let prevdata;
+    if (prevCheckresponse.status === 404) {
+        console.log("No previous goals found.");
+    } else if (prevCheckresponse.ok) {
+        prevdata = await prevCheckresponse.json();
+    } else {
+        throw new Error('Network response to get previous goals was not ok');
+    }
+
+    let goalNeedsOverride = false;
+    let goalToDelete = null;  // Add this to store the goal that needs to be deleted
+
+    if (prevdata) {
+        prevdata.forEach(goal => {
+            if (goal.metric === selectedType.value) {
+                goalNeedsOverride = true;
+                goalToDelete = goal;  // Store the entire goal object
+                document.getElementById('itemValue').innerText = (selectedType.value === 'energy') ? 'Energy Usage' : 'Carbon Emissions';
+                document.getElementById('itemName').innerText = (goalSelect.value === 'pctgdecrease') ? 'Percentage Decrease' : 'Target Value';
+                document.getElementById('confirmationPopup').style.display = 'block';
+            }
+        });
+    }
+
+    // Remove any existing event listeners to prevent duplicates
+    const yesButton = document.getElementById('yesconfirmButton');
+    const noButton = document.getElementById('noconfirmButton');
+    const newYesButton = yesButton.cloneNode(true);
+    const newNoButton = noButton.cloneNode(true);
+    yesButton.parentNode.replaceChild(newYesButton, yesButton);
+    noButton.parentNode.replaceChild(newNoButton, noButton);
+
+    // If the goal needs an override, wait for confirmation
+    if (goalNeedsOverride && goalToDelete) {
+        newYesButton.addEventListener('click', async function () {
+            try {
+                // Hide confirmation popup
+                document.getElementById('confirmationPopup').style.display = 'none';
+                
+                console.log('Attempting to delete goal with ID:', goalToDelete.id);
+                
+                // Delete the old goal (same type)
+                let deleteGoalresponse = await fetch(`/goals/${goalToDelete.id}`, {
+                    method: "DELETE"
+                });
+                
+                if (!deleteGoalresponse.ok) {
+                    throw new Error('Network response to delete old goal was not ok');
+                }
+                
+                console.log('Successfully deleted old goal');
+                // Now create the new goal
+                await createGoal();
+                
+                // Optionally refresh the page or update the UI
+                window.location.reload();
+            } catch (error) {
+                console.error('Error in goal deletion/creation:', error);
+                alert('There was an error updating the goal. Please try again.');
+            }
+        });
+
+        newNoButton.addEventListener('click', function () {
+            document.getElementById('confirmationPopup').style.display = 'none';
+            document.getElementById('goalPopup').style.display = 'none';
+        });
+    } else {
+        // If no override is needed, just create the new goal
+        createGoal();
+    }
+});
+
+
+
+
+
+// function flipCard(card) {
+//     card.classList.toggle('is-flipped');
+// 
+
 async function fetchEnergyUsageData() {
-    let response = await fetch(`/energy-usage`, {
+    let response = await fetch(`/energy-usage/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +207,7 @@ async function fetchEnergyUsageData() {
 }
 
 async function fetchCarbonFootprintData() {
-    let response = await fetch(`/carbon-footprints`, {
+    let response = await fetch(`/carbon-footprints/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -33,8 +219,24 @@ async function fetchCarbonFootprintData() {
     return Edata;
 }
 
+async function fetchGoals() {
+    let prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
+    let prevdata;
+    if (prevCheckresponse.status === 404) {
+        // No previous goals found, continue as needed
+        console.log("No previous goals found.");
+        return [];
+    } else if (prevCheckresponse.ok) {
+        // If the response is successful, parse the JSON data
+        prevdata = await prevCheckresponse.json();
+        return prevdata;
+    } else {
+        // Handle any other errors (e.g., 500 server errors, etc.)
+        throw new Error('Network response to get previous goals was not ok');
+    }
+}
 async function fetchEnergyBreakdownData() {
-    let response = await fetch(`/energy-breakdowns`, {
+    let response = await fetch(`/energy-breakdowns/school/${placeholderID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -45,6 +247,197 @@ async function fetchEnergyBreakdownData() {
     let Edata = await response.json();
     return Edata;
 }
+
+
+// ==================== Impact Card ====================
+document.addEventListener("DOMContentLoaded", () => {
+    const defaultYear = 2024;
+    initImpactCard(defaultYear);
+});
+
+function getTotalCarbonFootprint(data, selectedYear) {
+    const filteredData = data.filter(item => {
+        const itemYear = new Date(item.timestamp).getFullYear();
+        return itemYear === selectedYear;
+    });
+
+    // calculate all the carbon footprint for that particular year
+    const totalCarbonFootprint = filteredData.reduce((total, item) => {
+        return total + (item.total_carbon_tons); 
+    }, 0);
+
+    return totalCarbonFootprint;
+}
+
+function getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear) {
+    // Filter energy usage data for the selected year
+    const filteredEnergyUsage = energyUsageData.filter(item => {
+        const itemYear = new Date(item.timestamp).getFullYear();
+        return itemYear === selectedYear;
+    });
+
+    // Calculate the total energy usage, incorporating percentage from breakdownData
+    const totalEnergyUsage = filteredEnergyUsage.reduce((total, item) => {
+        // Find matching breakdown entry for the current energy usage item
+        const breakdownEntries = breakdownData.filter(b => b.energyusage_id === item.id);
+
+        // Sum the energy usage * percentage for each breakdown entry associated with this usage item
+        const itemTotal = breakdownEntries.reduce((subtotal, breakdown) => {
+            // Multiply energy_kwh by the percentage (converted to a decimal)
+            return subtotal + (item.energy_kwh * (breakdown.percentage / 100));
+        }, 0);
+
+        // Add this item's total to the overall total
+        return total + itemTotal;
+    }, 0);
+
+    return totalEnergyUsage;
+}
+
+
+function getTopContributors(data, selectedYear) {
+    // filter the data for the selected year
+    const filteredData = data.filter(item => {
+        const itemYear = new Date(item.timestamp).getFullYear();
+        return itemYear === selectedYear;
+    });
+
+    // calculate the total energy usage for the selected year
+    const totalEnergyUsage = filteredData.reduce((total, item) => total + item.energy_usage, 0);
+
+    // calculate the percentage contribution for each category
+    const categoriesWithPercentage = filteredData.map(item => ({
+        category: item.category,
+        percentage: (item.percentage / totalEnergyUsage) * 100
+    }));
+
+    // sort by percentage in descending order and get the top 2 categories
+    const topCategories = categoriesWithPercentage
+        .sort((a, b) => b.percentage - a.percentage) // Sort by highest percentage
+        .slice(0, 2) // Get the top 2 categories
+        .map(item => item.category); // Extract the category names
+
+    return topCategories;
+}
+
+
+
+function percentageChangeCF(data, selectedYear) {
+    // Filter data for the selected year and the previous year
+    const currentYearData = data.filter(item => {
+        const itemYear = new Date(item.timestamp).getFullYear();
+        return itemYear === selectedYear;
+    });
+    
+    const previousYearData = data.filter(item => {
+        const itemYear = new Date(item.timestamp).getFullYear();
+        return itemYear === selectedYear - 1;
+    });
+
+    // Sum carbon footprint values for the selected year and the previous year
+    const currentYearTotal = currentYearData.reduce((total, item) => total + item.total_carbon_tons, 0);
+    const previousYearTotal = previousYearData.reduce((total, item) => total + item.total_carbon_tons, 0);
+
+    // Calculate percentage change
+    if (previousYearTotal === 0) {
+        return 0; // Avoid division by zero if previous year total is 0
+    }
+    const change = ((currentYearTotal - previousYearTotal) / previousYearTotal) * 100;
+
+    return change.toFixed(1); // one dp
+}
+
+function percentageChangeEU(energyUsageData, breakdownData, selectedYear) {
+    // Get the total energy usage for the current and previous year
+    const currentYearTotal = getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear);
+    const previousYearTotal = getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear - 1);
+
+    // Calculate percentage change
+    if (previousYearTotal === 0) {
+        return "No data"; // Indicate that we cannot calculate a change
+    }
+    const change = ((currentYearTotal - previousYearTotal) / previousYearTotal) * 100;
+
+    return change.toFixed(2); // two decimal places
+}
+
+
+
+async function initImpactCard(placeholderYear) {
+    const carbonFootprintData = await fetchCarbonFootprintData();
+    const energyUsageData = await fetchEnergyUsageData();
+    const topContributorsData = await fetchEnergyBreakdownData();
+
+    const totalCarbonFootprint = getTotalCarbonFootprint(carbonFootprintData, placeholderYear);
+    const totalEnergyUsage = getTotalEnergyUsage(energyUsageData, topContributorsData, placeholderYear);
+    const topContributors = getTopContributors(topContributorsData, placeholderYear);
+    
+    const carbonFootprintChange = percentageChangeCF(carbonFootprintData, placeholderYear);
+    const energyUsageChange = percentageChangeEU(energyUsageData, topContributorsData, placeholderYear);
+
+    const yearElement = document.querySelector(".impact-card .title");
+    const totalCarbonFootprintElement = document.querySelector(".metric-value1");
+    const totalEnergyUsageElement = document.querySelector(".metric-value2");
+    const topContributorsElement = document.querySelector(".metric-value3");
+    const carbonFootprintChangeElement = document.querySelector(".trend1");
+    const energyUsageChangeElement = document.querySelector(".trend2");
+
+
+    if (yearElement) {
+        yearElement.innerText = `${placeholderYear}'s Impact`;
+    }
+
+    if (totalCarbonFootprintElement) {
+        totalCarbonFootprintElement.innerText = `${totalCarbonFootprint.toFixed(2)}`;
+    }
+
+    if (totalEnergyUsageElement) {
+        totalEnergyUsageElement.innerText = `${totalEnergyUsage.toFixed(2)}`;
+    }
+
+    if (topContributorsElement) {
+        topContributorsElement.innerText = topContributors.join(", "); 
+    }
+
+    if (carbonFootprintChangeElement) {
+        // Check if carbonFootprintChange is "No data" or NaN
+        if (isNaN(carbonFootprintChange) || carbonFootprintChange === "No data") {
+            carbonFootprintChangeElement.innerHTML = "No data available from last year";
+            carbonFootprintChangeElement.style.color = "grey"; // Default color for no data
+        } else if (Math.abs(carbonFootprintChange) == 0.0) {
+            // No change case (near zero)
+            carbonFootprintChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
+            carbonFootprintChangeElement.style.color = "blue"; // Blue color for no change
+        } else {
+            // Set up icon and color based on increase or decrease
+            const iconClass = carbonFootprintChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
+            const color = carbonFootprintChange < 0 ? 'rgb(25, 176, 25)' : 'red';
+            
+            carbonFootprintChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(carbonFootprintChange)}% from last year`;
+            carbonFootprintChangeElement.style.color = color; // Apply color based on trend
+        }
+    }
+    
+    if (energyUsageChangeElement) {
+        // Check if energyUsageChange is "No data" or NaN
+        if (isNaN(energyUsageChange) || energyUsageChange === "No data") {
+            energyUsageChangeElement.innerHTML = "No data available from last year";
+            energyUsageChangeElement.style.color = "grey"; // Default color for no data
+        } else if (Math.abs(energyUsageChange) == 0.0) {
+            // No change case (near zero)
+            energyUsageChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
+            energyUsageChangeElement.style.color = "blue"; // Blue color for no change
+        } else {
+            // Set up icon and color based on increase or decrease
+            const iconClass = energyUsageChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
+            const color = energyUsageChange < 0 ? 'rgb(25, 176, 25)' : 'red';
+            
+            energyUsageChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(energyUsageChange)}% from last year`;
+            energyUsageChangeElement.style.color = color; // Apply color based on trend
+        }
+    }
+}
+
 
 // ==================== Doughnut Progress Chart ====================
 const chartData1 = {
@@ -182,24 +575,73 @@ const doughnutChart2 = new Chart(ctx2, {
 // });
 
 // ==================== Bar + Line Graph ====================
-let energyTemperatureChart; // Global variable for the energy temperature chart
+let energyTemperatureChart;
+let backgroundColor = Array(12).fill('rgba(255, 159, 64, 0.5)');
+let selectedIndex = null;
+let selectedMonth = null;
+const monthPicker = document.getElementById('monthPicker');
 
 async function initEnergyTempChart() {
     const fetchedData = await fetchEnergyUsageData();
+    let goalkwh = 0;
+    
+    // Check for goal data
+    const goalData = await fetchGoals();
+    if (goalData && goalData.length > 0) {
+        for (const goal of goalData) {
+            if (goal.metric === 'energy') {
+                if (goal.goal === 'tgtvalue') {
+                    goalkwh = goal.metric_value/12;
+                } else {
+                    try {
+                        const currentkwhresponse = await fetch(`/energy-usage/school/${placeholderID}`);
+                        if (!currentkwhresponse.ok) {
+                            throw new Error("Network response to get energy usage was not OK");
+                        }
+                        let currentkwhdata = await currentkwhresponse.json();
+                        let currentkwhtotal = 0;
+                        currentkwhdata = currentkwhdata.filter(item => 
+                            new Date(item.timestamp).getFullYear() === new Date().getFullYear()
+                        );
+                        currentkwhdata.forEach(item => {
+                            currentkwhtotal += item.energy_kwh;
+                        });
+                        currentkwhtotal = (1 - (goal.metric_value / 100)) * currentkwhtotal;
+                        goalkwh = currentkwhtotal / 12;
+                    } catch (error) {
+                        console.error('Error fetching current energy usage:', error);
+                    }
+                }
+                break; // Exit loop after finding energy goal
+            }
+        }
+    }
 
     function filterDataById(fetchedData, selectedId) {
-        let filteredData = fetchedData.filter(item => item.school_id === selectedId);
-        filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
+        let filteredData = fetchedData.filter(item => 
+            item.school_id === selectedId && 
+            new Date(item.timestamp).getFullYear() === placeholderYear
+        );
+
+        let kwhtotal = 0;
+        let temptotal = 0;
+        filteredData.forEach(row => {
+            kwhtotal += row.energy_kwh;
+            temptotal += row.avg_temperature_c;
+        });
+        document.getElementById('avgenergy').innerText = `${(kwhtotal/12).toFixed(2)} kWh/month`
+        document.getElementById('avgtemp').innerText = `${(temptotal/12).toFixed(2)} °C/month`
         const monthlyEnergyData = {};
         const monthlyTempData = {};
 
         filteredData.forEach(item => {
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
-
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1;
+            
             if (!monthlyEnergyData[monthIndex]) {
                 monthlyEnergyData[monthIndex] = 0;
             }
             monthlyEnergyData[monthIndex] += item.energy_kwh;
+            
             if (!monthlyTempData[monthIndex]) {
                 monthlyTempData[monthIndex] = 0;
             }
@@ -207,13 +649,14 @@ async function initEnergyTempChart() {
         });
 
         return {
-            labels: Object.keys(monthlyEnergyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
-            totalEnergy: Object.values(monthlyEnergyData),
-            totalTemp: Object.values(monthlyTempData)
+            labels: monthNames,
+            totalEnergy: Array(12).fill(0).map((_, i) => monthlyEnergyData[i] || 0),
+            totalTemp: Array(12).fill(0).map((_, i) => monthlyTempData[i] || 0)
         };
     }
 
     const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
+
     const energyData = filteredEnergyTempData.totalEnergy;
     const temperatureData = filteredEnergyTempData.totalTemp;
 
@@ -226,31 +669,49 @@ async function initEnergyTempChart() {
         energyTemperatureChart.destroy();
     }
 
-    // Define the chart configuration
+    // Prepare datasets array
+    const datasets = [
+        {
+            label: 'Energy (kWh)',
+            type: 'bar',
+            data: filteredEnergyTempData.totalEnergy,
+            backgroundColor: backgroundColor,
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            yAxisID: 'y1',
+        },
+        {
+            label: 'Temperature (°C)',
+            type: 'line',
+            data: filteredEnergyTempData.totalTemp,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: false,
+            yAxisID: 'y2'
+        }
+    ];
+
+    // Add goal line dataset if goal exists
+    if (goalkwh > 0) {
+        datasets.push({
+            label: 'Goal Line (kWh)',
+            type: 'line',
+            data: Array(12).fill(goalkwh), // All months will have the same value for the goal line
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 2,
+            fill: false,
+            yAxisID: 'y1',
+            pointRadius: 0,
+            lineTension: 0
+        });
+    }
+
     const energyTemperatureConfig = {
         type: 'bar',
         data: {
             labels: monthNames,
-            datasets: [
-                {
-                    label: 'Energy (kWh)',
-                    type: 'bar',
-                    data: energyData,
-                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    borderWidth: 1,
-                    yAxisID: 'y1'
-                },
-                {
-                    label: 'Temperature (°C)',
-                    type: 'line',
-                    data: temperatureData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: false,
-                    yAxisID: 'y2'
-                }
-            ]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -260,7 +721,7 @@ async function initEnergyTempChart() {
                     type: 'linear',
                     position: 'left',
                     beginAtZero: true,
-                    max: 2000,
+                    max: Math.max(2000, goalkwh * 1.2), // Adjust max to accommodate goal line
                     ticks: {
                         callback: function(value) {
                             return value + ' kWh';
@@ -278,6 +739,32 @@ async function initEnergyTempChart() {
                         }
                     }
                 }
+            },
+            onClick: (e) => {
+                const element = energyTemperatureChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                if (element.length) {
+                    const index = element[0].index;
+
+                    if (selectedIndex === index) {
+                        backgroundColor[index] = 'rgba(255, 159, 64, 0.5)';
+                        selectedIndex = null;
+                        selectedMonth = null;
+                    } else {
+                        backgroundColor.fill('rgba(255, 159, 64, 0.5)');
+                        backgroundColor[index] = 'rgba(255, 99, 132, 1)';
+                        selectedIndex = index;
+                        selectedMonth = index;
+                    }
+
+                    energyTemperatureChart.data.datasets[0].backgroundColor = backgroundColor;
+                    energyTemperatureChart.update();
+
+                    const event = new Event('change', {
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    monthPicker.dispatchEvent(event);
+                }
             }
         }
     };
@@ -294,147 +781,119 @@ async function initEnergyTempChart() {
 
 initEnergyTempChart();
 
-/*const energyTemperatureData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    datasets: [
-        {
-            label: 'Energy (kWh)',
-            type: 'bar',
-            data: [270, 180, 200, 100, 120, 50, 60, 130, 70, 50, 90, 190],
-            backgroundColor: 'rgba(255, 159, 64, 0.5)', // Light orange
-            borderColor: 'rgba(255, 159, 64, 1)',
-            borderWidth: 1,
-            yAxisID: 'y1'
-        },
-        {
-            label: 'Temperature (°C)',
-            type: 'line',
-            data: [-6, 0, 6, 12, 18, 24, 28, 30, 26, 20, 10, 2],
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Light green for the line
-            fill: false,
-            yAxisID: 'y2'
-        }
-    ]
-};
 
-const energyTemperatureConfig = {
-    type: 'bar',
-    data: energyTemperatureData,
-    options: {
-        responsive: true,
-        maintainAspectRatio: false, 
-        scales: {
-            y1: {
-                type: 'linear',
-                position: 'left',
-                beginAtZero: true,
-                max: 350, // Adjust based on the maximum energy value
-                ticks: {
-                    callback: function(value) {
-                        return value + ' kWh'; // Add unit to tick labels
-                    }
-                }
-            },
-            y2: {
-                type: 'linear',
-                position: 'right',
-                beginAtZero: true,
-                max: 35, // Adjust based on maximum temperature
-                ticks: {
-                    callback: function(value) {
-                        return value + '°C'; // Add unit to tick labels
-                    }
-                }
-            }
-        }
-    }
-};
-
-// Initialize the energy vs. temperature chart
-const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
-const energyTemperatureChart = new Chart(energyCtx, energyTemperatureConfig);
-*/
-
-// ==================== Pie Chart ====================
 let currentChart; // Global variable to hold the current chart instance
 let uniqueLocations = [];
+let uniqueCategories = []; // Store unique categories for button visibility
+let prepended = false;
+const colorMapping = {
+    "Lighting": "#3498db",
+    "Computers": "#5bc7a0",
+    "HVAC": "#9b59b6",
+    "Equipment": "#f1c40f",
+    "Refrigeration": "#ff7f50",
+    "Appliances": "#e74c3c",
+    "Food Waste Management": "#FFC0CB",
+    "Sound Equipment": "#c5c6c7"
+};
+
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
-    
+
     // TO POPULATE DROPDOWN-------------------------
-    
     fetchedData.forEach(data => {
         if (!uniqueLocations.includes(data.location)) {
             uniqueLocations.push(data.location);
         }
+        if (!uniqueCategories.includes(data.category)) {
+            uniqueCategories.push(data.category);
+        }
     });
-    
+
     // Adding "All Locations" to the dropdown
-    uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
+    if (!prepended) {
+        uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
+        prepended = true;
+    }
 
     const locationDropdown = document.getElementById('locationSelect');
+    const yearDropdown = document.getElementById('yearsFilter'); // Assuming you have a year filter
 
+    locationDropdown.innerHTML = '';
     uniqueLocations.forEach(location => {
         const option = document.createElement('option');
         option.value = location; // Set the value to the location
         option.textContent = location === "all_locations" ? "All Locations" : location; // Set display text
         locationDropdown.appendChild(option);
     });
-    // End populate dropdown--------------------
+
+    // Function to filter data by year
+    function filterDataByYear(fetchedData, selectedYear) {
+        return fetchedData.filter(item => new Date(item.timestamp).getFullYear() === selectedYear);
+    }
+
+    // Function to filter data by month
+    function filterDataByMonth(fetchedData, selectedYear, selectedMonth) {
+        return fetchedData.filter(item => {
+            const date = new Date(item.timestamp);
+            return date.getFullYear() === selectedYear && date.getMonth() === selectedMonth;
+        });
+    }
 
     // Function to filter data by location
     function filterDataByLocation(fetchedData, selectedLocation) {
-        let filteredData;
         if (selectedLocation === "all_locations") {
-            filteredData = fetchedData; // Use all data if "all_locations" is selected
-        } else {
-            filteredData = fetchedData.filter(item => item.location === selectedLocation);
+            return fetchedData;
         }
-
-        filteredData = filteredData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear);
-        return aggregateData(filteredData);
+        return fetchedData.filter(item => item.location === selectedLocation);
     }
 
     // Function to get previous year's data for comparison
-    function getPreviousYearData(fetchedData, selectedLocation) {
+    function getPreviousYearData(fetchedData, selectedLocation, year, month) {
         let previousYearData;
         if (selectedLocation === "all_locations") {
-            previousYearData = fetchedData.filter(item => new Date(item.timestamp).getFullYear() === placeholderYear - 1);
+            previousYearData = fetchedData.filter(item => new Date(item.timestamp).getFullYear() === year - 1);
         } else {
-            previousYearData = fetchedData.filter(item => item.location === selectedLocation && new Date(item.timestamp).getFullYear() === placeholderYear - 1);
+            previousYearData = fetchedData.filter(item => item.location === selectedLocation && new Date(item.timestamp).getFullYear() === year - 1);
         }
 
-        return aggregateData(previousYearData);
+        if (month !== null) {
+            previousYearData = previousYearData.filter(item => new Date(item.timestamp).getMonth() === month);
+        }
+
+        return previousYearData;
     }
 
     // Function to aggregate data for a specific year
     function aggregateData(filteredData) {
-        const Label = [];
-        const Percentage = [];
-
+        const aggregated = {};
+        
         filteredData.forEach(item => {
-            if (!Label.includes(item.category)) {
-                Label.push(item.category);
-                Percentage.push(item.percentage);
+            if (!aggregated[item.category]) {
+                aggregated[item.category] = item.percentage;
             }
         });
 
-        return { Label, Percentage };
+        return {
+            Label: Object.keys(aggregated),
+            Percentage: Object.values(aggregated)
+        };
     }
 
     // Function to initialize the pie chart
     function initializePieChart(currentData, previousData) {
-        // Destroy the current chart if it exists
         if (currentChart) {
             currentChart.destroy();
         }
+
+        // Map categories to fixed colors using colorMapping
+        const backgroundColors = currentData.Label.map(category => colorMapping[category] || '#c5c6c7');
 
         const chartDataPie = {
             labels: currentData.Label,
             datasets: [{
                 data: currentData.Percentage,
-                backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
+                backgroundColor: backgroundColors
             }]
         };
 
@@ -443,7 +902,7 @@ async function initPieChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: true,
+                    display: false,
                     position: 'right',
                     labels: {
                         boxWidth: 20,
@@ -455,26 +914,19 @@ async function initPieChart() {
                         label: function(tooltipItem) {
                             const currentValue = tooltipItem.raw;
                             const category = currentData.Label[tooltipItem.dataIndex];
-                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0; // Fallback to 0 if not found
-                            if (previousValue){
-                                const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1); // Calculate percentage change
+                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0;
+                            if (previousValue) {
+                                const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1);
                                 return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}% from last year)`;
                             }
-                            else {
-                                return `${category}: ${currentValue}% (last year's data unavailable)`;
-                            }
-                            
+                            return `${category}: ${currentValue}% (last year's data unavailable)`;
                         }
                     }
                 },
                 datalabels: {
                     color: 'white',
                     formatter: (value, ctx) => {
-                        let sum = 0;
-                        let dataArr = ctx.chart.data.datasets[0].data;
-                        dataArr.forEach(data => {
-                            sum += data;
-                        });
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                         let percentage = (value * 100 / sum).toFixed(1) + "%";
                         return percentage;
                     },
@@ -494,155 +946,141 @@ async function initPieChart() {
             options: pieChartOptions,
             plugins: [ChartDataLabels]
         });
+
+        // Update legend buttons to match chart colors
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach((button, index) => {
+            const category = button.getAttribute('data-segment');
+            const color = colorMapping[category] || '#c5c6c7';
+            button.style.backgroundColor = hexToRGBA(color, 0.65);
+            button.style.borderColor = color;
+            button.style.borderWidth = '3px';
+            button.style.borderStyle = 'solid';
+        });
+
+        showHideLegendButtons(currentData.Label);
     }
 
-    // Initialize the pie chart with data for "All Locations" by default
-    const allData = filterDataByLocation(fetchedData, "all_locations");
-    const previousYearData = getPreviousYearData(fetchedData, "all_locations");
-    initializePieChart(allData, previousYearData);
+    // Function to show/hide legend buttons
+    function showHideLegendButtons(currentLabels) {
+        if (!currentLabels) return; // Guard clause to prevent undefined errors
+        
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            button.style.display = currentLabels.includes(category) ? 'inline-block' : 'none';
+        });
+    }
 
-    // Event listener for location dropdown change
-    locationDropdown.addEventListener('change', function() {
-        const selectedLocation = this.value; // Get the selected location
-        const currentFilteredData = filterDataByLocation(fetchedData, selectedLocation);
-        const previousYearFilteredData = getPreviousYearData(fetchedData, selectedLocation);
-        initializePieChart(currentFilteredData, previousYearFilteredData); // Update the pie chart with filtered data
-    });
+    // Function to update the pie chart
+    function updatePieChart() {
+        const selectedLocation = locationDropdown.value;
+        const selectedYear = placeholderYear;
+        
+        let filteredData = filterDataByLocation(fetchedData, selectedLocation);
+        let previousYearData;
+
+        if (selectedMonth !== null) {
+            filteredData = filterDataByMonth(filteredData, selectedYear, selectedMonth);
+            previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, selectedMonth);
+        } else {
+            filteredData = filterDataByYear(filteredData, selectedYear);
+            previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, null);
+        }
+
+        const aggregatedCurrentData = aggregateData(filteredData);
+        const aggregatedPreviousData = aggregateData(previousYearData);
+        
+        initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
+    }
+
+    // Initialize with default data
+    let allData = filterDataByLocation(fetchedData, "all_locations");
+    allData = filterDataByYear(allData, placeholderYear);
+    const previousYearData = getPreviousYearData(fetchedData, "all_locations", placeholderYear, null);
+    
+    const aggregatedCurrentData = aggregateData(allData);
+    const aggregatedPreviousData = aggregateData(previousYearData);
+    
+    initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
+
+    // Event listeners
+    locationDropdown.addEventListener('change', updatePieChart);
+    yearDropdown.addEventListener('change', updatePieChart);
+    monthPicker.addEventListener('change', updatePieChart);
 }
+
+// Convert hex color to RGBA format
+function hexToRGBA(hex, opacity) {
+    const num = parseInt(hex.slice(1), 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+// Popup functions
+function highlightSegment(segment) {
+    const popupTitle = document.getElementById("popupTitle");
+    const popupMessage = document.getElementById("popupMessage");
+
+    popupTitle.textContent = popupMessages[segment].title;
+    popupMessage.innerHTML = popupMessages[segment].message;
+
+    document.getElementById("popupModal").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("popupModal").style.display = "none";
+}
+
+document.getElementById("popupModal").addEventListener("click", function(event) {
+    const popupContent = document.querySelector(".popup-content");
+    if (!popupContent.contains(event.target)) {
+        closePopup();
+    }
+});
 
 initPieChart();
-
-
-
-/*
-const chartDataPie = {
-    labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners '],
-    datasets: [{
-        data: [40, 15, 25, 10, 10], // Sample data
-        backgroundColor: ['#5bc7a0', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'] // Colors for each segment
-    }]
-};
-
-const pieChartOptions = {
-    responsive: false,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            display: true,
-            position: 'right', // Position the legend to the right
-            labels: {
-                boxWidth: 20, // Size of the color box in the legend
-                padding: 15 // Space between legend items
-                
-            }
-        },
-        datalabels: {
-            color: 'white',
-            formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.forEach(data => {
-                    sum += data;
-                });
-                let percentage = (value * 100 / sum).toFixed(1) + "%";
-                return percentage;
-            },
-            font: {
-                weight: 'bold',
-                size: 12
-            }
-        }
-    }
-};
-
-const energyData = {
-    'classroom': {
-        labels: ['Lights', 'Fans', 'Computers', 'Projectors', 'Air Conditioners'],
-        data: [40, 15, 25, 10, 10]
-    },
-    'library': {
-        labels: ['Lights', 'Computers', 'Air Conditioners'],
-        data: [50, 30, 20]
-    },
-    'lab': {
-        labels: ['Lights', 'Microscopes', 'Lab Freezers', 'Fans'],
-        data: [30, 35, 50, 15]
-    },
-    'staffroom': {
-        labels: ['Lights', 'Printers', 'Air Conditioners'],
-        data: [60, 20, 20]
-    },
-    'canteen': {
-        labels: ['Lights', 'Fans', 'Refrigerators', 'Stove'],
-        data: [20, 15, 35, 25,]
-    }
-};
-
-//Piechart filter
-// Function to apply default filter on page load
-window.onload = function() {
-    filterPieData(); // Calls the filter function with the default "Locations" option
-};
-
-
-// Update the filterData function
-function filterPieData() {
-    const locationSelect = document.getElementById('locationSelect');
-    const selectedValue = locationSelect.value;
-
-    let filteredLabels = [];
-    let filteredData = [];
-
-    if (selectedValue === 'all_locations') {
-        // Combine total energy consumption per location
-        filteredLabels = Object.keys(energyData); // Labels will be the location names
-        filteredData = Object.values(energyData).map(location => {
-            return location.data.reduce((acc, val) => acc + val, 0); // Sum of all appliances in the location
-        });
-
-    } else if (selectedValue === 'all_appliances') {
-        // Group data by appliance type across all locations
-        const applianceTotals = {};
-
-        Object.values(energyData).forEach(location => {
-            location.labels.forEach((label, index) => {
-                applianceTotals[label] = (applianceTotals[label] || 0) + location.data[index];
-            });
-        });
-
-        filteredLabels = Object.keys(applianceTotals);
-        filteredData = Object.values(applianceTotals);
-
-    } else {
-        // Filter for a specific location
-        filteredLabels = energyData[selectedValue].labels;
-        filteredData = energyData[selectedValue].data;
-    }
-
-    // Update chart with filtered data
-    pieChart.data.labels = filteredLabels;
-    pieChart.data.datasets[0].data = filteredData;
-    pieChart.update();
-}
-
-
-// Add event listener to filter dropdown
-document.getElementById('locationSelect').addEventListener('change', filterPieData);
-
-
-// Initialize the pie chart with the right-positioned legend
-const pieCtx = document.getElementById('pieChart').getContext('2d');
-const pieChart = new Chart(pieCtx, {
-    type: 'pie',
-    data: chartDataPie,
-    options: pieChartOptions,
-    plugins: [ChartDataLabels] // Register the data labels plugin if used
-});
-*/
 // ==================== Line Graph ====================
 let carbonFootprintChart;
 async function initCarbonFootprintChart() {
     const fetchedData = await fetchCarbonFootprintData();
+
+    let goalton = 0;
+    
+    // Check for goal data
+    const goalData = await fetchGoals();
+    if (goalData && goalData.length > 0) {
+        for (const goal of goalData) {
+            if (goal.metric === 'carbon') {
+                if (goal.goal === 'tgtvalue') {
+                    goalton = goal.metric_value / 12 ;
+                    console.log("target goalton: ", goalton)
+                } else {
+                    try {
+                        const currenttonresponse = await fetch(`/carbon-footprints/school/${placeholderID}`);
+                        if (!currenttonresponse.ok) {
+                            throw new Error("Network response to get carbon footprint was not OK");
+                        }
+                        let currenttondata = await currenttonresponse.json();
+                        let currenttontotal = 0;
+                        currenttondata = currenttondata.filter(item => 
+                            new Date(item.timestamp).getFullYear() === new Date().getFullYear()
+                        );
+                        currenttondata.forEach(item => {
+                            currenttontotal += item.total_carbon_tons;
+                        });
+                        currenttontotal = (1 - (goal.metric_value / 100)) * currenttontotal;
+                        goalton = currenttontotal / 12;
+                    } catch (error) {
+                        console.error('Error fetching current carbon footprint:', error);
+                    }
+                }
+                break; // Exit loop after finding carbon goal
+            }
+        }
+    }
 
     function filterDataByIdandMonth(fetchedData, selectedId) {
         const monthlyData = {};
@@ -736,21 +1174,43 @@ async function initCarbonFootprintChart() {
         const maxDataValue = Math.max(...data);
         const dynamicMax = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
 
+        const datasets = [
+            {
+                label: 'Carbon Footprint (tonnes)',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: true,
+                borderWidth: 2,
+                yAxisID: 'y1'
+            }
+        ];
+
+        // If goalton exists, add goal line to datasets
+        if (goalton > 0) {
+            const goalLineData = (document.getElementById('yearMonthSelect').value === 'years') 
+                ? Array(labels.length).fill(goalton * 12) // For year, multiply by 12
+                : Array(labels.length).fill(goalton); // For months, use goalton directly
+
+            datasets.push({
+                label: 'Goal Line (tonnes)',
+                type: 'line',
+                data: goalLineData,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderWidth: 2,
+                fill: false,
+                yAxisID: 'y1',
+                pointRadius: 0,
+                lineTension: 0
+            });
+        }
+
         const carbonFootprintConfig = {
             type: 'line',
             data: {
                 labels: labels,
-                datasets: [
-                    {
-                        label: 'Carbon Footprint (tonnes)',
-                        data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        fill: true,
-                        borderWidth: 2,
-                        yAxisID: 'y1'
-                    },
-                ]
+                datasets: datasets
             },
             options: {
                 responsive: true,
@@ -781,88 +1241,6 @@ async function initCarbonFootprintChart() {
 initCarbonFootprintChart();
 
 
-
-
-//test
-/*
-const carbonFootprintData = {
-    months: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        data: [2.7, 1.8, 2.0, 1.0, 1.2, 0.5, 0.6, 1.3, 0.7, 0.5, 0.9, 1.9], // Monthly data in tonnes
-    },
-    years: {
-        labels: ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
-        data: [19.8 ,22.4, 27.6, 25.8, 27.9, 30.8, 18.9, 27.4, 29.8, 30.0], // Yearly data in tonnes
-    }
-};
-
-function filterData() {
-    const selection = document.getElementById('yearMonthSelect').value;
-    let filteredLabels;
-    let filteredData;
-    
-
-    if (selection === 'years') {
-        filteredLabels = carbonFootprintData.years.labels;
-        filteredData = carbonFootprintData.years.data;
-    } else if (selection === 'months') {
-        filteredLabels = carbonFootprintData.months.labels;
-        filteredData = carbonFootprintData.months.data;
-    }
-
-    // Update the chart with the selected data
-    carbonFootprintGraph.data.labels = filteredLabels;
-    carbonFootprintGraph.data.datasets[0].data = filteredData;
-    
-    // Calculate the maximum value for the y-axis
-    const maxDataValue = Math.max(...filteredData); // Get the maximum data value
-    carbonFootprintGraph.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
-
-    carbonFootprintGraph.update();
-}
-
-
-const carbonFootprintConfig = {
-    type: 'line',
-    data: {
-        labels: carbonFootprintData.months.labels,
-        datasets: [
-            {
-                label: 'Carbon Footprint (tonnes)',
-                type: 'line',
-                data: carbonFootprintData.months.data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: true,
-                borderWidth: 2,
-                yAxisID: 'y1'
-            },
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y1: {
-                type: 'linear',
-                position: 'left',
-                beginAtZero: true,
-                max: 20, // Adjust based on expected maximum carbon footprint
-                ticks: {
-                    callback: function(value) {
-                        return value + ' tonnes'; // Add unit to tick labels
-                    }
-                }
-            }
-        }
-    }
-};
-
-// Initialize the chart
-const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
-const carbonFootprintGraph = new Chart(carbonCtx, carbonFootprintConfig);
-*/
-
 // Function to toggle dropdown visibility
 function toggleDropdown() {
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -872,8 +1250,9 @@ function toggleDropdown() {
 yearSelect.addEventListener('change', function() {
     placeholderYear = parseInt(this.value);
     initEnergyTempChart();
-    initPieChart();
     initCarbonFootprintChart(); 
+
+    initImpactCard(placeholderYear);
 
     // Reset the location filter to its default value
     const locationDropdown = document.getElementById('locationSelect');

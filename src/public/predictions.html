@@ -33,58 +33,70 @@
               </li>
         </ul>
     </nav>
- <!-- Main Content -->
- <div class="dashboard-content">
-    <div class="carpet-container">
-      <div class="allContent-container">
-        
-        <!-- Header Section -->
-        <div class="header-section">
-          <h1>Energy and Carbon Footprint Predictions</h1>
-          <div class="filter-section">
-            <!-- Optionally, add a multi-year selector or controls here -->
+    
+    <div class="dashboard-content">
+        <div class="carpet-container">
+          <div class="allContent-container">
+            
+            <!-- Header Section -->
+            <div class="header-section">
+              <h1>Energy and Carbon Footprint Predictions</h1>
+              <div class="filter-section">
+                <!-- Optionally, add a multi-year selector or controls here -->
+              </div>
+            </div>
+            
+            <!-- Prediction Cards -->
+            <div class="prediction-cards-container">
+              <div class="card">
+                <div class="title">Predicted Energy Usage</div>
+                <canvas id="predictedEnergyChart"></canvas>
+              </div>
+    
+              <div class="card">
+                <div class="title">Predicted Carbon Emissions</div>
+                <canvas id="predictedCarbonChart"></canvas>
+              </div>
+            </div>
+    
+            <!-- Net Zero Estimation -->
+            <div class="net-zero-container">
+                <h3>Net Zero Estimation</h3>
+                <p id="netZeroEstimation">Loading...</p>
+            </div>
+    
+            <!-- Additional Prediction Charts -->
+            <div class="additional-charts-container">
+              <div class="chart-card">
+                <div class="title">Energy Usage vs. Carbon Emissions</div>
+                <canvas id="energyCarbonComparisonChart"></canvas>
+              </div>
+    
+              <!-- New Trend Analysis Chart -->
+              <div class="chart-card">
+                <div class="title">Trend Analysis</div>
+                <canvas id="trendAnalysisChart"></canvas>
+              </div>
+    
+              <!-- New Energy Breakdown Forecast Pie Chart -->
+              <div class="chart-card">
+                <div class="title">Energy Breakdown Forecast</div>
+                <canvas id="energyBreakdownPieChart"></canvas>
+              </div>
+            </div>
+    
+            <!-- Loading and Error Indicators -->
+            <div id="loadingIndicator" style="display: none; text-align: center;">
+                <p>Loading predictions...</p>
+            </div>
+            
+            <div id="errorMessage" style="display: none; color: red; text-align: center;">
+                <p>Error fetching predictions.</p>
+            </div>
+    
           </div>
-        </div>
-        
-        <!-- Prediction Cards -->
-        <div class="prediction-cards-container">
-          <div class="card">
-            <div class="title">Predicted Energy Usage</div>
-            <canvas id="predictedEnergyChart" width="400" height="200"></canvas>
-          </div>
-
-          <div class="card">
-            <div class="title">Predicted Carbon Emissions</div>
-            <canvas id="predictedCarbonChart" width="400" height="200"></canvas>
-          </div>
-        </div>
-
-        <!-- Net Zero Estimation -->
-        <div class="net-zero-container">
-            <h3>Net Zero Estimation</h3>
-            <p id="netZeroEstimation">Loading...</p>
-        </div>
-
-        <!-- Additional Prediction Charts -->
-        <div class="additional-charts-container">
-          <div class="chart-card">
-            <div class="title">Energy Usage vs. Carbon Emissions</div>
-            <canvas id="energyCarbonComparisonChart" width="400" height="200"></canvas>
-          </div>
-        </div>
-
-        <!-- Loading and Error Indicators -->
-        <div id="loadingIndicator" style="display: none; text-align: center;">
-            <p>Loading predictions...</p>
-        </div>
-        
-        <div id="errorMessage" style="display: none; color: red; text-align: center;">
-            <p>Error fetching predictions.</p>
-        </div>
-
+        </div> 
       </div>
-    </div> 
-  </div>
 
     <!-- Footer -->
     <div class="footer-placeholder"></div>
