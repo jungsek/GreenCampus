@@ -45,7 +45,7 @@
 /* ================== Prediction Cards ================== */
 .prediction-cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr; /* Changed to single column */
     gap: 20px;
     width: 100%;
 }
@@ -56,6 +56,7 @@
     box-shadow: 0 4px 5px rgba(122, 120, 120, 0.2);
     background-color: #f9f9f9;
     transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Added spacing between cards */
 }
 
 .prediction-cards-container .card:hover {
@@ -100,6 +101,9 @@
 .additional-charts-container {
     margin-top: 30px;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr; /* Changed to single column */
+    gap: 20px;
 }
 
 .additional-charts-container .chart-card {
@@ -108,6 +112,7 @@
     box-shadow: 0 4px 5px rgba(122, 120, 120, 0.2);
     background-color: #f9f9f9;
     transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Added spacing between charts */
 }
 
 .additional-charts-container .chart-card:hover {
@@ -148,7 +153,7 @@
     }
 
     .prediction-cards-container, .additional-charts-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Ensure single column on smaller screens */
     }
 
     .net-zero-container {
@@ -158,4 +163,21 @@
     .prediction-cards-container .card, .additional-charts-container .chart-card {
         padding: 15px;
     }
+}
+
+/* Optional: Center the canvas elements */
+canvas {
+    display: block;
+    margin: 0 auto;
+}
+/* Make chart containers full width */
+.prediction-cards-container .card,
+.additional-charts-container .chart-card {
+    width: 100%;
+}
+
+/* Adjust canvas to fill the container */
+canvas {
+    width: 100% !important;
+    height: 400px !important; /* Adjust height as needed */
 }

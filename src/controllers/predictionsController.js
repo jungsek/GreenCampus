@@ -109,67 +109,59 @@ Energy Breakdown:
 
     // Now, prepare the enhanced prompt with detailed instructions
     return `
-Using the data summary below, analyze the trends and make comprehensive predictions for the next 5 years of energy usage and carbon footprint for ${schoolName}.
+Based on the historical energy usage and carbon emissions data provided for ${schoolName}, analyze the trends and make comprehensive predictions for each year until 2050.
+
+**Specific Instructions:**
+
+1. **Actual Predictions:**
+   - Analyze historical trends to forecast future energy usage and carbon emissions.
+   - Some years may be higher, and some years may be lower. Some years may go against the steady decline and shoot up, but afterwards return back on track.
+   - Incorporate any seasonal variations, growth rates, or patterns observed in the historical data.
+   - Include potential fluctuations like sudden increase spikes or drops due to specific events or interventions, to reflect natural inconsistencies.
+   - Ensure the actual predictions are lower than the starting value.
+   - The predictions should not follow a straight-line projection but reflect realistic trends with fluctuations.
+   - **Ensure that the actual predictions end at 500 kWh for energy usage and 0.4 tons for carbon emissions in the year 2050.**
+
+2. **Ideal Predictions:**
+   - Start from the current actual values.
+   - Decrease energy usage and carbon emissions steadily and more aggressively each year compared to the actual predictions.
+   - **Ensure that the ideal energy usage reaches 200 kWh and ideal carbon emissions reach 0.2 tons only in the year 2050, and not before.**
+   - The decline should be consistent and should not reach below 200 kWh for energy usage and 0.2 tons for carbon emissions.
+   - The decline should be smooth and steady, without any sudden drops or spikes.
+
+3. **Net Zero Estimation:**
+   - Calculate how far the school is from achieving net-zero emissions based on historical data.
+   - Provide:
+     - "current_status": A string indicating the percentage progress towards net zero (e.g., "60% towards net zero").
+     - "estimated_year_to_net_zero": An integer year when the school is expected to achieve net-zero emissions under current trends (without additional interventions). This cannot be higher than 2050.
+
+4. **Data Format:**
+   - Provide the predictions in JSON format as an object containing:
+     - "predictions": [Array of prediction objects],
+     - "net_zero_estimation": {
+         "current_status": string,
+         "estimated_year_to_net_zero": integer
+       }
+   - Each prediction object in the "predictions" array should contain:
+     - "year": integer,
+     - "predicted_energy_kwh": number (Actual Emissions Forecast),
+     - "ideal_energy_kwh": number (Ideal Emissions Forecast),
+     - "predicted_carbon_tons": number (Actual Emissions Forecast),
+     - "ideal_carbon_tons": number (Ideal Emissions Forecast)
+
+5. **Requirements:**
+   - **Ensure the ideal predictions show a consistent, steep declining trend, reaching 200 kWh for energy usage and 0.2 tons for carbon emissions only in the year 2050, and not before.**
+   - **Ensure the ideal predictions do not go below 200 kWh for energy usage and 0.2 tons for carbon emissions at any point.**
+   - **Ensure the actual predictions end at 500 kWh for energy usage and 0.4 tons for carbon emissions in 2050.**
+   - **Ensure the actual predictions include natural inconsistencies, with fluctuations, irregularities, spikes, or drops, reflecting realistic trends.**
+   - The ideal values must be lower than the actual predicted values for each corresponding year.
+   - Do not include any explanations or text outside of the JSON structure.
+   - The data should be suitable for plotting graphs and charts as described.
 
 **Data Summary:**
 
 ${summary}
 
-**Instructions:**
-
-1. **Net Zero Emissions Proximity:**
-   - Determine how far away the school is from achieving net zero emissions based on historical data.
-
-2. **Impact of Recommendations:**
-   - Assuming the school implements recommended measures to reduce emissions, estimate how long it will take to reach net zero.
-
-3. **Additional Criteria:**
-   - Consider factors such as:
-     - Annual growth or reduction rates in energy consumption and carbon emissions.
-     - Seasonal variations and their impact on energy usage.
-     - Efficiency improvements from new technologies.
-     - Potential external factors influencing energy consumption (e.g., policy changes, climate variations).
-
-4. **Predictions Structure:**
-   - Present your predictions in the following JSON format:
-
-    {
-        "predictions": [
-            {
-                "year": 2025,
-                "month": "January",
-                "predicted_energy_kwh": 1234.56,
-                "predicted_carbon_tons": 7.89
-            },
-            ...
-        ],
-        "net_zero_estimation": {
-            "current_status": "X% towards net zero",
-            "estimated_year_to_net_zero": 20
-        }
-    }
-
-5. **Requirements:**
-   - Ensure that the predictions are realistic and based on the provided data.
-   - Avoid including any explanations or text outside of the JSON structure.
-
-**Example Output:**
-
-{
-    "predictions": [
-        {
-            "year": 2025,
-            "month": "January",
-            "predicted_energy_kwh": 1200.00,
-            "predicted_carbon_tons": 7.50
-        },
-        ...
-    ],
-    "net_zero_estimation": {
-        "current_status": "60% towards net zero",
-        "estimated_year_to_net_zero": 2045
-    }
-}
 `;
 }
 function parsePredictionResponse(aiResponse) {
