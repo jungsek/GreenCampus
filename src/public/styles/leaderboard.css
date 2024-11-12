@@ -9,6 +9,7 @@
     background: #89cdb4;  
     padding: 24px;
     width: 100%;
+    height: 100vh;
 }
 
 .header {
@@ -24,6 +25,7 @@
     font-size: 24px;
     font-weight: 600;
     text-align: center;
+    margin-bottom: 100px;
 }
 
 .toggle-buttons {
@@ -48,7 +50,8 @@
 }
 
 .performance-card {
-    background: #4b527c;
+    /* background: #4b527c; */
+    background: #89cdb4;  
     padding: 16px;
     border-radius: 12px;
     margin-bottom: 40px;
@@ -106,7 +109,8 @@
 }
 
 .winnerMetricsCF,
-.winnerMetricsEU {
+.winnerMetricsEU,
+.sustainability-points {
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
 }
@@ -202,7 +206,7 @@
 }
 
 .list-points {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.633);
     font-size: 12px;
 }
 
@@ -211,14 +215,14 @@
     justify-content: space-evenly; 
     align-items: center;
     flex-grow: 0.5;
-    margin-right: 560px;
+    margin-right: 400px;
 }
 
 .CFmetrics,
 .EUmetrics {
     font-weight: bold;
     font-size: 14px;
-    text-align: center; /* Centers text inside each metric item */
+    text-align: center; 
 }
 
 
@@ -235,30 +239,30 @@
     align-items: center;
     gap: 8px;
     margin-left: auto; /* Added */
-  }
+}
   
-  .score-item {
+.score-item {
     padding: 8px 12px;
     border-radius: 4px;
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-  
-  .score-value {
+}
+
+.score-value {
     font-size: 14px;
     font-weight: bold;
-  }
-  
-  .score-icon {
+}
+
+.score-icon {
     font-size: 12px;
     color: #444;
-  }
-  
-  .score-icon.fa-arrow-up {
+}
+
+.score-icon.fa-arrow-up {
     color: green;
-  }
-  
-  .score-icon.fa-arrow-down {
+}
+
+.score-icon.fa-arrow-down {
     color: #F44336;
-  }
+}
