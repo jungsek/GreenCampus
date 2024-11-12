@@ -22,5 +22,10 @@ function closeModifyPopup() {
 
 // Delete Campaign (Placeholder for future functionality)
 function deleteCampaign() {
+    const deleteBtn = document.querySelector('.btn-set-goal');
+    deleteBtn.addEventListener('click', async () => {
+        popupText.textContent = 'Are you sure you want to delete this campaign?'
+        popup.style.display = 'flex'; // Show the popup
+    });
     alert("Campaign deleted!");
 }
