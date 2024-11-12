@@ -230,6 +230,9 @@ function displayLeaderboard(data) {
                 <div class="list-name">${school.school_name}</div>
                 <div class="list-points">
                     Points: ${school.sustainability_points}
+                    <span class="rank-change ${rankChange > 0 ? 'positive' : rankChange < 0 ? 'negative' : 'neutral'}">
+                        (${rankChange > 0 ? '+' : ''}${rankChange || '0'})
+                    </span>
                 </div>
             </div>
             
