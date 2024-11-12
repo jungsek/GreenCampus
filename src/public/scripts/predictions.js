@@ -3,11 +3,45 @@
 // Placeholder variable until school ID can be dynamically set
 const placeholderID = 1; // Example school ID
 
+// Chart Instances
+let predictedEnergyChart;
+let predictedCarbonChart;
+let energyCarbonComparisonChart;
+let trendAnalysisChart;
+
+// Get references to buttons
+const generatePredictionsBtn = document.getElementById('generatePredictionsBtn');
+const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+// Add Event Listener to the "Generate Predictions" Button
+generatePredictionsBtn.addEventListener('click', () => {
+  generatePredictions();
+});
+
+// Add Event Listener to the "Download Predictions as PDF" Button
+downloadPdfBtn.addEventListener('click', () => {
+  downloadPredictionsAsPDF();
+});
+
+function showLoadingScreen() {
+  document.getElementById('loading-screen').style.display = 'block';
+  document.getElementById('prediction').style.display = 'none';
+}
+
+function hideLoadingScreen() {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('prediction').style.display = 'block';
+}
+
 // Function to Generate Predictions for All Future Years
 async function generatePredictions() {
   try {
-    document.getElementById('loadingIndicator').style.display = 'block';
-    document.getElementById('errorMessage').style.display = 'none';
+    showLoadingScreen(); // Show loading screen
+
+    // Clear existing charts and data
+    clearCharts();
+    clearNetZeroEstimation();
+    hidePredictionComponents(); // Hide components before generating predictions
 
     const response = await fetch('/api/predictions/generate', {
       method: 'POST',
@@ -35,26 +69,83 @@ async function generatePredictions() {
     renderPredictedCarbonChart(predictionsData);
     renderEnergyCarbonComparisonChart(predictionsData);
     renderTrendAnalysisChart(predictionsData);
-    renderEnergyBreakdownPieChart(predictionsData);
 
     // Display Net Zero Estimation
     displayNetZeroEstimation(netZeroData);
+
+    // Show prediction components after successful generation
+    showPredictionComponents();
+
+    // Show the download button
+    downloadPdfBtn.classList.remove('hidden');
 
   } catch (error) {
     console.error('Error generating predictions:', error);
     document.getElementById('errorMessage').textContent = `Error: ${error.message}`;
     document.getElementById('errorMessage').style.display = 'block';
+
+    // Hide the download button if there's an error
+    downloadPdfBtn.classList.add('hidden');
+
   } finally {
-    document.getElementById('loadingIndicator').style.display = 'none';
+    hideLoadingScreen(); // Hide loading screen
   }
 }
 
-// Chart Instances
-let predictedEnergyChart;
-let predictedCarbonChart;
-let energyCarbonComparisonChart;
-let trendAnalysisChart;
-let energyBreakdownPieChart;
+// Function to Download Predictions as a PDF
+function downloadPredictionsAsPDF() {
+  const predictionsContent = document.getElementById('predictionComponents');
+
+  // Define PDF options
+  const opt = {
+    margin:       0,
+    filename:     'Predictions.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  // Generate and save the PDF
+  html2pdf().set(opt).from(predictionsContent).save();
+}
+
+// Function to Show Prediction Components
+function showPredictionComponents() {
+  const predictionComponents = document.getElementById('predictionComponents');
+  predictionComponents.classList.remove('hidden');
+}
+
+// Function to Hide Prediction Components
+function hidePredictionComponents() {
+  const predictionComponents = document.getElementById('predictionComponents');
+  predictionComponents.classList.add('hidden');
+}
+
+// Function to Clear Existing Charts
+function clearCharts() {
+  if (predictedEnergyChart) {
+    predictedEnergyChart.destroy();
+    predictedEnergyChart = null;
+  }
+  if (predictedCarbonChart) {
+    predictedCarbonChart.destroy();
+    predictedCarbonChart = null;
+  }
+  if (energyCarbonComparisonChart) {
+    energyCarbonComparisonChart.destroy();
+    energyCarbonComparisonChart = null;
+  }
+  if (trendAnalysisChart) {
+    trendAnalysisChart.destroy();
+    trendAnalysisChart = null;
+  }
+}
+
+// Function to Clear Net Zero Estimation
+function clearNetZeroEstimation() {
+  const container = document.getElementById('netZeroEstimation');
+  container.textContent = '';
+}
 
 // Function to Render Predicted Energy Usage Chart
 function renderPredictedEnergyChart(predictionsData) {
@@ -63,11 +154,6 @@ function renderPredictedEnergyChart(predictionsData) {
   const labels = predictionsData.map(p => `${p.year}`);
   const actualEnergyData = predictionsData.map(p => p.predicted_energy_kwh);
   const idealEnergyData = predictionsData.map(p => p.ideal_energy_kwh);
-
-  // Destroy existing chart if it exists
-  if (predictedEnergyChart) {
-    predictedEnergyChart.destroy();
-  }
 
   predictedEnergyChart = new Chart(ctx, {
     type: 'line',
@@ -95,7 +181,7 @@ function renderPredictedEnergyChart(predictionsData) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Allow chart to fill container
+      maintainAspectRatio: false,
       plugins: {
         title: {
           display: true,
@@ -103,22 +189,14 @@ function renderPredictedEnergyChart(predictionsData) {
         },
       },
       scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Energy Usage (kWh)',
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Year',
-          },
-          ticks: {
-            autoSkip: false, // Show every year
-          },
-        },
+        yAxes: [{
+          ticks: { beginAtZero: true },
+          scaleLabel: { display: true, labelString: 'Energy Usage (kWh)' },
+        }],
+        xAxes: [{
+          scaleLabel: { display: true, labelString: 'Year' },
+          ticks: { autoSkip: false },
+        }],
       },
     },
   });
@@ -131,11 +209,6 @@ function renderPredictedCarbonChart(predictionsData) {
   const labels = predictionsData.map(p => `${p.year}`);
   const actualCarbonData = predictionsData.map(p => p.predicted_carbon_tons);
   const idealCarbonData = predictionsData.map(p => p.ideal_carbon_tons);
-
-  // Destroy existing chart if it exists
-  if (predictedCarbonChart) {
-    predictedCarbonChart.destroy();
-  }
 
   predictedCarbonChart = new Chart(ctx, {
     type: 'line',
@@ -163,7 +236,7 @@ function renderPredictedCarbonChart(predictionsData) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Allow chart to fill container
+      maintainAspectRatio: false,
       plugins: {
         title: {
           display: true,
@@ -171,22 +244,14 @@ function renderPredictedCarbonChart(predictionsData) {
         },
       },
       scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Carbon Emissions (tons)',
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Year',
-          },
-          ticks: {
-            autoSkip: false, // Show every year
-          },
-        },
+        yAxes: [{
+          ticks: { beginAtZero: true },
+          scaleLabel: { display: true, labelString: 'Carbon Emissions (tons)' },
+        }],
+        xAxes: [{
+          scaleLabel: { display: true, labelString: 'Year' },
+          ticks: { autoSkip: false },
+        }],
       },
     },
   });
@@ -200,11 +265,6 @@ function renderEnergyCarbonComparisonChart(predictionsData) {
   const energyData = predictionsData.map(p => p.predicted_energy_kwh);
   const carbonData = predictionsData.map(p => p.predicted_carbon_tons);
 
-  // Destroy existing chart if it exists
-  if (energyCarbonComparisonChart) {
-    energyCarbonComparisonChart.destroy();
-  }
-
   energyCarbonComparisonChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -216,7 +276,7 @@ function renderEnergyCarbonComparisonChart(predictionsData) {
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1,
-          yAxisID: 'y',
+          yAxisID: 'y-axis-energy',
         },
         {
           label: 'Predicted Carbon Emissions (tons)',
@@ -224,55 +284,37 @@ function renderEnergyCarbonComparisonChart(predictionsData) {
           backgroundColor: 'rgba(255, 159, 64, 0.6)',
           borderColor: 'rgba(255, 159, 64, 1)',
           borderWidth: 1,
-          yAxisID: 'y1',
+          yAxisID: 'y-axis-carbon',
         },
       ],
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Allow chart to fill container
+      maintainAspectRatio: false,
       interaction: {
         mode: 'index',
         intersect: false,
       },
-      stacked: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Energy Usage vs. Carbon Emissions',
-        },
-      },
       scales: {
-        y: {
-          type: 'linear',
-          position: 'left',
-          title: {
-            display: true,
-            text: 'Energy Usage (kWh)',
+        yAxes: [
+          {
+            id: 'y-axis-energy',
+            position: 'left',
+            ticks: { beginAtZero: true },
+            scaleLabel: { display: true, labelString: 'Energy Usage (kWh)' },
           },
-          beginAtZero: true,
-        },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          title: {
-            display: true,
-            text: 'Carbon Emissions (tons)',
+          {
+            id: 'y-axis-carbon',
+            position: 'right',
+            ticks: { beginAtZero: true },
+            scaleLabel: { display: true, labelString: 'Carbon Emissions (tons)' },
+            gridLines: { drawOnChartArea: false },
           },
-          beginAtZero: true,
-          grid: {
-            drawOnChartArea: false,
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Year',
-          },
-          ticks: {
-            autoSkip: false, // Show every year
-          },
-        },
+        ],
+        xAxes: [{
+          scaleLabel: { display: true, labelString: 'Year' },
+          ticks: { autoSkip: false },
+        }],
       },
     },
   });
@@ -286,11 +328,6 @@ function renderTrendAnalysisChart(predictionsData) {
   const energyData = predictionsData.map(p => p.predicted_energy_kwh);
   const carbonData = predictionsData.map(p => p.predicted_carbon_tons);
 
-  // Destroy existing chart if it exists
-  if (trendAnalysisChart) {
-    trendAnalysisChart.destroy();
-  }
-
   trendAnalysisChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -301,111 +338,49 @@ function renderTrendAnalysisChart(predictionsData) {
           data: energyData,
           borderColor: 'rgba(54, 162, 235, 1)',
           fill: false,
-          yAxisID: 'y',
+          yAxisID: 'y-axis-energy',
         },
         {
           label: 'Carbon Emissions Trend',
           data: carbonData,
           borderColor: 'rgba(255, 99, 132, 1)',
           fill: false,
-          yAxisID: 'y1',
+          yAxisID: 'y-axis-carbon',
         },
       ],
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Allow chart to fill container
+      maintainAspectRatio: false,
       interaction: {
         mode: 'index',
         intersect: false,
       },
-      stacked: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Trend Analysis',
-        },
-      },
       scales: {
-        y: {
-          type: 'linear',
-          position: 'left',
-          title: {
-            display: true,
-            text: 'Energy Usage (kWh)',
+        yAxes: [
+          {
+            id: 'y-axis-energy',
+            position: 'left',
+            ticks: { beginAtZero: true },
+            scaleLabel: { display: true, labelString: 'Energy Usage (kWh)' },
           },
-          beginAtZero: true,
-        },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          title: {
-            display: true,
-            text: 'Carbon Emissions (tons)',
+          {
+            id: 'y-axis-carbon',
+            position: 'right',
+            ticks: { beginAtZero: true },
+            scaleLabel: { display: true, labelString: 'Carbon Emissions (tons)' },
+            gridLines: { drawOnChartArea: false },
           },
-          beginAtZero: true,
-          grid: {
-            drawOnChartArea: false,
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Year',
-          },
-          ticks: {
-            autoSkip: false, // Show every year
-          },
-        },
-      },
-    },
-  });
-}
-
-// Function to Render Energy Breakdown Forecast Pie Chart
-function renderEnergyBreakdownPieChart(predictionsData) {
-  const ctx = document.getElementById('energyBreakdownPieChart').getContext('2d');
-
-  // Assuming you have breakdown data in predictionsData
-  // For example, predictionsData[0].energy_breakdown = [{ category: 'Heating', percentage: 30 }, ...]
-  const latestBreakdown = predictionsData[predictionsData.length - 1].energy_breakdown || [];
-
-  const categories = latestBreakdown.map(b => b.category);
-  const percentages = latestBreakdown.map(b => b.percentage);
-
-  // Destroy existing chart if it exists
-  if (energyBreakdownPieChart) {
-    energyBreakdownPieChart.destroy();
-  }
-
-  energyBreakdownPieChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: categories,
-      datasets: [{
-        data: percentages,
-        backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#4BC0C0',
-          '#9966FF',
-          '#FF9F40',
         ],
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false, // Allow chart to fill container
-      plugins: {
-        title: {
-          display: true,
-          text: 'Energy Breakdown Forecast',
-        },
+        xAxes: [{
+          scaleLabel: { display: true, labelString: 'Year' },
+          ticks: { autoSkip: false },
+        }],
       },
     },
   });
 }
+
 
 // Function to Display Net Zero Estimation
 function displayNetZeroEstimation(netZeroData) {
@@ -421,8 +396,3 @@ function displayNetZeroEstimation(netZeroData) {
     <p>Estimated Year to Net Zero: ${netZeroData.estimated_year_to_net_zero}</p>
   `;
 }
-
-// Initialize Predictions on Page Load
-window.addEventListener('DOMContentLoaded', (event) => {
-  generatePredictions();
-});

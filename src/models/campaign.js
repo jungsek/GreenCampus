@@ -57,7 +57,7 @@ class Campaign{
 
     static async getAllCampaigns() {
         const result = (await this.query("SELECT * FROM Campaigns ORDER BY school_id ASC")).recordset
-        return result.length ? result.map((x) => th(x)) : null
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
     static async getCampaignById(id){
@@ -66,16 +66,16 @@ class Campaign{
             "SELECT * FROM Campaigns WHERE id = @id", 
             params
         )).recordset
-        return result ? th(result) : null
+        return result ? this.toCampaignObj(result) : null
     }
 
     static async getCampaignsBySchool(school_id) {
         const params = {"school_id": school_id}
         const result = (await this.query(
-            "SELECT * FROM Campaigns WHERE school_id = @school_id ORDER BY year ASC", 
+            "SELECT * FROM Campaigns WHERE school_id = @school_id", 
             params
         )).recordset
-        return result.length ? result.map((x) => th(x)) : null
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
     static async createCampaign(newCampaignData) {

@@ -107,7 +107,7 @@ submitgoalbtn.addEventListener('click', async (event) => {
             body: JSON.stringify(newGoal)
         });
         if (!response.ok) throw new Error('Network response was not ok');
-        alert("Goal created");
+        alert("Goal created! Reload to sync changes.");
         document.getElementById('goalPopup').style.display = 'none';
     }
    
