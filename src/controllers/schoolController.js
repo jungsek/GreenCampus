@@ -57,9 +57,53 @@ const getAllSchools = async (req, res) => {
     }
   }
 
+  const getSchoolsCarbonFootprintByCurrentAndPreviousYear = async (req, res) => {
+    try {
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentAndPreviousYear();
+        res.json(carbonFootprints);
+    } catch (error) {
+        console.error('Error retrieving schools carbon footprint by current year:', error);
+        res.status(500).send("Error retrieving schools carbon footprint by current year");
+    }
+  }
+
+  const getSchoolsCarbonFootprintByCurrentAndPreviousMonth = async (req, res) => {
+    try {
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentAndPreviousMonth();
+        res.json(carbonFootprints);
+    } catch (error) {
+        console.error('Error retrieving schools carbon footprint by current month:', error);
+        res.status(500).send("Error retrieving schools carbon footprint by current month");
+    }
+  }
+
+  const getSchoolsEnergyUsageByCurrentAndPreviousYear = async (req, res) => {
+    try {
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentAndPreviousYear();
+        res.json(energyUsage);
+    } catch (error) {
+        console.error('Error retrieving schools energy usage by current year:', error);
+        res.status(500).send("Error retrieving schools energy usage by current year");
+    }
+  }
+
+  const getSchoolsEnergyUsageByCurrentAndPreviousMonth= async (req, res) => {
+    try {
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentAndPreviousMonth();
+        res.json(energyUsage);
+    } catch (error) {
+        console.error('Error retrieving schools energy usage by current month:', error);
+        res.status(500).send("Error retrieving schools energy usage by current month");
+    }
+  }
+
 module.exports = {
     getAllSchools,
     getSchoolById,
     getSchoolByStudentId,
-    getSchoolsByName
+    getSchoolsByName,
+    getSchoolsCarbonFootprintByCurrentAndPreviousYear,
+    getSchoolsCarbonFootprintByCurrentAndPreviousMonth,
+    getSchoolsEnergyUsageByCurrentAndPreviousYear,
+    getSchoolsEnergyUsageByCurrentAndPreviousMonth
 }

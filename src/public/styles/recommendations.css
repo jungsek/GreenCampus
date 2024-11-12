@@ -1,0 +1,11 @@
+/* styles/recommendations.css */
+
+.area-of-concern, .strength {
+    margin-bottom: 30px;
+}
+
+.area-of-concern canvas, .strength canvas {
+    width: 100% !important;
+    height: 600px !important;
+}
+
