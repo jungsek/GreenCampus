@@ -1,4 +1,4 @@
-let studentID = 6; // Example student ID
+let studentID = 11; // Example student ID
 let currentPoints = 0;
 // Example rewards
 const rewards = [
@@ -29,27 +29,13 @@ async function updateStudentPoints(pts) {
 
 // Load the student's current points and the available rewards
 async function loadRewards() {
-    if (sessionStorage.getItem("pointsUpdated") === null){
-        let initcurrentPointsresponse = await fetch(`/users/student/points/${studentID}`)
-        if (!initcurrentPointsresponse.ok) {
-        throw new Error("Network response to get student's current points was not ok");
-        } else {
-            let currentpointsjson = await initcurrentPointsresponse.json();
-            currentpointsjson.forEach(element => {
-                currentPoints += parseInt(element.points);
-            });
-            await updateStudentPoints(currentPoints);
-            }
-            sessionStorage.setItem("pointsUpdated", 'true');
-    }
+    let currentPointsresponse = await fetch(`/users/${studentID}`)
+    if (!currentPointsresponse.ok) {throw new Error("Network response to fetching current student was not ok")}
     else {
-        let currentPointsresponse = await fetch(`/users/${studentID}`)
-        if (!currentPointsresponse.ok) {throw new Error("Network response to fetching current student was not ok")}
-        else {
-            let currentstudentobj =  await currentPointsresponse.json()
-            currentPoints = currentstudentobj.points
-        }
+        let currentstudentobj =  await currentPointsresponse.json()
+        currentPoints = currentstudentobj.points
     }
+
     
     document.getElementById("current-points").innerText = currentPoints;
 

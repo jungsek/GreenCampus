@@ -168,7 +168,7 @@ class User {
 
     static async getStudentPoints(id) {
         const params = {"id": id}
-        const query = `SELECT points FROM Campaigns c INNER JOIN CampaignStudents cs on cs.campaign_id = c.id WHERE cs.student_id = @id`
+        const query = `SELECT points FROM Users WHERE id = @id`
 
         const result = (await this.query(query, params)).recordset
         
@@ -177,7 +177,6 @@ class User {
 
     static async updateStudentPoints(id, pts){
         const params = {"id": id, "pts": pts}
-        console.log(params)
         const query = `UPDATE Users SET points = @pts WHERE id = @id`
         await this.query(query, params)
     }
