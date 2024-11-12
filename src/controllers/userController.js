@@ -67,6 +67,18 @@ const getStudentPoints = async (req, res) => {
   }
 }
 
+const updateStudentPoints = async (req, res) => {
+  const id = parseInt(req.params.id)
+  const pts = parseInt(req.params.points)
+  try{
+    await User.updateStudentPoints(id, pts)
+    res.status(204).send()
+  }catch(error){
+    console.error(error)
+    res.status(500).send("Error updating student points")
+  }
+}
+
 const searchUsers = async (req,res) => {
   const searchTerm = req.query.q
   
@@ -186,5 +198,6 @@ module.exports = {
     decodeJWT,
     searchUsers,
     getPrincipalBySchoolId,
-    getStudentPoints
+    getStudentPoints,
+    updateStudentPoints
 }
