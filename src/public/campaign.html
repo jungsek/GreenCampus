@@ -48,6 +48,12 @@
                     <label for="campaignPoints">Points</label>
                     <input type="number" id="campaignPoints" class="form-control" min="0" max="5" required>
                 </div>
+                <div class="form-group">
+                    <label for="campaignImage">Campaign Image</label>
+                    <input type="file" id="campaignImage" class="form-control campaign-image" accept="image/*">
+                    <img id="imagePreview" class="campaign-image" style="max-width: 200px; margin-top: 10px; display: none;" alt="Campaign Image">
+                    <input type="hidden" id="imageBase64" name="imageBase64">
+                </div>
                 <button type="submit" id="submitnewcampaignbtn" class="btn-set-goal">Create Campaign</button>
                 <button type="button" class="cancel-button" onclick="closeCreatePopup()">✖</button>
             </form>
@@ -70,6 +76,12 @@
                 <div class="form-group">
                     <label for="modifyCampaignPoints">Points</label>
                     <input type="number" id="modifyCampaignPoints" class="form-control" min="0" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="campaignImage">Campaign Image</label>
+                    <input type="file" id="campaignImage" class="form-control campaign-image" accept="image/*">
+                    <img id="imagePreview" class="campaign-image" style="max-width: 200px; margin-top: 10px; display: none;" alt="Campaign Image">
+                    <input type="hidden" id="imageBase64" name="imageBase64">
                 </div>
                 <button type="submit" id="submitmodifycampaignbtn" class="btn-set-goal">Modify Campaign</button>
                 <button type="button" class="cancel-button" onclick="closeModifyPopup()">✖</button>
