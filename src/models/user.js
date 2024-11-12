@@ -177,7 +177,6 @@ class User {
 
     static async updateStudentPoints(id, pts){
         const params = {"id": id, "pts": pts}
-        console.log(params)
         const query = `UPDATE Users SET points = @pts WHERE id = @id`
         await this.query(query, params)
     }
