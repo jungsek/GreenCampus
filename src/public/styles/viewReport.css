@@ -122,3 +122,26 @@ button:hover {
     background-color: #e9ecef;
   }
   
+
+  
+  .chart-container {
+    position: relative;
+    height: 400px; /* Set desired height */
+    width: 100%;   /* Optional, adjust as needed */
+}
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-placeholder {
+  height: 400px !important;
+}
+
+#predictedEnergyChartContainer {
+  height: 400px !important;
+}
+
+#predictedCarbonChartContainer {
+  height: 400px !important;
+}

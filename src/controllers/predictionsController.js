@@ -68,6 +68,7 @@ module.exports.generatePrediction = async (req, res) => {
         });
 
         const aiResponse = completion.choices[0].message.content;
+        console.log('AI Response:', aiResponse); 
         const parsedPredictions = parsePredictionResponse(aiResponse);
 
         // Return the predictions to the frontend

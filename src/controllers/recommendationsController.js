@@ -67,19 +67,19 @@ module.exports.generateRecommendations = async (req, res) => {
             model: aiModel,
             messages,
             temperature: 0.7,
-            max_tokens: 1000,
+            max_tokens: 2000,
             top_p: 0.9,
             frequency_penalty: 0,
             presence_penalty: 0,
         });
 
+   
         const aiResponse = completion.choices[0].message.content;
-        const recommendationContent = aiResponse.trim();
+        console.log('AI Response:', aiResponse); 
+        const parsedRecommendations = parseRecommendationResponse(aiResponse);
 
-
-        // Return the generated HTML recommendations
-        res.json({ recommendation: recommendationContent });
-
+        // Return the recommendations to the frontend
+        res.json({ recommendationData: parsedRecommendations });
 
     } catch (error) {
         console.error('Error generating recommendations via OpenAI:', error.response ? error.response.data : error.message);
@@ -114,9 +114,8 @@ Energy Breakdown:
         summary += `- ${eb.month}: ${eb.breakdowns.map(b => `${b.category}: ${b.percentage}%`).join(', ')}\n`;
     });
 
-    // Now, prepare the enhanced prompt with detailed instructions
     return `
-Based on the data summary below and considering Singapore's national climate target to achieve "net zero emissions by 2050" as part of our Long-Term Low-Emissions Development Strategy (LEDS), generate a comprehensive sustainability analysis. This analysis should include:
+    Based on the data summary below and considering Singapore's national climate target to achieve "net zero emissions by 2050" as part of our Long-Term Low-Emissions Development Strategy (LEDS), generate a comprehensive sustainability analysis. This analysis should include:
 
 1. **Green Score:** Assign a score out of 100 indicating the school's sustainability performance. A score of 90 and above is excellent, showing proximity to achieving Net Zero Emissions. Provide a short summary explaining the reasoning behind the score.
 
@@ -126,60 +125,96 @@ Based on the data summary below and considering Singapore's national climate tar
    - Provide a conclusion, reasoning, and in-depth explanation of the factors contributing to this concern.
    - Talk about the months, periods, and locations where the issue is most prominent.
 
-3. **Personalized Recommendations:** Offer specific, actionable recommendations to address each area of concern. Ensure that the recommendations are task-specific, personalized to the school's context, and include explanations for their effectiveness.
+3. **Graphs for Areas of Concern:**
+   - Provide data suitable for generating graphs related to each area of concern.
+   - The data should be in JSON format, including labels and values.
+   - Examples of graphs:
+     - Monthly Energy Usage Bar Chart.
+     - Monthly Carbon Emissions Line Chart.
+     - Energy Breakdown Pie Chart for specific months.
 
-4. **Strengths:** Highlight areas where the school performed well, such as months with the lowest emissions or effective energy management in certain locations. For each strength:
+4. **Personalized Recommendations:** Offer specific, actionable recommendations to address each area of concern. Ensure that the recommendations are task-specific, personalized to the school's context, and include explanations for their effectiveness.
+
+5. **Strengths:** Highlight areas where the school performed well, such as months with the lowest emissions or effective energy management in certain locations. For each strength:
    - Highlight the achievement.
    - Display the relevant data.
    - Provide a conclusion and in-depth explanation of why this is a strength.
 
-5. **Path to Net Zero:** Outline how the school can achieve net-zero emissions, including sustainable practices to be adopted, strategies for measurable reductions, and methods for tracking progress toward sustainability goals.
+6. **Path to Net Zero:** Outline how the school can achieve net-zero emissions, including sustainable practices to be adopted, strategies for measurable reductions, and methods for tracking progress toward sustainability goals.
 
 **Data Summary:**
 
 ${summary}
 
-Please format the recommendations using the following HTML template, ensuring that all placeholders are replaced with the appropriate content based on the data and insights provided. The HTML should be well-structured, professional, and tailored to help the school achieve its sustainability objectives.
+**Output Instructions:**
 
-<pre>
-<div id="recommendationsOutput" class="recommendations">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${schoolName} Sustainability Recommendations ${year}</title>
+- **Your entire response should be valid JSON matching the structure provided below.**
+- **Do not include any explanations, notes, or additional text outside of the JSON.**
+- **Ensure all strings are properly quoted and escape any characters that may break the JSON format.**
+- **Do not include comments in the JSON output.**
 
-    <h1>${schoolName} Sustainability Recommendations ${year}</h1>
+**Output Format:**
 
-    <h2>Green Score: <span id="greenScore"></span></h2>
-    <p>[Provide a short summary explaining the reasoning behind the Green Score.]</p>
+Provide the analysis in **JSON format only** with the following structure. **Do not include any markdown formatting, code block delimiters, or additional text.** Ensure that all placeholders are replaced with the appropriate content based on the data and insights provided.
 
-    <h2>Areas of Concern</h2>
-    <div id="areasOfConcern">
-        <!-- Populate with detailed areas of concern -->
-        <p>[Detailed explanation of Area]</p>
-        <!-- Add more areas as needed -->
-    </div>
+**JSON Structure:**
 
-    <h2>Personalized Recommendations</h2>
-    <ul id="personalizedRecommendations">
-        <!-- Populate with specific recommendations -->
-        <li>[Recommendation]</li>
-        <!-- Add more recommendations as needed -->
-    </ul>
+{
+  "green_score": {
+    "score": <number>,
+    "summary": "<string>"
+  },
+  "areas_of_concern": [
+    {
+      "title": "<string>",
+      "problem": "<string>",
+      "data": {
+        "labels": ["<string>", ...],
+        "values": [<number>, ...]
+      },
+      "conclusion": "<string>"
+    },
+    // ... more areas of concern
+  ],
+  "personalized_recommendations": [
+    "<string>",
+    // ... more recommendations
+  ],
+  "strengths": [
+    {
+      "title": "<string>",
+      "achievement": "<string>",
+      "data": {
+        "labels": ["<string>", ...],
+        "values": [<number>, ...]
+      },
+      "conclusion": "<string>"
+    },
+    // ... more strengths
+  ],
+  "path_to_net_zero": [
+    "<string>",
+    // ... more strategies
+  ]
+}
 
-    <h2>Strengths</h2>
-    <div id="strengths">
-        <!-- Populate with detailed strengths -->
-        <p>[Detailed explanation of Strength]</p>
-        <!-- Add more strengths as needed -->
-    </div>
-
-    <h2>Path to Net Zero</h2>
-    <ul id="paths">
-        <li>[Outline strategies, sustainable practices, and methods for tracking progress toward net-zero emissions in point form.]</li>
-    </ul>
-</div>
-</pre>
-
-Ensure that the HTML is complete, well-formatted, and replaces all placeholders with the relevant content based on the analysis.
 `;
+}
+
+function parseRecommendationResponse(aiResponse) {
+    try {
+        // Use regex to extract JSON content between the first '{' and the last '}'
+        const jsonStart = aiResponse.indexOf('{');
+        const jsonEnd = aiResponse.lastIndexOf('}');
+        if (jsonStart !== -1 && jsonEnd !== -1) {
+            const jsonString = aiResponse.substring(jsonStart, jsonEnd + 1);
+            const recommendationData = JSON.parse(jsonString);
+            return recommendationData; // Return the parsed data
+        } else {
+            throw new Error('No JSON content found in AI response.');
+        }
+    } catch (error) {
+        console.error('Error parsing AI response:', error);
+        throw new Error('Failed to parse recommendations data.');
+    }
 }
