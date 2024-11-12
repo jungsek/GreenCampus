@@ -57,9 +57,9 @@ const getAllSchools = async (req, res) => {
     }
   }
 
-  const getSchoolsCarbonFootprintByCurrentYear = async (req, res) => {
+  const getSchoolsCarbonFootprintByCurrentAndPreviousYear = async (req, res) => {
     try {
-        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentYear();
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentAndPreviousYear();
         res.json(carbonFootprints);
     } catch (error) {
         console.error('Error retrieving schools carbon footprint by current year:', error);
@@ -67,9 +67,9 @@ const getAllSchools = async (req, res) => {
     }
   }
 
-  const getSchoolsCarbonFootprintByCurrentMonth = async (req, res) => {
+  const getSchoolsCarbonFootprintByCurrentAndPreviousMonth = async (req, res) => {
     try {
-        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentMonth();
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentAndPreviousMonth();
         res.json(carbonFootprints);
     } catch (error) {
         console.error('Error retrieving schools carbon footprint by current month:', error);
@@ -77,9 +77,9 @@ const getAllSchools = async (req, res) => {
     }
   }
 
-  const getSchoolsEnergyUsageByCurrentYear = async (req, res) => {
+  const getSchoolsEnergyUsageByCurrentAndPreviousYear = async (req, res) => {
     try {
-        const energyUsage = await School.getSchoolsEnergyUsageByCurrentYear();
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentAndPreviousYear();
         res.json(energyUsage);
     } catch (error) {
         console.error('Error retrieving schools energy usage by current year:', error);
@@ -87,9 +87,9 @@ const getAllSchools = async (req, res) => {
     }
   }
 
-  const getSchoolsEnergyUsageByCurrentMonth= async (req, res) => {
+  const getSchoolsEnergyUsageByCurrentAndPreviousMonth= async (req, res) => {
     try {
-        const energyUsage = await School.getSchoolsEnergyUsageByCurrentMonth();
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentAndPreviousMonth();
         res.json(energyUsage);
     } catch (error) {
         console.error('Error retrieving schools energy usage by current month:', error);
@@ -102,8 +102,8 @@ module.exports = {
     getSchoolById,
     getSchoolByStudentId,
     getSchoolsByName,
-    getSchoolsCarbonFootprintByCurrentYear,
-    getSchoolsCarbonFootprintByCurrentMonth,
-    getSchoolsEnergyUsageByCurrentYear,
-    getSchoolsEnergyUsageByCurrentMonth
+    getSchoolsCarbonFootprintByCurrentAndPreviousYear,
+    getSchoolsCarbonFootprintByCurrentAndPreviousMonth,
+    getSchoolsEnergyUsageByCurrentAndPreviousYear,
+    getSchoolsEnergyUsageByCurrentAndPreviousMonth
 }
