@@ -106,6 +106,63 @@ function closeDeletePopup() {
     document.getElementById("deleteConfirmationPopup").style.display = "none";
 }
 
+//image handling
+document.getElementById('campaignImage').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            alert('File is too large. Please select an image under 5MB.');
+            this.value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imageBase64').value = '';
+            return;
+        }
+
+        // Create image for compression
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        
+        await new Promise(resolve => img.onload = resolve);
+        
+        // Create canvas for compression
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Calculate new dimensions while maintaining aspect ratio
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 800; // Maximum width or height
+
+        if (width > height && width > maxDimension) {
+            height = (height * maxDimension) / width;
+            width = maxDimension;
+        } else if (height > maxDimension) {
+            width = (width * maxDimension) / height;
+            height = maxDimension;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw and compress image
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to base64 with reduced quality
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6); // 0.6 = 60% quality
+        
+        // Store compressed base64 string in hidden input
+        document.getElementById('imageBase64').value = compressedBase64;
+        
+        // Show preview
+        const preview = document.getElementById('imagePreview');
+        preview.src = compressedBase64;
+        preview.style.display = 'block';
+        
+        // Clean up
+        URL.revokeObjectURL(img.src);
+    }
+});
+
 //create campaign
 document.getElementById('submitnewcampaignbtn').addEventListener('click', async function(){
     if (parseInt(document.getElementById('campaignPoints').value) >5 || parseInt(document.getElementById('campaignPoints').value) < 0) {
@@ -116,8 +173,7 @@ document.getElementById('submitnewcampaignbtn').addEventListener('click', async 
         school_id: placeholderID,
         name: document.getElementById('campaignName').value,
         description: document.getElementById('campaignDescription').value,
-        //for today im gon leave image as blank
-        image: "",
+        image: document.getElementById('imageBase64').value || "", //use image or empty string if no image
         points: parseInt(document.getElementById('campaignPoints').value)
     }
 
@@ -133,8 +189,9 @@ document.getElementById('submitnewcampaignbtn').addEventListener('click', async 
     })
     if (!createResponse.ok) {throw new Error("Network response to create new campaign was not ok")}
     else {
-        alert("Campaign created! Reload to sync changes.")
+        alert("Campaign created!")
         document.getElementById("createPopup").style.display = "none";
+        await loadCurrentCampaigns(); // Reload campaigns
     }
 })
 
@@ -149,8 +206,7 @@ document.getElementById('submitmodifycampaignbtn').addEventListener('click', asy
         school_id: placeholderID,
         name: document.getElementById('modifyCampaignName').value,
         description: document.getElementById('modifyCampaignDescription').value,
-        //replace ltr
-        image: '',
+        image: document.getElementById('imageBase64').value || "",
         points: document.getElementById('modifyCampaignPoints').value
     }
 
@@ -164,8 +220,11 @@ document.getElementById('submitmodifycampaignbtn').addEventListener('click', asy
     })
     if (!modifycampaignresponse.ok) {throw new Error("Network response to modify campaign was not ok")}
     else{
-        alert("Campaign modified! Refresh to sync changes.")
+        alert("Campaign modified!")
         closeModifyPopup()
+        let parentcontainer = document.getElementById('campaignparent-container');
+        parentcontainer.innerHTML = ''; // Clear existing campaigns
+        await loadCurrentCampaigns();
     }
 })
 
@@ -176,7 +235,10 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
     })
     if (!deletecampaignresponse.ok) {throw new Error("Network response to delete campaign was not ok")}
     else {
-        alert("Campaign deleted! Refresh to sync changes.")
+        alert("Campaign deleted!")
         closeDeletePopup()
+        let parentcontainer = document.getElementById('campaignparent-container');
+        parentcontainer.innerHTML = ''; // Clear existing campaigns
+        await loadCurrentCampaigns();
     }
 })
