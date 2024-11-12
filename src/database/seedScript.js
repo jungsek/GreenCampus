@@ -32,6 +32,10 @@ IF OBJECT_ID('FK_Goals_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Goals DROP CONSTRAINT FK_Goals_SchoolID;
   IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Campaigns DROP CONSTRAINT FK_Campaigns_SchoolID;
+    IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
+  ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_CampaignID;
+    IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
+  ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_StudentID;
 
 -- Drop all tables if they exist
 IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
@@ -42,6 +46,7 @@ IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
 IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
 IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
+IF OBJECT_ID('dbo.CampaignStudents', 'U') IS NOT NULL DROP TABLE dbo.CampaignStudents;
 
 -- Create the tables here...
 
@@ -52,6 +57,7 @@ CREATE TABLE Users (
     last_name VARCHAR(40) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
+    points INT NULL,
     role VARCHAR(8) NOT NULL CHECK (role IN ('student', 'lecturer'))
 );
 
@@ -136,6 +142,13 @@ CREATE TABLE Campaigns (
    FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
    )
 
+CREATE TABLE CampaignStudents (
+  id INT PRIMARY KEY IDENTITY(1,1),
+  student_id INT NOT NULL,
+  campaign_id INT NOT NULL, 
+  FOREIGN KEY (student_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (campaign_id) REFERENCES Campaigns(id) ON DELETE CASCADE
+)
 `;
 
 async function insertData(connection) {
@@ -203,20 +216,20 @@ async function insertData(connection) {
       VALUES ('Cedar Grove Charter School', 'An innovative charter school emphasizing project-based learning and student-driven inquiry', 10);
 
       -- Finally insert the students with their school_ids
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Toby', 'Dean', 'toby@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 1);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Toby', 'Dean', 'toby@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 1, 0);
       
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Sarah', 'Lee', 'sarah@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 2);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Sarah', 'Lee', 'sarah@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 2, 6);
 
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Ethan', 'Garcia', 'ethan.garcia@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 3);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Ethan', 'Garcia', 'ethan.garcia@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 3, 14);
 
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Olivia', 'Martinez', 'olivia.martinez@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 4);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Olivia', 'Martinez', 'olivia.martinez@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 4, 24);
 
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Liam', 'Johnson', 'liam.johnson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 5);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Liam', 'Johnson', 'liam.johnson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 5, 28);
 
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
       VALUES ('Ava', 'Brown', 'ava.brown@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 6);

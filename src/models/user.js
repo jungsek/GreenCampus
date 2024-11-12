@@ -5,18 +5,19 @@ const fs = require("fs");
 
 class User {
     //setup user object
-    constructor(id, first_name, last_name, email, role) {
+    constructor(id, first_name, last_name, email, role, points) {
       this.id = id
       this.first_name = first_name
       this.last_name = last_name
       this.email = email
       this.role = role
+      this.points = points;
     }
 
     //pass the sql recordset in
     //returns a new user obj
     static toUserObj(row){
-        return new User(row.id, row.first_name, row.last_name, row.email, row.role)
+        return new User(row.id, row.first_name, row.last_name, row.email, row.role, row.points)
     }
     
 
@@ -116,7 +117,7 @@ class User {
             "last_name": user.last_name,
             "email": user.email,
             "password": user.password,
-            "role": user.role
+            "role": user.role,
         }
         //add user data
         const result = await this.query("INSERT INTO Users (first_name, last_name, email, password, role) VALUES (@first_name, @last_name, @email, @password, @role); SELECT SCOPE_IDENTITY() AS id;", params)
@@ -165,6 +166,21 @@ class User {
 
     }
 
+    static async getStudentPoints(id) {
+        const params = {"id": id}
+        const query = `SELECT points FROM Campaigns c INNER JOIN CampaignStudents cs on cs.campaign_id = c.id WHERE cs.student_id = @id`
+
+        const result = (await this.query(query, params)).recordset
+        
+        return result;
+    }
+
+    static async updateStudentPoints(id, pts){
+        const params = {"id": id, "pts": pts}
+        console.log(params)
+        const query = `UPDATE Users SET points = @pts WHERE id = @id`
+        await this.query(query, params)
+    }
     static async getPrincipalBySchoolId(schoolid) {
         const params = {"schoolid": schoolid}
         const query = `
