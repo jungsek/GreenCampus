@@ -165,6 +165,17 @@ class User {
 
     }
 
+    static async getStudentPoints(id) {
+        const params = {"id": id}
+        const query = `SELECT Points FROM Campaigns c INNER JOIN CampaignStudents cs on cs.campaign_id = c.id WHERE cs.student_id = @id`
+
+        const result = (await this.query(query, params)).recordset
+        let total = 0;
+        result.forEach(element => {
+            total += element.points;
+        });
+        return total;
+    }
     static async getPrincipalBySchoolId(schoolid) {
         const params = {"schoolid": schoolid}
         const query = `

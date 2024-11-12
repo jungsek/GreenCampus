@@ -56,6 +56,16 @@ const getPrivateUserById = async (req, res) => {
   }
 }
 
+const getStudentPoints = async (req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+    const points = await User.getStudentPoints(id)
+    res.json(points)
+  }catch(error){
+    console.error(error)
+    res.status(500).send("Error retrieving student points")
+  }
+}
 
 const searchUsers = async (req,res) => {
   const searchTerm = req.query.q
@@ -175,5 +185,6 @@ module.exports = {
     hashPassword,
     decodeJWT,
     searchUsers,
-    getPrincipalBySchoolId
+    getPrincipalBySchoolId,
+    getStudentPoints
 }

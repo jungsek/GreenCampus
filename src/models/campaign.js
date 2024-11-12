@@ -78,6 +78,12 @@ class Campaign{
         return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
+    static async getSignedUpCampaignsByStudent(student_id){
+        const params = {"student_id": student_id}
+        const result = (await this.query("SELECT Campaigns.id, Campaigns.school_id, Campaigns.name, Campaigns.description, Campaigns.image, Campaigns.points FROM Campaigns INNER JOIN CampaignStudents on CampaignStudents.campaign_id = Campaigns.id WHERE CampaignStudents.student_id = @student_id", params)).recordset
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
+    }
+
     static async createCampaign(newCampaignData) {
         const params = {
             "school_id": newCampaignData.school_id,
@@ -115,6 +121,12 @@ class Campaign{
     static async deleteCampaign(id) {
         const params = {"id": id}
         await this.query("DELETE FROM Campaigns WHERE id = @id", params)
+    }
+
+    static async signUpStudentForCampaign(student_id, id) {
+        const params = {"student_id": student_id,
+                        "id": id}
+        await this.query("INSERT INTO CampaignStudents(student_id, campaign_id) VALUES (@student_id, @id);", params)
     }
 }
 

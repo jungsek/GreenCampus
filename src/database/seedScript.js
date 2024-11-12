@@ -32,6 +32,10 @@ IF OBJECT_ID('FK_Goals_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Goals DROP CONSTRAINT FK_Goals_SchoolID;
   IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Campaigns DROP CONSTRAINT FK_Campaigns_SchoolID;
+    IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
+  ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_CampaignID;
+    IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
+  ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_StudentID;
 
 -- Drop all tables if they exist
 IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
@@ -42,6 +46,7 @@ IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
 IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
 IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
+IF OBJECT_ID('dbo.CampaignStudents', 'U') IS NOT NULL DROP TABLE dbo.CampaignStudents;
 
 -- Create the tables here...
 
@@ -136,6 +141,13 @@ CREATE TABLE Campaigns (
    FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
    )
 
+CREATE TABLE CampaignStudents (
+  id INT PRIMARY KEY IDENTITY(1,1),
+  student_id INT NOT NULL,
+  campaign_id INT NOT NULL, 
+  FOREIGN KEY (student_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (campaign_id) REFERENCES Campaigns(id) ON DELETE CASCADE
+)
 `;
 
 async function insertData(connection) {
