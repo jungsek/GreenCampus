@@ -97,87 +97,115 @@ class School{
         return result.length ? result.map((x) => this.toSchoolObj(x)) : null;
     }
 
-    static async getSchoolsCarbonFootprintByCurrentYear() {
+    static async getSchoolsCarbonFootprintByCurrentAndPreviousYear() {
         const query = `
             SELECT 
                 s.id AS school_id,
                 s.school_name,
-                SUM(cf.total_carbon_tons) AS total_carbon_footprint
+                -- Total carbon footprint for the current year
+                SUM(CASE WHEN YEAR(cf.timestamp) = YEAR(GETDATE()) THEN cf.total_carbon_tons ELSE 0 END) AS current_year_carbon_footprint,
+                -- Total carbon footprint for the previous year
+                SUM(CASE WHEN YEAR(cf.timestamp) = YEAR(DATEADD(YEAR, -1, GETDATE())) THEN cf.total_carbon_tons ELSE 0 END) AS previous_year_carbon_footprint
             FROM 
                 Schools s
-            INNER JOIN 
+            LEFT JOIN 
                 CarbonFootprint cf ON s.id = cf.school_id
-            WHERE 
-                YEAR(cf.timestamp) = YEAR(GETDATE())
+            WHERE
+                -- Filter records for the current and previous years
+                YEAR(cf.timestamp) = YEAR(GETDATE()) 
+                OR 
+                YEAR(cf.timestamp) = YEAR(DATEADD(YEAR, -1, GETDATE()))
             GROUP BY 
                 s.id, s.school_name
             ORDER BY 
-                total_carbon_footprint ASC
+                current_year_carbon_footprint ASC;
         `;
 
         const result = (await this.query(query)).recordset;
         return result.length ? result : null;
     }
 
-    static async getSchoolsCarbonFootprintByCurrentMonth() { 
+    static async getSchoolsCarbonFootprintByCurrentAndPreviousMonth() { 
         const query = `
             SELECT 
                 s.id AS school_id,
                 s.school_name,
-                SUM(cf.total_carbon_tons) AS total_carbon_footprint
+                -- Total carbon footprint for the current month
+                SUM(CASE WHEN YEAR(cf.timestamp) = YEAR(GETDATE())
+                    AND MONTH(cf.timestamp) = MONTH(GETDATE()) THEN cf.total_carbon_tons ELSE 0 END) AS current_month_carbon_footprint,
+                -- Total carbon footprint for the previous month
+                SUM(CASE WHEN YEAR(cf.timestamp) = YEAR(DATEADD(MONTH, -1, GETDATE())) 
+                    AND MONTH(cf.timestamp) = MONTH(DATEADD(MONTH, -1, GETDATE())) THEN cf.total_carbon_tons ELSE 0 END) AS previous_month_carbon_footprint
             FROM 
                 Schools s
-            INNER JOIN 
+            LEFT JOIN 
                 CarbonFootprint cf ON s.id = cf.school_id
-            WHERE 
-                YEAR(cf.timestamp) = YEAR(GETDATE()) AND 
-                MONTH(cf.timestamp) = MONTH(GETDATE())
+            WHERE
+                -- Filter for records that belong to either the current or the previous month
+                (YEAR(cf.timestamp) = YEAR(GETDATE()) AND MONTH(cf.timestamp) = MONTH(GETDATE())) 
+                OR 
+                (YEAR(cf.timestamp) = YEAR(DATEADD(MONTH, -1, GETDATE())) AND MONTH(cf.timestamp) = MONTH(DATEADD(MONTH, -1, GETDATE())))
             GROUP BY 
                 s.id, s.school_name
             ORDER BY 
-                total_carbon_footprint ASC
+                current_month_carbon_footprint ASC;
+
         `;
     
         const result = (await this.query(query)).recordset;
         return result.length ? result : null;
     }
 
-    static async getSchoolsEnergyUsageByCurrentYear() { 
+    static async getSchoolsEnergyUsageByCurrentAndPreviousYear() { 
         const query = `
             SELECT 
                 s.id AS school_id,
                 s.school_name,
-                SUM(eu.energy_kwh) AS total_energy_usage
+                -- Total energy usage for the current year
+                SUM(CASE WHEN YEAR(eu.timestamp) = YEAR(GETDATE()) THEN eu.energy_kwh ELSE 0 END) AS current_year_energy_usage,
+                -- Total energy usage for the previous year
+                SUM(CASE WHEN YEAR(eu.timestamp) = YEAR(DATEADD(YEAR, -1, GETDATE())) THEN eu.energy_kwh ELSE 0 END) AS previous_year_energy_usage
+            FROM 
+                Schools s
+            LEFT JOIN 
+                EnergyUsage eu ON s.id = eu.school_id
+            WHERE
+                -- Filter for energy usage in either the current year or the previous year
+                (YEAR(eu.timestamp) = YEAR(GETDATE()) OR YEAR(eu.timestamp) = YEAR(DATEADD(YEAR, -1, GETDATE())))
+            GROUP BY 
+                s.id, s.school_name
+            ORDER BY 
+                current_year_energy_usage DESC;  
+        `;
+    
+        const result = (await this.query(query)).recordset;
+        return result.length ? result : null;
+    }
+
+    static async getSchoolsEnergyUsageByCurrentAndPreviousMonth() { 
+        const query = `
+            SELECT 
+            s.id AS school_id,
+            s.school_name,
+            SUM(CASE 
+                    WHEN MONTH(eu.timestamp) = MONTH(GETDATE()) AND YEAR(eu.timestamp) = YEAR(GETDATE()) 
+                    THEN eu.energy_kwh 
+                    ELSE 0 
+                END) AS current_month_energy_usage,
+            SUM(CASE 
+                    WHEN MONTH(eu.timestamp) = MONTH(DATEADD(MONTH, -1, GETDATE())) 
+                         AND YEAR(eu.timestamp) = YEAR(DATEADD(MONTH, -1, GETDATE())) 
+                    THEN eu.energy_kwh 
+                    ELSE 0 
+                END) AS previous_month_energy_usage
             FROM 
                 Schools s
             INNER JOIN 
                 EnergyUsage eu ON s.id = eu.school_id
-            WHERE 
-                YEAR(eu.timestamp) = YEAR(GETDATE())
             GROUP BY 
                 s.id, s.school_name
             ORDER BY 
-                total_energy_usage ASC;
-        `;
-    
-        const result = (await this.query(query)).recordset;
-        return result.length ? result : null;
-    }
-
-    static async getSchoolsEnergyUsageByCurrentMonth() { 
-        const query = `
-            SELECT 
-                school_id,
-                SUM(energy_kwh) AS total_energy_usage
-            FROM 
-                EnergyUsage
-            WHERE 
-                YEAR(timestamp) = YEAR(GETDATE()) AND 
-                MONTH(timestamp) = MONTH(GETDATE())
-            GROUP BY 
-                school_id
-            ORDER BY 
-                total_energy_usage ASC;
+                current_month_energy_usage ASC;
         `;
     
         const result = (await this.query(query)).recordset;
