@@ -41,6 +41,19 @@ const getCampaignById = async (req, res) => {
     }
 };
 
+const getSignedUpCampaignsByStudent = async (req, res) => {
+    const id = parseInt(req.params.studentId)
+    try {
+        const campaigns = await Campaign.getSignedUpCampaignsByStudent(id);
+        if (!campaigns) {
+            return res.status(404).send("No campaigns signed up by this student");
+        }
+        res.json(campaigns);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving signed up campaigns for this student");
+    }
+}
 // Create a new campaign
 const createCampaign = async (req, res) => {
     const newCampaignData = req.body;
@@ -81,10 +94,25 @@ const deleteCampaign = async (req, res) => {
     }
 };
 
+// Delete a campaign
+const signUpStudentForCampaign = async (req, res) => {
+    const student_id = parseInt(req.params.studentId)
+    const id = parseInt(req.params.id);
+    try {
+        await Campaign.signUpStudentForCampaign(student_id, id);
+        res.status(204).send(); // No content to return
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error signing up for campaign");
+    }
+};
+
 module.exports = {
     getAllCampaigns,
     getCampaignById,
     getCampaignsBySchool,
+    getSignedUpCampaignsByStudent,
+    signUpStudentForCampaign,
     createCampaign,
     updateCampaign,
     deleteCampaign,
