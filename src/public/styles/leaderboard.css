@@ -9,30 +9,116 @@
     background: #89cdb4;  
     padding: 24px;
     width: 100%;
-    height: 100vh;
 }
 
 .header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* This keeps the toggle buttons on the right */
     align-items: center;
-    margin-bottom: 24px;
-    position: relative;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Create a container for title and info button */
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between title and info button */
 }
 
 .title {
     color: white;
     font-size: 24px;
     font-weight: 600;
-    text-align: center;
-    margin-bottom: 100px;
+    margin: 0; /* Remove any default margins */
+}
+
+.info-btn {
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0; /* Remove any default padding */
+}
+
+/* modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #1a1a1a; /* Dark background for the modal */
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-right: 30px; /* Make space for close button */
+}
+
+.instruction-section {
+    margin-bottom: 20px;
+}
+
+.instruction-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #4CAF50; /* Green color for section headers */
+}
+
+.points-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.points-table th, .points-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #333;
+}
+
+.points-table th {
+    background-color: #4CAF50;
 }
 
 .toggle-buttons {
     display: flex;
     gap: 8px;
-    position: absolute;
-    right: 0;
 }
 
 .toggle-btn {
