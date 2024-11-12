@@ -1,4 +1,4 @@
-let studentID = 6;
+let studentID = 11;
 let placeholderID = 1; // for school
 let currentCampaignID;
 let currentcampaigns;
@@ -55,8 +55,9 @@ async function loadCurrentCampaigns() {
     
             let signupbtn = document.createElement('button')
             signupbtn.textContent = 'Sign Up'
-            signupbtn.addEventListener('click', () => signUp(element.id))
+            signupbtn.addEventListener('click', () => signUp(element.id, element.points))
             signupbtn.classList.add('btn-set-goal')
+            
             if (signedupcampaigns){
                 signedupcampaigns.forEach(campaign => {
                     if (campaign.id === element.id) {
@@ -81,13 +82,28 @@ async function loadCurrentCampaigns() {
 //ALWAYS CALL THIS
 loadCurrentCampaigns()
 
-async function signUp(id) {
+async function signUp(id, pts) {
     signupresponse = await fetch(`/campaigns/signup/${studentID}/${id}`, {
         method: "POST"
     })
     if (!signupresponse.ok) {throw new Error("Network response to sign up for campaign was not ok")}
     else {
         alert("Signed up for campaign! Refresh to sync changes.")
-        
     }
-}
+
+    let getpointsresponse = await fetch(`/users/student/points/${studentID}`)
+    let studentpts = 0;
+    if (!getpointsresponse.ok) {throw new Error("Network response to get student points was not ok")}
+    else {
+        let getpointsjson = await getpointsresponse.json()
+        getpointsjson.forEach(element => {
+            studentpts += element.points
+        });
+        studentpts += pts
+        let updatepointsresponse = await fetch(`/users/student/points/${studentID}/${studentpts}`, {
+            method: "PATCH"
+        })
+        if (!updatepointsresponse.ok) {throw new Error("Network response to update points was not ok")}
+    }
+    
+ }

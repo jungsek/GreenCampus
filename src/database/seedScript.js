@@ -231,20 +231,20 @@ async function insertData(connection) {
       INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
       VALUES ('Liam', 'Johnson', 'liam.johnson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 5, 28);
 
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Ava', 'Brown', 'ava.brown@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 6);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Ava', 'Brown', 'ava.brown@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 6, 0);
 
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Noah', 'Davis', 'noah.davis@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 7);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Noah', 'Davis', 'noah.davis@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 7, 0);
       
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Mia', 'Wilson', 'mia.wilson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 8);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Mia', 'Wilson', 'mia.wilson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 8, 5);
       
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Paige', 'Taylor', 'paige.taylor@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 9);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Paige', 'Taylor', 'paige.taylor@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 9, 6);
       
-      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('Ella', 'Anderson', 'ella.anderson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 10);
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
+      VALUES ('Ella', 'Anderson', 'ella.anderson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 10, 10);
 
 -- Mock data for EnergyUsage table
 INSERT INTO EnergyUsage (school_id, month, energy_kwh, avg_temperature_c, timestamp)
