@@ -1,3 +1,32 @@
+// Add this to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('instructionsModal');
+    const infoBtn = document.querySelector('.info-btn');
+    const closeBtn = document.querySelector('.close-btn');
+
+    // Open modal when info button is clicked
+    infoBtn.addEventListener('click', function() {
+        modal.style.display = 'flex';
+    });
+
+    // Close modal when close button is clicked
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Prevent closing when clicking inside modal content
+    modal.querySelector('.modal-content').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+});
+
 // Toggle between Monthly and Yearly data
 const toggleButtons = document.querySelectorAll('.toggle-btn');
 
@@ -183,7 +212,7 @@ function displayLeaderboard(data) {
     const listContainer = document.querySelector('.list');
     listContainer.innerHTML = '';
 
-    data.slice(3, 5).forEach((school, index) => {
+    data.slice(3, 10).forEach((school, index) => {
         const currentRank = index + 4;
         const rankChange = calculateRankChange(currentRank, school.previous_rank);
 
@@ -201,9 +230,6 @@ function displayLeaderboard(data) {
                 <div class="list-name">${school.school_name}</div>
                 <div class="list-points">
                     Points: ${school.sustainability_points}
-                    <span class="rank-change ${rankChange > 0 ? 'positive' : rankChange < 0 ? 'negative' : 'neutral'}">
-                        (${rankChange > 0 ? '+' : ''}${rankChange || '0'})
-                    </span>
                 </div>
             </div>
             
@@ -261,11 +287,14 @@ function calculateMonthlySustainabilityPoints(carbonFootprint, energyUsage) {
         : -50;                                  // Monthly CF over 0.9 tons
 
     points += (energyUsage <= 850) ? 100        // Monthly EU  <-= 83.3 kWh add 100 points
-        : (energyUsage <= 900) ? 80              
-        : (energyUsage <= 950) ? 60              
-        : (energyUsage <= 1000) ? 40              
-        : (energyUsage <= 1050) ? 20              
-        : (energyUsage <= 1100) ? 10              
+        : (energyUsage <= 900) ? 90              
+        : (energyUsage <= 950) ? 80              
+        : (energyUsage <= 1000) ? 70              
+        : (energyUsage <= 1050) ? 60              
+        : (energyUsage <= 1100) ? 50    
+        : (energyUsage <= 1150) ? 40             
+        : (energyUsage <= 1200) ? 30         
+        : (energyUsage <= 1250) ? 20              
         : -50;                                  // Monthly EU over 125 kWh
     return points;
 }
