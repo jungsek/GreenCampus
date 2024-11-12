@@ -59,10 +59,6 @@
     margin-bottom: 20px; /* Added spacing between cards */
 }
 
-.prediction-cards-container .card:hover {
-    background-color: #245D51;
-    color: #ffffff;
-}
 
 .prediction-cards-container .card .title {
     font-size: 1.2rem;
@@ -80,11 +76,6 @@
     background-color: #f9f9f9;
     transition: background-color 0.3s, color 0.3s;
     width: 100%;
-}
-
-.net-zero-container:hover {
-    background-color: #245D51;
-    color: #ffffff;
 }
 
 .net-zero-container h3 {
@@ -115,10 +106,6 @@
     margin-bottom: 20px; /* Added spacing between charts */
 }
 
-.additional-charts-container .chart-card:hover {
-    background-color: #245D51;
-    color: #ffffff;
-}
 
 .additional-charts-container .chart-card .title {
     font-size: 1.2rem;
@@ -165,7 +152,6 @@
     }
 }
 
-/* Optional: Center the canvas elements */
 canvas {
     display: block;
     margin: 0 auto;
@@ -176,8 +162,60 @@ canvas {
     width: 100%;
 }
 
-/* Adjust canvas to fill the container */
 canvas {
     width: 100% !important;
-    height: 400px !important; /* Adjust height as needed */
+    height: 400px !important; 
 }
+
+#generatePredictionsBtn {
+    margin-left: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* PDF Styling */
+#predictionComponents {
+    width: 800px; /* Fixed width suitable for PDF */
+    margin: 0 auto; /* Center the content */
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+#predictionComponents h1, 
+#predictionComponents h2, 
+#predictionComponents h3, 
+#predictionComponents .title {
+    color: #333;
+}
+
+#predictionComponents p {
+    color: #555;
+}
+
+#predictionComponents canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px;
+}
+
+/* Hide elements not needed in the PDF */
+@media print {
+    #downloadPdfBtn, #generatePredictionsBtn {
+        display: none;
+    }
+}
+
+/* Ensure charts are displayed correctly in the PDF */
+canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Adjust button styles */
+#downloadPdfBtn {
+    margin-top: 20px;
+}
+

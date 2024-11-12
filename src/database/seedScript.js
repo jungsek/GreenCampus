@@ -110,6 +110,8 @@ CREATE TABLE Reports (
     school_id INT NOT NULL,
     year INT NOT NULL,
     content NVARCHAR(MAX) NOT NULL,
+    recommendation_data NVARCHAR(MAX),
+    prediction_data NVARCHAR(MAX),
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
 );
