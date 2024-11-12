@@ -96,6 +96,93 @@ class School{
         )).recordset;
         return result.length ? result.map((x) => this.toSchoolObj(x)) : null;
     }
+
+    static async getSchoolsCarbonFootprintByCurrentYear() {
+        const query = `
+            SELECT 
+                s.id AS school_id,
+                s.school_name,
+                SUM(cf.total_carbon_tons) AS total_carbon_footprint
+            FROM 
+                Schools s
+            INNER JOIN 
+                CarbonFootprint cf ON s.id = cf.school_id
+            WHERE 
+                YEAR(cf.timestamp) = YEAR(GETDATE())
+            GROUP BY 
+                s.id, s.school_name
+            ORDER BY 
+                total_carbon_footprint ASC
+        `;
+
+        const result = (await this.query(query)).recordset;
+        return result.length ? result : null;
+    }
+
+    static async getSchoolsCarbonFootprintByCurrentMonth() { 
+        const query = `
+            SELECT 
+                s.id AS school_id,
+                s.school_name,
+                SUM(cf.total_carbon_tons) AS total_carbon_footprint
+            FROM 
+                Schools s
+            INNER JOIN 
+                CarbonFootprint cf ON s.id = cf.school_id
+            WHERE 
+                YEAR(cf.timestamp) = YEAR(GETDATE()) AND 
+                MONTH(cf.timestamp) = MONTH(GETDATE())
+            GROUP BY 
+                s.id, s.school_name
+            ORDER BY 
+                total_carbon_footprint ASC
+        `;
+    
+        const result = (await this.query(query)).recordset;
+        return result.length ? result : null;
+    }
+
+    static async getSchoolsEnergyUsageByCurrentYear() { 
+        const query = `
+            SELECT 
+                s.id AS school_id,
+                s.school_name,
+                SUM(eu.energy_kwh) AS total_energy_usage
+            FROM 
+                Schools s
+            INNER JOIN 
+                EnergyUsage eu ON s.id = eu.school_id
+            WHERE 
+                YEAR(eu.timestamp) = YEAR(GETDATE())
+            GROUP BY 
+                s.id, s.school_name
+            ORDER BY 
+                total_energy_usage ASC;
+        `;
+    
+        const result = (await this.query(query)).recordset;
+        return result.length ? result : null;
+    }
+
+    static async getSchoolsEnergyUsageByCurrentMonth() { 
+        const query = `
+            SELECT 
+                school_id,
+                SUM(energy_kwh) AS total_energy_usage
+            FROM 
+                EnergyUsage
+            WHERE 
+                YEAR(timestamp) = YEAR(GETDATE()) AND 
+                MONTH(timestamp) = MONTH(GETDATE())
+            GROUP BY 
+                school_id
+            ORDER BY 
+                total_energy_usage ASC;
+        `;
+    
+        const result = (await this.query(query)).recordset;
+        return result.length ? result : null;
+    }
 }
 
 module.exports = School;

@@ -110,6 +110,8 @@ CREATE TABLE Reports (
     school_id INT NOT NULL,
     year INT NOT NULL,
     content NVARCHAR(MAX) NOT NULL,
+    recommendation_data NVARCHAR(MAX),
+    prediction_data NVARCHAR(MAX),
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
 );
@@ -145,6 +147,15 @@ async function insertData(connection) {
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
       VALUES ('Regina', 'William', 'regina@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'lecturer', null);
 
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Michael', 'Brown', 'michael.brown@edu.com', '$2a$10$eD1c8y1Rt/JF4SzTZq05z4brI9E4hb5qJXjx2MCZw3wY5SwLl9u1C', 'lecturer', null);
+
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Alex', 'Johnson', 'alex.johnson@example.com', '$2a$10$7DoY7.sftak9f7yOBB1SxuMfg1zzDl0WguEz1Pkn3fFBeowEX7zyq', 'lecturer', null);
+
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Jessica', 'Smith', 'jessica.smith@school.org', '$2a$10$OFX1v01lq6LoxJknoHf42sLzwfNIZgqErjt.xWy9Pq.V6HsqCwzIu', 'lecturer', null);
+
       -- Then create the schools with the lecturer IDs
       INSERT INTO Schools (school_name, description, principal_id)
       VALUES ('Lincoln High School', 'A comprehensive public high school focused on STEM education', 1);
@@ -152,12 +163,31 @@ async function insertData(connection) {
       INSERT INTO Schools (school_name, description, principal_id)
       VALUES ('Washington Elementary', 'K-5 elementary school with emphasis on early childhood development', 2);
 
+      INSERT INTO Schools (school_name, description, principal_id)
+      VALUES ('Roosevelt Academy', 'A private high school offering a rigorous college preparatory curriculum', 3);
+
+      INSERT INTO Schools (school_name, description, principal_id)
+      VALUES ('Jefferson International School', 'An international school with a focus on bilingual education and global citizenship', 4);
+
+      INSERT INTO Schools (school_name, description, principal_id)
+      VALUES ('Greenwood High', 'A public high school with an emphasis on environmental studies and sustainability', 5);
+
       -- Finally insert the students with their school_ids
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
       VALUES ('Toby', 'Dean', 'toby@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 1);
       
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
       VALUES ('Sarah', 'Lee', 'sarah@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 2);
+
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Ethan', 'Garcia', 'ethan.garcia@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 3);
+
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Olivia', 'Martinez', 'olivia.martinez@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 4);
+
+      INSERT INTO Users (first_name, last_name, email, password, role, school_id)
+      VALUES ('Liam', 'Johnson', 'liam.johnson@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 5);
+
 
 -- Mock data for EnergyUsage table
 INSERT INTO EnergyUsage (school_id, month, energy_kwh, avg_temperature_c, timestamp)
@@ -274,7 +304,49 @@ VALUES
     (2, 'September', 900, 28.0, '2024-09-15 10:00:00'),
     (2, 'October', 1000, 25.0, '2024-10-15 10:00:00'),
     (2, 'November', 950, 24.0, '2024-11-15 10:00:00'),
-    (2, 'December', 800, 23.0, '2024-12-15 10:00:00');
+    (2, 'December', 800, 23.0, '2024-12-15 10:00:00'),
+
+    -- School 3 Data (2024)
+    (3, 'January', 800, 23.5, '2024-01-15 10:00:00'),
+    (3, 'February', 950, 24.5, '2024-02-15 10:00:00'),
+    (3, 'March', 1100, 25.0, '2024-03-15 10:00:00'),
+    (3, 'April', 1050, 27.0, '2024-04-15 10:00:00'),
+    (3, 'May', 900, 26.0, '2024-05-15 10:00:00'),
+    (3, 'June', 1150, 29.5, '2024-06-15 10:00:00'),
+    (3, 'July', 1200, 31.0, '2024-07-15 10:00:00'),
+    (3, 'August', 1100, 30.5, '2024-08-15 10:00:00'),
+    (3, 'September', 950, 28.0, '2024-09-15 10:00:00'),
+    (3, 'October', 1050, 25.5, '2024-10-15 10:00:00'),
+    (3, 'November', 900, 24.0, '2024-11-15 10:00:00'),
+    (3, 'December', 850, 23.0, '2024-12-15 10:00:00'),
+
+    -- School 4 Data (2024)
+    (4, 'January', 750, 22.5, '2024-01-15 10:00:00'),
+    (4, 'February', 850, 23.5, '2024-02-15 10:00:00'),
+    (4, 'March', 950, 24.0, '2024-03-15 10:00:00'),
+    (4, 'April', 1200, 25.0, '2024-04-15 10:00:00'),
+    (4, 'May', 890, 24.5, '2024-05-15 10:00:00'),
+    (4, 'June', 1050, 28.0, '2024-06-15 10:00:00'),
+    (4, 'July', 1100, 29.5, '2024-07-15 10:00:00'),
+    (4, 'August', 1000, 28.5, '2024-08-15 10:00:00'),
+    (4, 'September', 900, 27.0, '2024-09-15 10:00:00'),
+    (4, 'October', 950, 24.0, '2024-10-15 10:00:00'),
+    (4, 'November', 850, 23.0, '2024-11-15 10:00:00'),
+    (4, 'December', 800, 22.0, '2024-12-15 10:00:00'),
+
+    -- School 5 Data (2024)
+    (5, 'January', 690, 21.0, '2024-01-15 10:00:00'),
+    (5, 'February', 750, 22.0, '2024-02-15 10:00:00'),
+    (5, 'March', 850, 23.0, '2024-03-15 10:00:00'),
+    (5, 'April', 900, 24.0, '2024-04-15 10:00:00'),
+    (5, 'May', 750, 23.5, '2024-05-15 10:00:00'),
+    (5, 'June', 950, 27.0, '2024-06-15 10:00:00'),
+    (5, 'July', 1000, 28.5, '2024-07-15 10:00:00'),
+    (5, 'August', 950, 28.0, '2024-08-15 10:00:00'),
+    (5, 'September', 800, 26.0, '2024-09-15 10:00:00'),
+    (5, 'October', 850, 23.5, '2024-10-15 10:00:00'),
+    (5, 'November', 1150, 22.5, '2024-11-15 10:00:00'),
+    (5, 'December', 970, 21.0, '2024-12-15 10:00:00');
 
 -- Mock data for EnergyBreakdown table
 INSERT INTO EnergyBreakdown (energyusage_id, location, category, percentage, timestamp)
@@ -1192,6 +1264,48 @@ VALUES
     (2, 0.7, '2024-10-31 12:00:00'),
     (2, 0.6, '2024-11-30 12:00:00'),
     (2, 1.0, '2024-12-31 12:00:00'),
+
+    -- School 3 Data for 2024
+    (3, 0.9, '2024-01-31 12:00:00'),
+    (3, 1.2, '2024-02-28 12:00:00'),
+    (3, 1.0, '2024-03-31 12:00:00'),
+    (3, 0.8, '2024-04-30 12:00:00'),
+    (3, 0.7, '2024-05-31 12:00:00'),
+    (3, 0.9, '2024-06-30 12:00:00'),
+    (3, 0.9, '2024-07-31 12:00:00'),
+    (3, 0.8, '2024-08-31 12:00:00'),
+    (3, 1.1, '2024-09-30 12:00:00'),
+    (3, 0.9, '2024-10-31 12:00:00'),
+    (3, 1.0, '2024-11-30 12:00:00'),
+    (3, 0.8, '2024-12-31 12:00:00'),
+
+    -- School 4 Data for 2024
+    (4, 0.9, '2024-01-31 12:00:00'),
+    (4, 0.7, '2024-02-28 12:00:00'),
+    (4, 1.1, '2024-03-31 12:00:00'),
+    (4, 0.9, '2024-04-30 12:00:00'),
+    (4, 0.7, '2024-05-31 12:00:00'),
+    (4, 0.8, '2024-06-30 12:00:00'),
+    (4, 0.9, '2024-07-31 12:00:00'),
+    (4, 1.0, '2024-08-31 12:00:00'),
+    (4, 0.7, '2024-09-30 12:00:00'),
+    (4, 0.8, '2024-10-31 12:00:00'),
+    (4, 1.2, '2024-11-30 12:00:00'),
+    (4, 1.0, '2024-12-31 12:00:00'),
+
+    -- School 5 Data for 2024
+    (5, 0.8, '2024-01-31 12:00:00'),
+    (5, 0.7, '2024-02-28 12:00:00'),
+    (5, 0.7, '2024-03-31 12:00:00'),
+    (5, 1.0, '2024-04-30 12:00:00'),
+    (5, 0.8, '2024-05-31 12:00:00'),
+    (5, 0.9, '2024-06-30 12:00:00'),
+    (5, 0.7, '2024-07-31 12:00:00'),
+    (5, 0.9, '2024-08-31 12:00:00'),
+    (5, 1.0, '2024-09-30 12:00:00'),
+    (5, 0.8, '2024-10-31 12:00:00'),
+    (5, 0.7, '2024-11-30 12:00:00'),
+    (5, 1.1, '2024-12-31 12:00:00'),
 
     -- Previous years for School 1
     (1, 0.8, '2023-01-31 12:00:00'),

@@ -57,9 +57,53 @@ const getAllSchools = async (req, res) => {
     }
   }
 
+  const getSchoolsCarbonFootprintByCurrentYear = async (req, res) => {
+    try {
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentYear();
+        res.json(carbonFootprints);
+    } catch (error) {
+        console.error('Error retrieving schools carbon footprint by current year:', error);
+        res.status(500).send("Error retrieving schools carbon footprint by current year");
+    }
+  }
+
+  const getSchoolsCarbonFootprintByCurrentMonth = async (req, res) => {
+    try {
+        const carbonFootprints = await School.getSchoolsCarbonFootprintByCurrentMonth();
+        res.json(carbonFootprints);
+    } catch (error) {
+        console.error('Error retrieving schools carbon footprint by current month:', error);
+        res.status(500).send("Error retrieving schools carbon footprint by current month");
+    }
+  }
+
+  const getSchoolsEnergyUsageByCurrentYear = async (req, res) => {
+    try {
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentYear();
+        res.json(energyUsage);
+    } catch (error) {
+        console.error('Error retrieving schools energy usage by current year:', error);
+        res.status(500).send("Error retrieving schools energy usage by current year");
+    }
+  }
+
+  const getSchoolsEnergyUsageByCurrentMonth= async (req, res) => {
+    try {
+        const energyUsage = await School.getSchoolsEnergyUsageByCurrentMonth();
+        res.json(energyUsage);
+    } catch (error) {
+        console.error('Error retrieving schools energy usage by current month:', error);
+        res.status(500).send("Error retrieving schools energy usage by current month");
+    }
+  }
+
 module.exports = {
     getAllSchools,
     getSchoolById,
     getSchoolByStudentId,
-    getSchoolsByName
+    getSchoolsByName,
+    getSchoolsCarbonFootprintByCurrentYear,
+    getSchoolsCarbonFootprintByCurrentMonth,
+    getSchoolsEnergyUsageByCurrentYear,
+    getSchoolsEnergyUsageByCurrentMonth
 }
