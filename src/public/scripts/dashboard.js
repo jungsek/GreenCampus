@@ -1232,3 +1232,15 @@ yearSelect.addEventListener('change', function() {
     const locationDropdown = document.getElementById('locationSelect');
     locationDropdown.value = 'all_locations'; // Change this to your default value
 });
+
+
+document.querySelectorAll('.analyse-chart-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const chartType = button.getAttribute('data-chart-type');
+        const selectedYear = parseInt(yearSelect.value) || new Date().getFullYear();
+        const schoolId = placeholderID; // Assuming placeholderID = 1
+
+        // Redirect to the analyseChart page with query parameters
+        window.location.href = `analyseChart.html?chartType=${chartType}&year=${selectedYear}&schoolId=${schoolId}`;
+    });
+});
