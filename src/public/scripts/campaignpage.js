@@ -17,7 +17,6 @@ async function loadCurrentCampaigns() {
     else {
         currentcampaigns = await currentcampaignsresponse.json()
         currentcampaigns.forEach(element => {
-            let card = document.createElement('div')
             card.classList.add('card')
     
             let campaignh2 = document.createElement('h2')
