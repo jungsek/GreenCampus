@@ -39,122 +39,73 @@
         <div class="carpet-container">
             <div class="allContent-container">
                 <div class="card-container">
-                    <div class="smallCard-container">
-                        <div class="impact-card" onclick="flipCard(this)">
-                            <div class="card-front">
-                                <div class="title">2024's Impact</div>
-                                <div class="metric">
-                                    <div class="metric-title carbon-footprint">Total Carbon Footprint: <span class="metric-value1" style="font-size: 1rem; font-weight: bold;">5534.44</span> tons
-                                        <span class="trend1"><br><i class='bx bx-trending-up'></i> +20% from last year</span>
-                                    </div> 
+                    <div class="content-card">
+                        <div class="title">2024's Impact</div>
+                            <div class="metric">
+                                <div class="metric-title carbon-footprint">Total Carbon Footprint: <span class="metric-value1" style="font-size: 1rem; font-weight: bold;">5534.44</span> tons
+                                    <span class="trend1"><br><i class='bx bx-trending-up'></i> +20% from last year</span>
+                                </div> 
+                            </div>
+                            <div class="metric">
+                                <div class="metric-title energy-usage">Total Energy Usage: <span class="metric-value2" style="font-size: 1rem; font-weight: bold">5534.44</span> kWh
+                                    <span class="trend2"><br><i class='bx bx-trending-down'></i> +20% from last year</span>
                                 </div>
-                                <div class="metric">
-                                    <div class="metric-title energy-usage">Total Energy Usage: <span class="metric-value2" style="font-size: 1rem; font-weight: bold">5534.44</span> kWh
-                                        <span class="trend2"><br><i class='bx bx-trending-down'></i> +20% from last year</span>
-                                    </div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-title">Top Contributor(s): 
+                                    <span class="metric-value3" style="font-size: 0.9rem; font-weight: bold">HVAC, Lighting</span>
                                 </div>
-                                <div class="metric">
-                                    <div class="metric-title">Top Contributor(s): <span class="metric-value3" style="font-size: 0.9rem; font-weight: bold">HVAC, Lighting</span>
-                                    <!-- <a href="#" class="see-why"><br>See why</a> -->
-                                    </div>
-                                </div>
+                            </div>
+                    </div>
 
-                                <div class="card-back">
-                                    <!-- Blank back side content -->
-                                </div>
-                            </div>    
-                        </div>    
+                    <div class="content-card">
+                        <div class="header" style="font-size: 1.2rem;">
+                            <span>Progress Towards Energy Usage Goal</span>
+                            <span class="menu-icon">...</span>
+                        </div>
+                        <div class="value">
+                            <div>
+                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 100 t CO2e</div>
+                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 70 t CO2e</div>
+                            </div>
                         
-                        <!-- <div class="card">
-                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2023's Impact</div>
-                            <div class="impact-number">55354.44</div>
-                            <div class="subtitle">CO₂e </div>
-                        </div>  
-
-                        <div class="card">
-                            <div class="title" style="font-size: 1rem; text-align: center; font-weight: bold;">2024's Impact</div>
-                            <div class="impact-number">55354.44</div>
-                            <div class="subtitle">CO₂e </div>
-                        </div>   -->
-                    </div>        
-                    
-                    <div class="mediumCard-container">
-                        <div class="content-card">
-                            <div class="header" style="font-size: 1.2rem;">
-                                <span>Progress Towards Goal</span>
-                                <span class="menu-icon">...</span>
-                            </div>
-                            <div class="value">
-                                <div>
-                                    <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70 t CO2e</div>
-                                    <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
-                                </div>
-                            
-                                <div class="doughnut-chart-container">
-                                    <canvas id="doughnutChart1" width="150" height="90"></canvas>
-                                    <div class="percentage-text">70%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="change">
-                                <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                                <span class="change-text">+35%</span>
-                                <span class="last-month">from last month</span> 
+                            <div class="doughnut-chart-container">
+                                <canvas id="doughnutChart1" width="150" height="90"></canvas>
+                                <div class="percentage-text"></div>
                             </div>
                         </div>
+                        
+                        <div class="change">
+                            <span class="increase-icon"><i class='etrend'></i></span>
+                            <span class="change-text"></span>
+                            <span class="last-month"></span> 
+                        </div>
+                    </div>
 
-                        <div class="content-card">
-                            <div class="header" style="font-size: 1.2rem;">
-                                <span>Overall System Carbon Footprint</span>
-                                <span class="menu-icon">...</span>
+                    <div class="content-card">
+                        <div class="header" style="font-size: 1.2rem;">
+                            <span>Goal to Net Zero Emissions</span>
+                            <span class="menu-icon">...</span>
+                        </div>
+                        <div class="value">
+                            <div>
+                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">150 metric tons CO2 /year</div>
+                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
                             </div>
-                            <div class="value">
-                                <div>
-                                    <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">150 metric tons CO2 /year</div>
-                                    <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
-                                </div>
-                            
-                                <div class="doughnut-chart-container">
-                                    <canvas id="doughnutChart2" width="150" height="90"></canvas>
-                                    <div class="percentage-text">70%</div>
-                                </div>
+                        
+                            <div class="doughnut-chart-container">
+                                <canvas id="doughnutChart2" width="150" height="90"></canvas>
+                                <div class="percentage-text"></div>
                             </div>
-                            
-                            <div class="change">
-                                <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                                <span class="change-text">+35%</span>
-                                <span class="last-month">from last year</span> 
-                            </div>
+                        </div>
+                        
+                        <div class="change">
+                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
+                            <span class="change-text">-35%</span>
+                            <span class="last-month">from last year</span> 
                         </div>
                     </div>
                     
-    
-                   
-    
-                    <!-- <div class="content-card">
-                        <div class="header" style="font-size: 1.2rem;">
-                            <span>Progress Towards Goal</span>
-                            <span class="menu-icon">...</span>
-                        </div>
-                        <div class="value" style="display: flex; align-items: center; margin-top: -30px;">
-                            <div style="margin-right: 250px;">
-                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 70%</div>
-                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
-                            </div>
-                    
-                            <div style="position: relative; display: inline-block;">
-                                <canvas id="doughnutChart3" width="100" height="100" style="margin-left: 10px;"></canvas>
-                                <div class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-35%, -50%); font-size: 1.0rem; color: #000; font-weight: bold">
-                                    70%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="change">
-                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                            <span class="change-text">+35%</span>
-                            <span class="last-month">from last month</span> 
-                        </div>
-                   </div> -->
                    
                    <div class="filter" style="font-size: 0.9rem; display: flex; flex-direction: column;">
                     <div class="filterSelect" style="font-size: 0.9rem; display: flex;">
@@ -208,21 +159,19 @@
                                 <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown
                             </span>
                         </div>
-                        <div class="pieChart-wrapper">
-                            <!-- ============ Pie Chart ============ -->
-                            <div class="pieChart-container">
-                                <canvas id="pieChart" style="margin-left: -25px; margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
+                        <!-- ============ Pie Chart ============ -->
+                        <div class="pieChart-container">
+                            <canvas id="pieChart" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
 
-                                <div id="legendButtons">
-                                    <button onclick="highlightSegment('Lighting')" class="legend-button" data-segment="Lighting">Lighting</button>
-                                    <button onclick="highlightSegment('Computers')" class="legend-button" data-segment="Computers">Computers</button>
-                                    <button onclick="highlightSegment('HVAC')" class="legend-button" data-segment="HVAC">HVAC</button>
-                                    <button onclick="highlightSegment('Equipment')" class="legend-button" data-segment="Equipment">Equipment</button>
-                                    <button onclick="highlightSegment('Refrigeration')" class="legend-button" data-segment="Refrigeration">Refrigeration</button>
-                                    <button onclick="highlightSegment('Appliances')" class="legend-button" data-segment="Appliances">Appliances</button>
-                                    <button onclick="highlightSegment('FoodWasteManagement')" class="legend-button" data-segment="Food Waste Management">Food Waste Management</button>
-                                    <button onclick="highlightSegment('SoundEquipment')" class="legend-button" data-segment="Sound Equipment">Sound Equipment</button>
-                                </div>
+                            <div class="legendButtons" id="legendButtons">
+                                <button onclick="highlightSegment('Lighting')" class="legend-button" data-segment="Lighting">Lighting</button>
+                                <button onclick="highlightSegment('Computers')" class="legend-button" data-segment="Computers">Computers</button>
+                                <button onclick="highlightSegment('HVAC')" class="legend-button" data-segment="HVAC">HVAC</button>
+                                <button onclick="highlightSegment('Equipment')" class="legend-button" data-segment="Equipment">Equipment</button>
+                                <button onclick="highlightSegment('Refrigeration')" class="legend-button" data-segment="Refrigeration">Refrigeration</button>
+                                <button onclick="highlightSegment('Appliances')" class="legend-button" data-segment="Appliances">Appliances</button>
+                                <button onclick="highlightSegment('FoodWasteManagement')" class="legend-button" data-segment="Food Waste Management">Food Waste Management</button>
+                                <button onclick="highlightSegment('SoundEquipment')" class="legend-button" data-segment="Sound Equipment">Sound Equipment</button>
                             </div>
                         </div>
 
@@ -261,81 +210,72 @@
         </div> 
 
         <!-- The Popup Structure -->
-<div id="confirmationPopup" class="popup" style="z-index: 100000;">
-    <div class="popup-content" style="display: flex; align-items: center; justify-content: center; flex-direction: column; max-width: 70%;">
-        <h3>This will override your previous response for <span id="itemName">Item Name</span> of <span id="itemValue">Value</span>. Do you want to continue?</h3>
-        <div class="button-group">
-            <button id="yesconfirmButton" class="btn-set-goal">Yes</button>
-            <button id="noconfirmButton" class="btn-set-goal">No</button>
+        <div id="confirmationPopup" class="popup" style="z-index: 100000;">
+            <div class="popup-content" style="display: flex; align-items: center; justify-content: center; flex-direction: column; max-width: 70%;">
+                <h3>This will override your previous response for <span id="itemName">Item Name</span> of <span id="itemValue">Value</span>. Do you want to continue?</h3>
+                <div class="button-group">
+                    <button id="yesconfirmButton" class="btn-set-goal">Yes</button>
+                    <button id="noconfirmButton" class="btn-set-goal">No</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="goalPopup" class="popup">
+            <div class="popup-content">
+                <button id="cancelButton" class="cancel-button">✖</button> <!-- Cancel button -->
+                <h1>Set Yearly Energy Usage/Carbon Footprint Goal</h1>
+
+                <form id="goalForm">
+                    <div class="form-group">
+                        <label for="goalSelect">Select Goal:</label>
+                        <select id="goalSelect" name="goalSelect">
+                            <option value="pctgdecrease" selected>Percentage Decrease</option>
+                            <option value="tgtvalue">Custom Target Value</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="typeSelection">
+                        <label>Choose Type:</label>
+                        <div>
+                            <input type="radio" id="energyUsage" name="type" value="energy" />
+                            <label for="energyUsage" selected>Energy Usage</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="carbonEmissions" name="type" value="carbon" />
+                            <label for="carbonEmissions">Carbon Emissions</label>
+                        </div>
+                    </div>
+
+                    <div id="percentageInput" class="form-group">
+                        <label for="goalPercentage">Enter Percentage:</label>
+                        <input type="number" id="goalPercentage" class="form-control" min="1" max="100" placeholder="__%">
+                    </div>
+
+                    <div id="kwhInput" class="form-group hidden">
+                        <label for="goalkwh">Enter target kWh:</label>
+                        <input type="number" id="goalkwh" class="form-control" min="0" max="1000000" placeholder="__kWh">
+                    </div>
+
+                    <div id="tonInput" class="form-group hidden">
+                        <label for="goalton">Enter target tonnes:</label>
+                        <input type="number" id="goalton" class="form-control" min="0" max="1000" placeholder="__tonnes">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goalYear">Select Year:</label>
+                        <input type="number" id="goalYear" class="form-control" min="2024" max="2100" placeholder="Enter Year">
+                    </div>
+
+                    <button type="submit" id="submitnewgoalbtn">Set Goal</button>
+                </form>
+
+                
+
+            </div>
         </div>
     </div>
-</div>
 
-<div id="goalPopup" class="popup">
-    <div class="popup-content">
-        <button id="cancelButton" class="cancel-button">✖</button> <!-- Cancel button -->
-        <h1>Set Yearly Energy Usage/Carbon Footprint Goal</h1>
-
-        <form id="goalForm">
-            <div class="form-group">
-                <label for="goalSelect">Select Goal:</label>
-                <select id="goalSelect" name="goalSelect">
-                    <option value="pctgdecrease" selected>Percentage Decrease</option>
-                    <option value="tgtvalue">Custom Target Value</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="typeSelection">
-                <label>Choose Type:</label>
-                <div>
-                    <input type="radio" id="energyUsage" name="type" value="energy" />
-                    <label for="energyUsage" selected>Energy Usage</label>
-                </div>
-                <div>
-                    <input type="radio" id="carbonEmissions" name="type" value="carbon" />
-                    <label for="carbonEmissions">Carbon Emissions</label>
-                </div>
-            </div>
-
-            <div id="percentageInput" class="form-group">
-                <label for="goalPercentage">Enter Percentage:</label>
-                <input type="number" id="goalPercentage" class="form-control" min="1" max="100" placeholder="__%">
-            </div>
-
-            <div id="kwhInput" class="form-group hidden">
-                <label for="goalkwh">Enter target kWh:</label>
-                <input type="number" id="goalkwh" class="form-control" min="0" max="1000000" placeholder="__kWh">
-            </div>
-
-            <div id="tonInput" class="form-group hidden">
-                <label for="goalton">Enter target tonnes:</label>
-                <input type="number" id="goalton" class="form-control" min="0" max="1000" placeholder="__tonnes">
-            </div>
-
-            <div class="form-group">
-                <label for="goalYear">Select Year:</label>
-                <input type="number" id="goalYear" class="form-control" min="2024" max="2100" placeholder="Enter Year">
-            </div>
-
-            <button type="submit" id="submitnewgoalbtn">Set Goal</button>
-        </form>
-
-        
-
-    </div>
-</div>
-
-
-</div>
-
-    
-    </div>
-
-
-     <!--footer-->
-     <div class="footer-placeholder"></div>
-
-     <!-- scripts -->
+    <!-- scripts -->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="./scripts/common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

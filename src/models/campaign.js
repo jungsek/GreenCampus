@@ -57,7 +57,7 @@ class Campaign{
 
     static async getAllCampaigns() {
         const result = (await this.query("SELECT * FROM Campaigns ORDER BY school_id ASC")).recordset
-        return result.length ? result.map((x) => th(x)) : null
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
     static async getCampaignById(id){
@@ -66,16 +66,22 @@ class Campaign{
             "SELECT * FROM Campaigns WHERE id = @id", 
             params
         )).recordset
-        return result ? th(result) : null
+        return result ? this.toCampaignObj(result) : null
     }
 
     static async getCampaignsBySchool(school_id) {
         const params = {"school_id": school_id}
         const result = (await this.query(
-            "SELECT * FROM Campaigns WHERE school_id = @school_id ORDER BY year ASC", 
+            "SELECT * FROM Campaigns WHERE school_id = @school_id", 
             params
         )).recordset
-        return result.length ? result.map((x) => th(x)) : null
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
+    }
+
+    static async getSignedUpCampaignsByStudent(student_id){
+        const params = {"student_id": student_id}
+        const result = (await this.query("SELECT Campaigns.id, Campaigns.school_id, Campaigns.name, Campaigns.description, Campaigns.image, Campaigns.points FROM Campaigns INNER JOIN CampaignStudents on CampaignStudents.campaign_id = Campaigns.id WHERE CampaignStudents.student_id = @student_id", params)).recordset
+        return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
     static async createCampaign(newCampaignData) {
@@ -115,6 +121,12 @@ class Campaign{
     static async deleteCampaign(id) {
         const params = {"id": id}
         await this.query("DELETE FROM Campaigns WHERE id = @id", params)
+    }
+
+    static async signUpStudentForCampaign(student_id, id) {
+        const params = {"student_id": student_id,
+                        "id": id}
+        await this.query("INSERT INTO CampaignStudents(student_id, campaign_id) VALUES (@student_id, @id);", params)
     }
 }
 
