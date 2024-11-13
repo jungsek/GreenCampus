@@ -5,15 +5,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* body {
-    background: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-} */
-
 .leaderboard {
     background: #89cdb4;  
     padding: 24px;
@@ -22,24 +13,112 @@
 
 .header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* This keeps the toggle buttons on the right */
     align-items: center;
-    margin-bottom: 24px;
-    position: relative;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Create a container for title and info button */
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between title and info button */
 }
 
 .title {
     color: white;
     font-size: 24px;
     font-weight: 600;
-    text-align: center;
+    margin: 0; /* Remove any default margins */
+}
+
+.info-btn {
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0; /* Remove any default padding */
+}
+
+/* modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #1a1a1a; /* Dark background for the modal */
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-right: 30px; /* Make space for close button */
+}
+
+.instruction-section {
+    margin-bottom: 20px;
+}
+
+.instruction-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #4CAF50; /* Green color for section headers */
+}
+
+.points-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.points-table th, .points-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #333;
+}
+
+.points-table th {
+    background-color: #4CAF50;
 }
 
 .toggle-buttons {
     display: flex;
     gap: 8px;
-    position: absolute;
-    right: 0;
 }
 
 .toggle-btn {
@@ -56,8 +135,9 @@
     background: rgba(75, 165, 132, 0.8);  /* More opaque version of the same color */
 }
 
-.performance-card {
+/* .performance-card {
     background: #4b527c;
+    background: #89cdb4;  
     padding: 16px;
     border-radius: 12px;
     margin-bottom: 40px;
@@ -72,7 +152,7 @@
 .performance-card p:last-child {
     font-size: 24px;
     font-weight: bold;
-}
+} */
 
 .podium {
     display: flex;
@@ -94,16 +174,11 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     background: #ddd;
     overflow: hidden;
 }
 
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
 .player-name {
     color: white;
@@ -112,10 +187,18 @@
     text-align: center;
 }
 
-.player-points {
+.player-points-container {
+    display: flex;     
+    gap: 16px;            
+    justify-content: center; 
+    margin-bottom: 10px;
+}
+
+.winnerMetricsCF,
+.winnerMetricsEU,
+.sustainability-points {
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
-    margin-bottom: 8px;
 }
 
 .podium-step {
@@ -172,6 +255,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative; 
 }
 
 .list-rank {
@@ -181,20 +265,22 @@
 }
 
 .list-profile {
+    display: flex;  
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ddd;
+    background-color: #007bff;  
+    align-items: center;  
+    justify-content: center;  
+    color: white;  
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
     overflow: hidden;
 }
 
-.list-profile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .list-info {
+    flex: 1; /* Added */
     display: flex;
     flex-direction: column;
 }
@@ -206,6 +292,63 @@
 }
 
 .list-points {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.633);
     font-size: 12px;
+}
+
+.metrics-container {
+    display: flex;
+    justify-content: space-evenly; 
+    align-items: center;
+    flex-grow: 0.5;
+    margin-right: 400px;
+}
+
+.CFmetrics,
+.EUmetrics {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center; 
+}
+
+
+.metric-item {
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto; /* Added */
+}
+  
+.score-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.score-value {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.score-icon {
+    font-size: 12px;
+    color: #444;
+}
+
+.score-icon.fa-arrow-up {
+    color: green;
+}
+
+.score-icon.fa-arrow-down {
+    color: #F44336;
 }

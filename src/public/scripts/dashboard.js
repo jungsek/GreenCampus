@@ -107,7 +107,7 @@ submitgoalbtn.addEventListener('click', async (event) => {
             body: JSON.stringify(newGoal)
         });
         if (!response.ok) throw new Error('Network response was not ok');
-        alert("Goal created");
+        alert("Goal created! Reload to sync changes.");
         document.getElementById('goalPopup').style.display = 'none';
     }
    
@@ -440,59 +440,205 @@ async function initImpactCard(placeholderYear) {
 
 
 // ==================== Doughnut Progress Chart ====================
-const chartData = {
-    labels: ['Current Progress', 'Remaining Target'],
-    datasets: [{
-        label: 'Progress Towards Goal',
-        data: [70, 30],
-        backgroundColor: [
-            '#5bc7a0', // Color for utilized
-            '#e0e0e0'  // Color for unused
-        ],
-        borderColor: '#fff',
-        borderWidth: 2
-    }]
-};
+async function initDoughnutChart() {
+    let sumEnergy;
+    let sumEnergyNow;
+    let metricValue; 
+    const fetchedData = await fetchGoals();
+    const fetchedEnergyData = await fetchEnergyUsageData();
 
-const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '50%', // Ring effect
-    plugins: {
-        legend: {
-            display: false // Hide legend
-        },
-        tooltip: {
-            callbacks: {
-                label: function(tooltipItem) {
-                    return tooltipItem.label + ': ' + tooltipItem.raw + '%';
-                }
-            }
+    //sumEnergy value
+    function filterDataById(fetchedData, selectedId, placeholderYear) {
+        let filteredData = fetchedData.filter(item => 
+            item.school_id === selectedId && 
+            new Date(item.timestamp).getFullYear() === placeholderYear
+        );
+
+        let kwhtotal = 0;
+        filteredData.forEach(row => {
+            kwhtotal += row.energy_kwh;
+        });
+        return kwhtotal;
+    }
+    sumEnergy = filterDataById(fetchedEnergyData, placeholderID, placeholderYear -1); //previous year usage
+    sumEnergyNow = filterDataById(fetchedEnergyData, placeholderID, placeholderYear);
+
+    //specific metric value
+    const specificMetricName = 'energy'; // Replace with actual metric name
+    const targetGoal = fetchedData.find(item => item.metric === specificMetricName);
+    
+    metricValue = targetGoal.metric_value;
+    console.log("Metric Value:", metricValue);
+    console.log(sumEnergy);
+    const goalValue = sumEnergy * ((100 - metricValue)/100);
+    const withinGoalLimit = goalValue * 0.8;
+    const remainingGoalLimit = goalValue * 0.2;
+    const pastGoalLimit = sumEnergy - goalValue;
+
+    const chartData1 = {
+        labels: ['Within Goal Limit', 'Reaching Goal Limit', 'Past Goal Limit'],
+        datasets: [{
+            label: 'Progress Towards Goal',
+            data: [withinGoalLimit, remainingGoalLimit, pastGoalLimit],//[80, 20, 20], //first element green (80% of goal), second element yellow (20% remaining of goal), third element red (amount past goal)
+            backgroundColor: [
+                '#5bc7a0', // Color for within goal limit (green)
+                '#f1c40f', // Color for reaching goal limit (yellow)
+                '#FF0000',  //Color for past goal limit (red)
+            ],
+            borderColor: '#fff',
+            borderWidth: 2,
+            circumference: 180,
+            rotation: 270,
+        }]
+    };
+
+    const chartData2 = {
+        labels: ['Within Goal Limit', 'Reaching Goal Limit', 'Past Goal Limit'],
+        datasets: [{
+            label: 'Progress Towards Goal',
+            data: [80, 20, 20], //first element green (80% of goal), second element yellow (20% remaining of goal), third element red (amount past goal)
+            backgroundColor: [
+                '#5bc7a0', // Color for within goal limit (green)
+                '#f1c40f', // Color for reaching goal limit (yellow)
+                '#FF0000',  //Color for past goal limit (red)
+            ],
+            borderColor: '#fff',
+            borderWidth: 2,
+            circumference: 180,
+            rotation: 270,
+        }]
+    };
+
+    const energyProgressChangeElement = document.querySelector('.etrend')
+
+    if (energyProgressChangeElement) {
+        const percentageChange = (((sumEnergyNow - sumEnergy)/sumEnergy) * 100).toFixed(2);
+        // Check if energyChange is "No data" or NaN
+        if (isNaN(percentageChange) || percentageChange === "No data") {
+            energyProgressChangeElement.innerHTML = "No data available from last year";
+            energyProgressChangeElement.style.color = "grey"; // Default color for no data
+        } else if (Math.abs(percentageChange) == 0.0) {
+            // No change case (near zero)
+            energyProgressChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
+            energyProgressChangeElement.style.color = "blue"; // Blue color for no change
+        } else {
+            // Set up icon and color based on increase or decrease
+            const iconClass = percentageChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
+            const color = percentageChange < 0 ? 'rgb(25, 176, 25)' : 'red';
+            
+            energyProgressChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(percentageChange)}% from last year`;
+            energyProgressChangeElement.style.color = color; // Apply color based on trend
         }
     }
-};
 
-//Initialize the doughnut charts
-const ctx1 = document.getElementById('doughnutChart1').getContext('2d');
-const doughnutChart1 = new Chart(ctx1, {
-    type: 'doughnut',
-    data: chartData,
-     options: chartOptions
-});
+    const doughnutPointer = {
+        id: 'doughnutPointer',
+        afterDatasetsDraw(chart, args, plugins) {
+            const {ctx, data} = chart;
 
-const ctx2 = document.getElementById('doughnutChart2').getContext('2d');
-const doughnutChart2 = new Chart(ctx2, {
-    type: 'doughnut',
-    data: chartData,
-    options: chartOptions
-});
+            ctx.save()
 
-// const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
-// const doughnutChart3 = new Chart(ctx3, {
-//     type: 'doughnut',
-//     data: chartData,
-//     options: chartOptions
-// });
+            const xCenter = chart.getDatasetMeta(0).data[0].x;
+            const yCenter = chart.getDatasetMeta(0).data[0].y;
+            const innerRadius = chart.getDatasetMeta(0).data[0].innerRadius;
+            const outerRadius = chart.getDatasetMeta(0).data[0].outerRadius;
+            const doughnutThickness = outerRadius - innerRadius;
+
+            //to update progress chart utilized value
+            function updateUtilizedEnergy(newValue) {
+                const utilizedElement = document.querySelector('.value > div > div');
+                
+                // Update the innerHTML with the new value
+                utilizedElement.innerHTML = `<div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: ${newValue}kwh</div>`;
+            }
+            updateUtilizedEnergy(sumEnergy);
+
+            const goalElement = document.querySelector('.value > div > div:nth-child(2)');
+            // Update the innerHTML with the new goal value
+            goalElement.innerHTML = `Goal: ${goalValue}kwh`;
+
+            const pointerColor = plugins.pointerColor || 'black';
+            const pointerValue = sumEnergy || plugins.pointerValue; //decides where target points to
+            const pointerRadius = plugins.pointerRadius || 5;
+            const angle = Math.PI / 180;
+
+            //total value of data (adds up to 120)
+            function sumArray(arr) {
+                return arr.reduce((acc, current) => acc + current, 0);
+            }
+
+            const dataPointArray = data.datasets[0].data.map((datapoint) => {
+                return datapoint
+            })
+
+            const totalSum = sumArray(dataPointArray);
+            const targetPointerRotation = (pointerValue / totalSum * 180) - 90;
+            const datapointPercentage = pointerValue / goalValue * 100;
+
+            //text
+            ctx.font = 'bold 1.0rem sans-serif';
+            ctx.fillStyle = pointerColor;
+            ctx.textAlign = 'center';
+            ctx.baseline = 'middle';
+            ctx.fillText(`${datapointPercentage.toFixed(1)}%`, xCenter, yCenter);
+
+            //pointer
+            ctx.translate(xCenter, yCenter);
+            ctx.rotate(angle * targetPointerRotation);
+
+            ctx.beginPath();
+            ctx.fillStyle = pointerColor;
+            ctx.roundRect(0 - 2.5, -outerRadius - 3, 3, doughnutThickness + 5,
+                pointerRadius); //x,y,w,h
+            ctx.fill();
+            
+            ctx.restore();
+
+        }
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '80%', // Ring effect
+        plugins: {
+            legend: {
+                display: false // Hide legend
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.label + ': ' + tooltipItem.raw;
+                    }
+                }
+            },
+            doughnutPointer: {
+                pointerValue: sumEnergy, //value should be the total amount used currently
+                pointerColor: 'black',
+                pointerRadius: 2
+            }
+        }
+    };
+
+    //Initialize the doughnut charts
+    const ctx1 = document.getElementById('doughnutChart1').getContext('2d');
+    const doughnutChart1 = new Chart(ctx1, {
+        type: 'doughnut',
+        data: chartData1,
+        options: chartOptions,
+        plugins: [doughnutPointer]
+    });
+
+    const ctx2 = document.getElementById('doughnutChart2').getContext('2d');
+    const doughnutChart2 = new Chart(ctx2, {
+        type: 'doughnut',
+        data: chartData2,
+        options: chartOptions,
+        plugins: [doughnutPointer]
+    });
+
+}
+initDoughnutChart();
 
 // ==================== Bar + Line Graph ====================
 let energyTemperatureChart;
@@ -576,7 +722,15 @@ async function initEnergyTempChart() {
     }
 
     const filteredEnergyTempData = filterDataById(fetchedData, placeholderID);
-    
+
+    const energyData = filteredEnergyTempData.totalEnergy;
+    const temperatureData = filteredEnergyTempData.totalTemp;
+
+    //to calculate sum of energy/temperature
+    const sumEnergy = energyData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    const sumTemp = temperatureData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    // Destroy the existing chart if it exists
     if (energyTemperatureChart) {
         energyTemperatureChart.destroy();
     }
@@ -680,6 +834,11 @@ async function initEnergyTempChart() {
             }
         }
     };
+
+    //calculate average energy usage and temperature
+    const avgEnergyTemp = document.querySelector('.barChart-info')
+    avgEnergyTemp.innerHTML = `<p>Energy consumption:<br><strong> ${(sumEnergy/12).toFixed(2)} kWh/month</strong></p>
+                            <p>Average Temperature:<br><strong>${(sumTemp/12).toFixed(1)}°C</strong></p>`
 
     // Initialize the energy vs. temperature chart
     const energyCtx = document.getElementById('energyTemperatureChart').getContext('2d');
@@ -806,7 +965,7 @@ async function initPieChart() {
 
         const pieChartOptions = {
             responsive: false,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
                     display: false,

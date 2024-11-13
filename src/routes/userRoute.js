@@ -9,6 +9,8 @@ const userRoute = (app, upload) => {
     app.post("/users", validateUser.validateUser, usersController.createUser) //register/sign up user
     app.post("/users/login", usersController.loginUser) //login
     app.get("/users", usersController.getAllUsers) //get all users. Mostly useful for testing
+    app.get("/users/student/points/:id", usersController.getStudentPoints)
+    app.patch("/users/student/points/:id/:points", usersController.updateStudentPoints)
     app.get("/users/private", authenticateToken, usersController.getPrivateUserById) //get the user's data by id but also includes email
     app.get("/users/decodejwt", authenticateToken, usersController.decodeJWT) //this route is for decoding the jwt
     app.get("/users/:id", usersController.getUserById) //get the user's data. Publicly available. No sensitive data like password or email
