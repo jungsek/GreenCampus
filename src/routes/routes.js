@@ -10,18 +10,18 @@ const goalRoute = require("./goalRoute.js")
 const campaignRoute = require("./campaignRoute.js")
 const analyseChartRoute = require("./analyseChartRoute.js");
 
-const route = (app, upload) => {
-    userRoute(app, upload);
-    energyUsageRoute(app, upload);
-    energyBreakdownRoute(app, upload);
-    carbonFootprintRoute(app, upload);
-    reportRoute(app, upload); 
-    schoolRoute(app, upload);
-    recommendationsRoute(app, upload);
-    predictionsRoute(app, upload);
-    goalRoute(app, upload);
-    campaignRoute(app, upload);
-    analyseChartRoute(app, upload);
+const route = (app, upload, getPool) => {
+    userRoute(app, upload, getPool);
+    energyUsageRoute(app, upload, getPool);
+    energyBreakdownRoute(app, upload, getPool);
+    carbonFootprintRoute(app, upload, getPool);
+    reportRoute(app, upload, getPool);
+    schoolRoute(app, upload, getPool);
+    recommendationsRoute(app, upload, getPool);
+    predictionsRoute(app, upload, getPool);
+    goalRoute(app, upload, getPool);
+    campaignRoute(app, upload, getPool);
+    analyseChartRoute(app, upload, getPool);
 };
 
 module.exports = route;
