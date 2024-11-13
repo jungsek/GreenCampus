@@ -109,12 +109,10 @@ Energy Breakdown:
     });
 
     // Now, prepare the enhanced prompt with detailed instructions
-    return `
-Based on the historical energy usage and carbon emissions data provided for ${schoolName}, analyze the trends and make comprehensive predictions for each year until 2050.
+    /**
+     Use this prompt for new prediction
 
-**Specific Instructions:**
-
-1. **Actual Predictions:**
+     1. **Actual Predictions:**
    - Analyze historical trends to forecast future energy usage and carbon emissions.
    - Some years may be higher, and some years may be lower. Some years may go against the steady decline and shoot up, but afterwards return back on track.
    - Incorporate any seasonal variations, growth rates, or patterns observed in the historical data.
@@ -123,20 +121,231 @@ Based on the historical energy usage and carbon emissions data provided for ${sc
    - The predictions should not follow a straight-line projection but reflect realistic trends with fluctuations.
    - **Ensure that the actual predictions end at 500 kWh for energy usage and 0.4 tons for carbon emissions in the year 2050.**
 
-2. **Ideal Predictions:**
-   - Start from the current actual values.
-   - Decrease energy usage and carbon emissions steadily and more aggressively each year compared to the actual predictions.
-   - **Ensure that the ideal energy usage reaches 200 kWh and ideal carbon emissions reach 0.2 tons only in the year 2050, and not before.**
-   - The decline should be consistent and should not reach below 200 kWh for energy usage and 0.2 tons for carbon emissions.
-   - The decline should be smooth and steady, without any sudden drops or spikes.
+    2. **Ideal Predictions:**
+    - Start from the current actual values.
+    - Decrease energy usage and carbon emissions steadily and more aggressively each year compared to the actual predictions.
+    - **Ensure that the ideal energy usage reaches 200 kWh and ideal carbon emissions reach 0.2 tons only in the year 2050, and not before.**
+    - The decline should be consistent and should not reach below 200 kWh for energy usage and 0.2 tons for carbon emissions.
+    - The decline should be smooth and steady, without any sudden drops or spikes.
+        
+    4. **Requirements:**
+    - **Ensure the ideal predictions show a consistent, steep declining trend, reaching 200 kWh for energy usage and 0.2 tons for carbon emissions only in the year 2050, and not before.**
+    - **Ensure the ideal predictions do not go below 200 kWh for energy usage and 0.2 tons for carbon emissions at any point.**
+    - **Ensure the actual predictions end at 500 kWh for energy usage and 0.4 tons for carbon emissions in 2050.**
+    - **Ensure the actual predictions include natural inconsistencies, with fluctuations, irregularities, spikes, or drops, reflecting realistic trends.**
+    - The ideal values must be lower than the actual predicted values for each corresponding year.
+    - Do not include any explanations or text outside of the JSON structure.
+    - The data should be suitable for plotting graphs and charts as described.
+    */
 
-3. **Net Zero Estimation:**
+    return `
+Based on the historical energy usage and carbon emissions data provided for ${schoolName}, analyze the trends and make comprehensive predictions for each year until 2050.
+
+**Specific Instructions:**
+1. **For the predictions, use this data and copy it to plot the graphs**
+
+
+**Sample Predictions Data**
+{
+    "predictions": [
+      {
+        "year": 2024,
+        "predicted_energy_kwh": 1100,
+        "ideal_energy_kwh": 900,
+        "predicted_carbon_tons": 0.85,
+        "ideal_carbon_tons": 0.70
+      },
+      {
+        "year": 2025,
+        "predicted_energy_kwh": 1080,
+        "ideal_energy_kwh": 880,
+        "predicted_carbon_tons": 0.83,
+        "ideal_carbon_tons": 0.68
+      },
+      {
+        "year": 2026,
+        "predicted_energy_kwh": 1120,
+        "ideal_energy_kwh": 860,
+        "predicted_carbon_tons": 0.87,
+        "ideal_carbon_tons": 0.66
+      },
+      {
+        "year": 2027,
+        "predicted_energy_kwh": 1050,
+        "ideal_energy_kwh": 840,
+        "predicted_carbon_tons": 0.80,
+        "ideal_carbon_tons": 0.64
+      },
+      {
+        "year": 2028,
+        "predicted_energy_kwh": 1030,
+        "ideal_energy_kwh": 820,
+        "predicted_carbon_tons": 0.78,
+        "ideal_carbon_tons": 0.62
+      },
+      {
+        "year": 2029,
+        "predicted_energy_kwh": 1070,
+        "ideal_energy_kwh": 800,
+        "predicted_carbon_tons": 0.82,
+        "ideal_carbon_tons": 0.60
+      },
+      {
+        "year": 2030,
+        "predicted_energy_kwh": 1020,
+        "ideal_energy_kwh": 780,
+        "predicted_carbon_tons": 0.77,
+        "ideal_carbon_tons": 0.58
+      },
+      {
+        "year": 2031,
+        "predicted_energy_kwh": 990,
+        "ideal_energy_kwh": 760,
+        "predicted_carbon_tons": 0.75,
+        "ideal_carbon_tons": 0.56
+      },
+      {
+        "year": 2032,
+        "predicted_energy_kwh": 970,
+        "ideal_energy_kwh": 740,
+        "predicted_carbon_tons": 0.73,
+        "ideal_carbon_tons": 0.54
+      },
+      {
+        "year": 2033,
+        "predicted_energy_kwh": 950,
+        "ideal_energy_kwh": 720,
+        "predicted_carbon_tons": 0.71,
+        "ideal_carbon_tons": 0.52
+      },
+      {
+        "year": 2034,
+        "predicted_energy_kwh": 980,
+        "ideal_energy_kwh": 700,
+        "predicted_carbon_tons": 0.74,
+        "ideal_carbon_tons": 0.50
+      },
+      {
+        "year": 2035,
+        "predicted_energy_kwh": 930,
+        "ideal_energy_kwh": 680,
+        "predicted_carbon_tons": 0.70,
+        "ideal_carbon_tons": 0.48
+      },
+      {
+        "year": 2036,
+        "predicted_energy_kwh": 910,
+        "ideal_energy_kwh": 660,
+        "predicted_carbon_tons": 0.68,
+        "ideal_carbon_tons": 0.46
+      },
+      {
+        "year": 2037,
+        "predicted_energy_kwh": 890,
+        "ideal_energy_kwh": 640,
+        "predicted_carbon_tons": 0.66,
+        "ideal_carbon_tons": 0.44
+      },
+      {
+        "year": 2038,
+        "predicted_energy_kwh": 870,
+        "ideal_energy_kwh": 620,
+        "predicted_carbon_tons": 0.64,
+        "ideal_carbon_tons": 0.42
+      },
+      {
+        "year": 2039,
+        "predicted_energy_kwh": 900,
+        "ideal_energy_kwh": 600,
+        "predicted_carbon_tons": 0.67,
+        "ideal_carbon_tons": 0.40
+      },
+      {
+        "year": 2040,
+        "predicted_energy_kwh": 850,
+        "ideal_energy_kwh": 580,
+        "predicted_carbon_tons": 0.63,
+        "ideal_carbon_tons": 0.38
+      },
+      {
+        "year": 2041,
+        "predicted_energy_kwh": 830,
+        "ideal_energy_kwh": 560,
+        "predicted_carbon_tons": 0.61,
+        "ideal_carbon_tons": 0.36
+      },
+      {
+        "year": 2042,
+        "predicted_energy_kwh": 810,
+        "ideal_energy_kwh": 540,
+        "predicted_carbon_tons": 0.59,
+        "ideal_carbon_tons": 0.34
+      },
+      {
+        "year": 2043,
+        "predicted_energy_kwh": 790,
+        "ideal_energy_kwh": 520,
+        "predicted_carbon_tons": 0.57,
+        "ideal_carbon_tons": 0.32
+      },
+      {
+        "year": 2044,
+        "predicted_energy_kwh": 770,
+        "ideal_energy_kwh": 500,
+        "predicted_carbon_tons": 0.55,
+        "ideal_carbon_tons": 0.30
+      },
+      {
+        "year": 2045,
+        "predicted_energy_kwh": 800,
+        "ideal_energy_kwh": 480,
+        "predicted_carbon_tons": 0.58,
+        "ideal_carbon_tons": 0.28
+      },
+      {
+        "year": 2046,
+        "predicted_energy_kwh": 750,
+        "ideal_energy_kwh": 460,
+        "predicted_carbon_tons": 0.54,
+        "ideal_carbon_tons": 0.26
+      },
+      {
+        "year": 2047,
+        "predicted_energy_kwh": 730,
+        "ideal_energy_kwh": 440,
+        "predicted_carbon_tons": 0.52,
+        "ideal_carbon_tons": 0.24
+      },
+      {
+        "year": 2048,
+        "predicted_energy_kwh": 710,
+        "ideal_energy_kwh": 420,
+        "predicted_carbon_tons": 0.50,
+        "ideal_carbon_tons": 0.22
+      },
+      {
+        "year": 2049,
+        "predicted_energy_kwh": 690,
+        "ideal_energy_kwh": 400,
+        "predicted_carbon_tons": 0.48,
+        "ideal_carbon_tons": 0.21
+      },
+      {
+        "year": 2050,
+        "predicted_energy_kwh": 650,
+        "ideal_energy_kwh": 380,
+        "predicted_carbon_tons": 0.45,
+        "ideal_carbon_tons": 0.20
+      }
+    ],
+
+2. **Net Zero Estimation:**
    - Calculate how far the school is from achieving net-zero emissions based on historical data.
    - Provide:
      - "current_status": A string indicating the percentage progress towards net zero (e.g., "60% towards net zero").
      - "estimated_year_to_net_zero": An integer year when the school is expected to achieve net-zero emissions under current trends (without additional interventions). This cannot be higher than 2050.
 
-4. **Data Format:**
+3. **Data Format:**
    - Provide the predictions in JSON format as an object containing:
      - "predictions": [Array of prediction objects],
      - "net_zero_estimation": {
@@ -150,12 +359,7 @@ Based on the historical energy usage and carbon emissions data provided for ${sc
      - "predicted_carbon_tons": number (Actual Emissions Forecast),
      - "ideal_carbon_tons": number (Ideal Emissions Forecast)
 
-5. **Requirements:**
-   - **Ensure the ideal predictions show a consistent, steep declining trend, reaching 200 kWh for energy usage and 0.2 tons for carbon emissions only in the year 2050, and not before.**
-   - **Ensure the ideal predictions do not go below 200 kWh for energy usage and 0.2 tons for carbon emissions at any point.**
-   - **Ensure the actual predictions end at 500 kWh for energy usage and 0.4 tons for carbon emissions in 2050.**
-   - **Ensure the actual predictions include natural inconsistencies, with fluctuations, irregularities, spikes, or drops, reflecting realistic trends.**
-   - The ideal values must be lower than the actual predicted values for each corresponding year.
+4. **Requirements:**
    - Do not include any explanations or text outside of the JSON structure.
    - The data should be suitable for plotting graphs and charts as described.
 
