@@ -39,7 +39,7 @@
         <div class="carpet-container">
             <div class="allContent-container">
                 <div class="card-container">
-                    <div class="content-card">
+                    <div class="content-card first">
                         <div class="title">2024's Impact</div>
                             <div class="metric">
                                 <div class="metric-title carbon-footprint">Total Carbon Footprint: <span class="metric-value1" style="font-size: 1rem; font-weight: bold;">5534.44</span> tons
@@ -58,51 +58,51 @@
                             </div>
                     </div>
 
-                    <div class="content-card">
-                        <div class="header" style="font-size: 1.2rem;">
-                            <span>Progress Towards Energy Usage Goal</span>
-                            <span class="menu-icon">...</span>
+                    <div class="content-card second">
+                        <div class="title">
+                            Progress to Goals
                         </div>
-                        <div class="value">
-                            <div>
-                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">Utilized: 100 t CO2e</div>
-                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 70 t CO2e</div>
-                            </div>
-                        
-                            <div class="doughnut-chart-container">
-                                <canvas id="doughnutChart1" width="150" height="90"></canvas>
-                                <div class="percentage-text"></div>
+                
+                        <!-- Energy Usage Chart -->
+                        <div class="bar-container">
+                            <div class="usage-bar" id="energyUsageBar"></div>
+                            <div class="target-container" id="energyTargetContainer">
+                                <div class="target-line"></div>
+                                <div class="target-label">Target</div>
                             </div>
                         </div>
-                        
-                        <div class="change">
-                            <span class="increase-icon"><i class='etrend'></i></span>
-                            <span class="change-text"></span>
-                            <span class="last-month"></span> 
-                        </div>
-                    </div>
 
-                    <div class="content-card">
-                        <div class="header" style="font-size: 1.2rem;">
-                            <span>Goal to Net Zero Emissions</span>
-                            <span class="menu-icon">...</span>
-                        </div>
                         <div class="value">
                             <div>
-                                <div style="font-size: 1rem; font-weight: bold; color: #5bc7a0;">150 metric tons CO2 /year</div>
-                                <div style="font-size: 1rem; color: #c0bfbf; font-weight: 400;">Goal: 100 t CO2e</div>
-                            </div>
-                        
-                            <div class="doughnut-chart-container">
-                                <canvas id="doughnutChart2" width="150" height="90"></canvas>
-                                <div class="percentage-text"></div>
+                                <strong>Energy Usage Goal</strong>
+                                <div class="utilized" id="energyUtilizedValue">Utilized: </div>
+                                <div class="goal" id="energyGoalValue">Goal: </div>
                             </div>
                         </div>
-                        
-                        <div class="change">
-                            <span class="increase-icon"><i class='bx bx-trending-up'></i></span>
-                            <span class="change-text">-35%</span>
-                            <span class="last-month">from last year</span> 
+
+                        <div id="energyNoGoalMessage" class="no-goal-message" style="display: none;">
+                            No goal set!
+                        </div>
+
+                        <!-- Carbon Footprint Chart -->
+                        <div class="bar-container">
+                            <div class="usage-bar" id="carbonUsageBar"></div>
+                            <div class="target-container" id="carbonTargetContainer">
+                                <div class="target-line"></div>
+                                <div class="target-label">Target</div>
+                            </div>
+                        </div>
+
+                        <div class="value">
+                            <div>
+                                <strong>Carbon Footprint Goal</strong>
+                                <div class="utilized" id="carbonUtilizedValue">Utilized: </div>
+                                <div class="goal" id="carbonGoalValue">Goal: </div>
+                            </div>
+                        </div>
+
+                        <div id="carbonNoGoalMessage" class="no-goal-message" style="display: none;">
+                            No goal set!
                         </div>
                     </div>
                     
@@ -189,7 +189,7 @@
             
                 <div class="bottom-graphs-container">
                     <div class="bottom-graph-name-container">
-                        <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Carbon Footprint CO₂ </span>
+                        <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Net Carbon Footprint CO₂ </span>
                         <button class="btn btn-secondary analyse-chart-btn" data-chart-type="carbon" style="background-color: #5bc7a0;">Analyse Chart</button>
                         <div class="yearMonthSelect-filter" style="font-size: 0.9rem;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
