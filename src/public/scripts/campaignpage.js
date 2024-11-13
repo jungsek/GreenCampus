@@ -1,136 +1,187 @@
 let placeholderID = 1;
 let currentCampaignID;
-let currentcampaigns;
+let currentCampaigns = [];
+
+// Load campaigns from server and render them
 async function loadCurrentCampaigns() {
-    let parentcontainer = document.getElementById('campaignparent-container')
-    let currentcampaignsresponse = await fetch(`/campaigns/school/${placeholderID}`)
-    if (!currentcampaignsresponse.ok){
-        let errorcampaignsmsg = document.createElement('h2')
-        if (currentcampaignsresponse.status === 404){
-            errorcampaignsmsg.innerText = "No campaigns yet!"
+    try {
+        const parentContainer = document.getElementById('campaignGrid');
+        parentContainer.innerHTML = ''; // Clear existing campaigns
+        let response = await fetch(`/campaigns/school/${placeholderID}`);
+        
+        if (!response.ok) {
+            const errorMsg = document.createElement('h2');
+            errorMsg.innerText = response.status === 404 ? "No campaigns yet!" : "Error retrieving campaigns!";
+            parentContainer.appendChild(errorMsg);
+            return;
         }
-        else {
-            errorcampaignsmsg.innerText = "There was an error retrieving campaigns!"
-        }
-        parentcontainer.appendChild(errorcampaignsmsg)
+
+        currentCampaigns = await response.json();
+        renderCampaigns();
+    } catch (error) {
+        console.error("Error loading campaigns:", error);
     }
-    else {
-        currentcampaigns = await currentcampaignsresponse.json()
-        currentcampaigns.forEach(element => {
-            card.classList.add('card')
-    
-            let campaignh2 = document.createElement('h2')
-            campaignh2.innerText = element.name;
-    
-            let campaigndetails = document.createElement('div')
-            campaigndetails.classList.add('campaign-details')
-    
-            let campaignimg = document.createElement('img')
-            campaignimg.src = element.image;
-            campaignimg.alt = 'Campaign Image'
-            campaignimg.classList.add('campaign-image')
-    
-            let campaigndescp = document.createElement('p')
-            campaigndescp.innerText = element.description;
-            campaigndescp.classList.add('campaign-description')
-    
-            let campaignpoints = document.createElement('p')
-            campaignpoints.innerText = `Points: ${element.points}`
-            campaignpoints.classList.add('campaign-points')
-    
-            let modifybtn = document.createElement('button')
-            modifybtn.textContent = 'Modify Campaign'
-            modifybtn.addEventListener('click', () => openModifyPopup(element.id))
-            modifybtn.classList.add('btn-set-goal')
-    
-            let deletebtn = document.createElement('button')
-            deletebtn.textContent = 'Delete Campaign'
-            deletebtn.addEventListener('click', () => openDeletePopup(element.id))
-            deletebtn.classList.add('btn-set-goal')
-    
-            card.appendChild(campaignh2)
-            campaigndetails.appendChild(campaignimg)
-            campaigndetails.appendChild(campaigndescp)
-            campaigndetails.appendChild(campaignpoints)
-            card.appendChild(campaigndetails)
-            card.appendChild(modifybtn)
-            card.appendChild(deletebtn)
-            parentcontainer.append(card)
-        });
-    }
-    
 }
 
-//ALWAYS CALL THIS
-loadCurrentCampaigns()
+// Render campaigns to the DOM
+function renderCampaigns() {
+    const parentContainer = document.getElementById('campaignGrid');
+    parentContainer.innerHTML = ""; // Clear previous cards
+
+    currentCampaigns.forEach(campaign => {
+        const card = document.createElement("div");
+        card.classList.add("campaign-card");
+        card.innerHTML = `
+            <img src="${campaign.image}" alt="Campaign Image" class="campaign-image">
+            <div class="campaign-content">
+                <h3 class="campaign-title">${campaign.name}</h3>
+                <p class="campaign-description">${campaign.description}</p>
+                <div class="campaign-points">
+                    <i class='bx bx-star'></i>
+                    ${campaign.points} Points
+                </div>
+                <div class="campaign-actions">
+                    <button class="action-button edit-button" onclick="openModifyPopup(${campaign.id})">
+                        <i class='bx bx-pencil'></i> Edit
+                    </button>
+                    <button class="action-button delete-button" onclick="openDeletePopup(${campaign.id})">
+                        <i class='bx bx-trash'></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+        parentContainer.appendChild(card);
+    });
+}
+
 // Open Create Popup
 function openCreatePopup() {
-    document.getElementById("createPopup").style.display = "block";
+    document.getElementById("createPopup").classList.add("active");
 }
 
 // Close Create Popup
 function closeCreatePopup() {
-    document.getElementById("createPopup").style.display = "none";
+    document.getElementById("createPopup").classList.remove("active");
+    document.getElementById("createForm").reset();
+    document.getElementById("imagePreview").style.display = "none";
 }
+
+// Handle create campaign form submission
+document.getElementById('createForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const newCampaignData = {
+        school_id: placeholderID,
+        name: document.getElementById('campaignName').value,
+        description: document.getElementById('campaignDescription').value,
+        image: document.getElementById('imageBase64').value || "",
+        points: parseInt(document.getElementById('campaignPoints').value)
+    };
+
+    if (newCampaignData.points < 1 || newCampaignData.points > 5) {
+        alert("Please enter a points value from 1 to 5.");
+        return;
+    }
+
+    try {
+        let response = await fetch('/campaigns', {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newCampaignData)
+        });
+
+        if (!response.ok) throw new Error("Error creating campaign");
+
+        alert("Campaign created!");
+        closeCreatePopup();
+        await loadCurrentCampaigns();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error creating campaign. Please try again.");
+    }
+});
 
 // Open Modify Popup
 function openModifyPopup(id) {
     currentCampaignID = id;
-    document.getElementById("modifyPopup").style.display = "block";
-    let modifiedcampaign;
-    currentcampaigns.forEach(element => {
-        if (element.id == currentCampaignID){
-            modifiedcampaign = element;
+    const campaign = currentCampaigns.find(camp => camp.id === currentCampaignID);
+    if (campaign) {
+        document.getElementById("modifyPopup").classList.add("active");
+        document.getElementById('modifyCampaignName').value = campaign.name;
+        document.getElementById('modifyCampaignDescription').value = campaign.description;
+        document.getElementById('modifyCampaignPoints').value = campaign.points;
+        
+        // Set the existing image preview if available
+        if (campaign.image) {
+            document.getElementById('modifyImagePreview').src = campaign.image;
+            document.getElementById('modifyImagePreview').style.display = 'block';
+            document.getElementById('modifyImageBase64').value = campaign.image;
         }
-    });
-    document.getElementById('modifyCampaignName').value = modifiedcampaign.name;
-    document.getElementById('modifyCampaignDescription').innerText = modifiedcampaign.description;
-    document.getElementById('modifyCampaignPoints').value = parseInt(modifiedcampaign.points);
+    }
 }
 
 // Close Modify Popup
 function closeModifyPopup() {
-    document.getElementById("modifyPopup").style.display = "none";
+    document.getElementById("modifyPopup").classList.remove("active");
+    document.getElementById("modifyForm").reset();
+    document.getElementById('modifyImagePreview').style.display = 'none';
 }
 
-// Delete Campaign (Placeholder for future functionality)
-async function openDeletePopup(id) {
-    currentCampaignID = id;
-    document.getElementById('deleteConfirmationPopup').style.display = 'block';
+// Handle modify campaign form submission
+document.getElementById('modifyForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
     
-}
+    const updatedCampaignData = {
+        id: currentCampaignID,
+        school_id: placeholderID,
+        name: document.getElementById('modifyCampaignName').value,
+        description: document.getElementById('modifyCampaignDescription').value,
+        points: parseInt(document.getElementById('modifyCampaignPoints').value),
+        image: document.getElementById('modifyImageBase64').value || currentCampaigns.find(camp => camp.id === currentCampaignID).image // Keep existing image if no new one is uploaded
+    };
 
-// Close Modify Popup
-function closeDeletePopup() {
-    document.getElementById("deleteConfirmationPopup").style.display = "none";
-}
+    if (updatedCampaignData.points < 1 || updatedCampaignData.points > 5) {
+        alert("Please enter a points value from 1 to 5.");
+        return;
+    }
 
-//image handling
-document.getElementById('campaignImage').addEventListener('change', async function(e) {
+    try {
+        let response = await fetch(`/campaigns/${currentCampaignID}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCampaignData)
+        });
+
+        if (!response.ok) throw new Error("Error modifying campaign");
+
+        alert("Campaign modified!");
+        closeModifyPopup();
+        await loadCurrentCampaigns();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error modifying campaign. Please try again.");
+    }
+});
+
+// Add image handling for modify form
+document.getElementById('modifyCampaignImage').addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (file) {
         if (file.size > 5 * 1024 * 1024) { // 5MB
             alert('File is too large. Please select an image under 5MB.');
-            this.value = '';
-            document.getElementById('imagePreview').style.display = 'none';
-            document.getElementById('imageBase64').value = '';
             return;
         }
 
-        // Create image for compression
         const img = new Image();
         img.src = URL.createObjectURL(file);
-        
         await new Promise(resolve => img.onload = resolve);
-        
-        // Create canvas for compression
+
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        // Calculate new dimensions while maintaining aspect ratio
+        const maxDimension = 800;
+
         let width = img.width;
         let height = img.height;
-        const maxDimension = 800; // Maximum width or height
 
         if (width > height && width > maxDimension) {
             height = (height * maxDimension) / width;
@@ -142,102 +193,127 @@ document.getElementById('campaignImage').addEventListener('change', async functi
 
         canvas.width = width;
         canvas.height = height;
-
-        // Draw and compress image
         ctx.drawImage(img, 0, 0, width, height);
-        
-        // Convert to base64 with reduced quality
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6); // 0.6 = 60% quality
-        
-        // Store compressed base64 string in hidden input
-        document.getElementById('imageBase64').value = compressedBase64;
-        
-        // Show preview
-        const preview = document.getElementById('imagePreview');
-        preview.src = compressedBase64;
-        preview.style.display = 'block';
-        
-        // Clean up
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        document.getElementById('modifyImageBase64').value = compressedBase64;
+        document.getElementById('modifyImagePreview').src = compressedBase64;
+        document.getElementById('modifyImagePreview').style.display = 'block';
+
         URL.revokeObjectURL(img.src);
     }
 });
 
-//create campaign
-document.getElementById('submitnewcampaignbtn').addEventListener('click', async function(){
-    if (parseInt(document.getElementById('campaignPoints').value) >5 || parseInt(document.getElementById('campaignPoints').value) < 0) {
-        alert("Please enter a points value from 1 to 5.")
-        return;
-    }
-    const newCampaignData = {
-        school_id: placeholderID,
-        name: document.getElementById('campaignName').value,
-        description: document.getElementById('campaignDescription').value,
-        image: document.getElementById('imageBase64').value || "", //use image or empty string if no image
-        points: parseInt(document.getElementById('campaignPoints').value)
-    }
+// Close Modify Popup
+function closeModifyPopup() {
+    document.getElementById("modifyPopup").classList.remove("active");
+    document.getElementById("modifyForm").reset();
+}
 
+// Handle modify campaign form submission
+document.getElementById('modifyForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
     
-
-    let createResponse = await fetch('/campaigns', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
-        },
-        body: JSON.stringify(newCampaignData)
-    })
-    if (!createResponse.ok) {throw new Error("Network response to create new campaign was not ok")}
-    else {
-        alert("Campaign created!")
-        document.getElementById("createPopup").style.display = "none";
-        await loadCurrentCampaigns(); // Reload campaigns
-    }
-})
-
-//modify campaign
-document.getElementById('submitmodifycampaignbtn').addEventListener('click', async function(){
-    if (parseInt(document.getElementById('modifyCampaignPoints').value) >5 || parseInt(document.getElementById('modifyCampaignPoints').value) < 0) {
-        alert("Please enter a points value from 1 to 5.")
-        return;
-    }
     const updatedCampaignData = {
         id: currentCampaignID,
         school_id: placeholderID,
         name: document.getElementById('modifyCampaignName').value,
         description: document.getElementById('modifyCampaignDescription').value,
-        image: document.getElementById('imageBase64').value || "",
-        points: document.getElementById('modifyCampaignPoints').value
+        points: parseInt(document.getElementById('modifyCampaignPoints').value)
+    };
+
+    if (updatedCampaignData.points < 1 || updatedCampaignData.points > 5) {
+        alert("Please enter a points value from 1 to 5.");
+        return;
     }
 
-    let modifycampaignresponse = await fetch(`/campaigns/${currentCampaignID}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
-        },
-        body: JSON.stringify(updatedCampaignData)
-    })
-    if (!modifycampaignresponse.ok) {throw new Error("Network response to modify campaign was not ok")}
-    else{
-        alert("Campaign modified!")
-        closeModifyPopup()
-        let parentcontainer = document.getElementById('campaignparent-container');
-        parentcontainer.innerHTML = ''; // Clear existing campaigns
+    try {
+        let response = await fetch(`/campaigns/${currentCampaignID}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCampaignData)
+        });
+
+        if (!response.ok) throw new Error("Error modifying campaign");
+
+        alert("Campaign modified!");
+        closeModifyPopup();
         await loadCurrentCampaigns();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error modifying campaign. Please try again.");
     }
-})
+});
 
-//delete campaign
+// Open Delete Popup
+function openDeletePopup(id) {
+    currentCampaignID = id;
+    document.getElementById('deleteConfirmationPopup').classList.add("active");
+}
+
+// Close Delete Popup
+function closeDeletePopup() {
+    document.getElementById("deleteConfirmationPopup").classList.remove("active");
+}
+
+// Delete campaign
 document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
-    let deletecampaignresponse = await fetch(`/campaigns/${currentCampaignID}`, {
-        method: 'DELETE',
-    })
-    if (!deletecampaignresponse.ok) {throw new Error("Network response to delete campaign was not ok")}
-    else {
-        alert("Campaign deleted!")
-        closeDeletePopup()
-        let parentcontainer = document.getElementById('campaignparent-container');
-        parentcontainer.innerHTML = ''; // Clear existing campaigns
+    try {
+        let response = await fetch(`/campaigns/${currentCampaignID}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error("Error deleting campaign");
+
+        alert("Campaign deleted!");
+        closeDeletePopup();
         await loadCurrentCampaigns();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error deleting campaign. Please try again.");
     }
-})
+});
+
+// Image handling for compression and preview
+document.getElementById('campaignImage').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            alert('File is too large. Please select an image under 5MB.');
+            return;
+        }
+
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        await new Promise(resolve => img.onload = resolve);
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const maxDimension = 800;
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > maxDimension) {
+            height = (height * maxDimension) / width;
+            width = maxDimension;
+        } else if (height > maxDimension) {
+            width = (width * maxDimension) / height;
+            height = maxDimension;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        document.getElementById('imageBase64').value = compressedBase64;
+        document.getElementById('imagePreview').src = compressedBase64;
+        document.getElementById('imagePreview').style.display = 'block';
+
+        URL.revokeObjectURL(img.src);
+    }
+});
+
+// Initialize by loading campaigns
+loadCurrentCampaigns();
