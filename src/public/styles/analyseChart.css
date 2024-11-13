@@ -1,0 +1,15 @@
+#mainChart {
+    height: 500px !important;
+}
+
+.area-of-concern .canvas {
+    height: 500px !important;
+}
+
+#predictionChart {
+    height: 500px !important;
+}
+
+.strength .canvas{
+    height: 500px !important;
+}
