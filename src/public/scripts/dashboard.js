@@ -1281,11 +1281,13 @@ yearSelect.addEventListener('change', function() {
 });
 
 
-document.querySelectorAll('.analyse-chart-btn').forEach(button => {
+document.querySelectorAll('.analyse-chart-btn1, .analyse-chart-btn2').forEach(button => {
     button.addEventListener('click', () => {
         const chartType = button.getAttribute('data-chart-type');
         const selectedYear = parseInt(yearSelect.value) || new Date().getFullYear();
-        const schoolId = placeholderID; // Assuming placeholderID = 1
+        const schoolId = placeholderID;
+
+        console.log(`Button clicked: ${chartType}, Year: ${selectedYear}, School ID: ${schoolId}`); // Debug
 
         // Redirect to the analyseChart page with query parameters
         window.location.href = `analyseChart.html?chartType=${chartType}&year=${selectedYear}&schoolId=${schoolId}`;
