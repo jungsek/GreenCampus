@@ -137,7 +137,7 @@
     }
 
     .content-card:hover {
-        background-color: #245D51;
+        background-color: #00b58e2e;
     }
 
     .doughnut-chart-container {
@@ -519,7 +519,7 @@
 
     .graph-name-container1 {
         display: flex; 
-        justify-content: space-between; 
+        justify-content: flex-start; 
         align-items: center; /* Vertically center the elements */
         width: 100%; /* Full width of container */
         max-width: 100%; /* Ensure container scales */
@@ -579,7 +579,7 @@
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        margin-right: 720px;
+        margin-left: 10px;
     }
     
     button.analyse-chart-btn:hover {
@@ -594,7 +594,7 @@
     /* ================== Pie Chart ================== */
     .graph-name-container2 {
         display: flex; 
-        justify-content: space-between; 
+        justify-content: flex-start; 
         align-items: center; /* Vertically center the elements */
         width: 100%; /* Full width of container */
         max-width: 100%; 
@@ -756,7 +756,7 @@
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        margin-right: 900px;
+        margin-left: 10px;
     }
     
     button.analyse-chart-btn2:hover {
@@ -885,6 +885,7 @@
         }
 
         /* ========== Medium Cards ========== */
+
         .content-card {
             padding: 20px;
             display: flex;
@@ -896,12 +897,12 @@
 
         /* First card should be 30% of the parent container */
         .content-card.first {
-            flex: 0 0 30%; /* Takes up 30% of the parent's width */
+            width: 30%;
         }
         
         /* Second card should be 70% of the parent container */
         .content-card.second {
-            flex: 0 0 70%; /* Takes up 70% of the parent's width */
+            width: 70%; /* Takes up 70% of the parent's width */
         }
 
         .content-card .header {
