@@ -3,6 +3,207 @@
 // Placeholder variable until school ID can be dynamically set
 const placeholderID = 1; // Example school ID
 
+const staticPredictionData = {
+  "predictions": [
+    {
+      "year": 2024,
+      "predicted_energy_kwh": 1100,
+      "ideal_energy_kwh": 900,
+      "predicted_carbon_tons": 0.85,
+      "ideal_carbon_tons": 0.70
+    },
+    {
+      "year": 2025,
+      "predicted_energy_kwh": 1080,
+      "ideal_energy_kwh": 880,
+      "predicted_carbon_tons": 0.83,
+      "ideal_carbon_tons": 0.68
+    },
+    {
+      "year": 2026,
+      "predicted_energy_kwh": 1120,
+      "ideal_energy_kwh": 860,
+      "predicted_carbon_tons": 0.87,
+      "ideal_carbon_tons": 0.66
+    },
+    {
+      "year": 2027,
+      "predicted_energy_kwh": 1050,
+      "ideal_energy_kwh": 840,
+      "predicted_carbon_tons": 0.80,
+      "ideal_carbon_tons": 0.64
+    },
+    {
+      "year": 2028,
+      "predicted_energy_kwh": 1030,
+      "ideal_energy_kwh": 820,
+      "predicted_carbon_tons": 0.78,
+      "ideal_carbon_tons": 0.62
+    },
+    {
+      "year": 2029,
+      "predicted_energy_kwh": 1070,
+      "ideal_energy_kwh": 800,
+      "predicted_carbon_tons": 0.82,
+      "ideal_carbon_tons": 0.60
+    },
+    {
+      "year": 2030,
+      "predicted_energy_kwh": 1020,
+      "ideal_energy_kwh": 780,
+      "predicted_carbon_tons": 0.77,
+      "ideal_carbon_tons": 0.58
+    },
+    {
+      "year": 2031,
+      "predicted_energy_kwh": 990,
+      "ideal_energy_kwh": 760,
+      "predicted_carbon_tons": 0.75,
+      "ideal_carbon_tons": 0.56
+    },
+    {
+      "year": 2032,
+      "predicted_energy_kwh": 970,
+      "ideal_energy_kwh": 740,
+      "predicted_carbon_tons": 0.73,
+      "ideal_carbon_tons": 0.54
+    },
+    {
+      "year": 2033,
+      "predicted_energy_kwh": 950,
+      "ideal_energy_kwh": 720,
+      "predicted_carbon_tons": 0.71,
+      "ideal_carbon_tons": 0.52
+    },
+    {
+      "year": 2034,
+      "predicted_energy_kwh": 980,
+      "ideal_energy_kwh": 700,
+      "predicted_carbon_tons": 0.74,
+      "ideal_carbon_tons": 0.50
+    },
+    {
+      "year": 2035,
+      "predicted_energy_kwh": 930,
+      "ideal_energy_kwh": 680,
+      "predicted_carbon_tons": 0.70,
+      "ideal_carbon_tons": 0.48
+    },
+    {
+      "year": 2036,
+      "predicted_energy_kwh": 910,
+      "ideal_energy_kwh": 660,
+      "predicted_carbon_tons": 0.68,
+      "ideal_carbon_tons": 0.46
+    },
+    {
+      "year": 2037,
+      "predicted_energy_kwh": 890,
+      "ideal_energy_kwh": 640,
+      "predicted_carbon_tons": 0.66,
+      "ideal_carbon_tons": 0.44
+    },
+    {
+      "year": 2038,
+      "predicted_energy_kwh": 870,
+      "ideal_energy_kwh": 620,
+      "predicted_carbon_tons": 0.64,
+      "ideal_carbon_tons": 0.42
+    },
+    {
+      "year": 2039,
+      "predicted_energy_kwh": 900,
+      "ideal_energy_kwh": 600,
+      "predicted_carbon_tons": 0.67,
+      "ideal_carbon_tons": 0.40
+    },
+    {
+      "year": 2040,
+      "predicted_energy_kwh": 850,
+      "ideal_energy_kwh": 580,
+      "predicted_carbon_tons": 0.63,
+      "ideal_carbon_tons": 0.38
+    },
+    {
+      "year": 2041,
+      "predicted_energy_kwh": 830,
+      "ideal_energy_kwh": 560,
+      "predicted_carbon_tons": 0.61,
+      "ideal_carbon_tons": 0.36
+    },
+    {
+      "year": 2042,
+      "predicted_energy_kwh": 810,
+      "ideal_energy_kwh": 540,
+      "predicted_carbon_tons": 0.59,
+      "ideal_carbon_tons": 0.34
+    },
+    {
+      "year": 2043,
+      "predicted_energy_kwh": 790,
+      "ideal_energy_kwh": 520,
+      "predicted_carbon_tons": 0.57,
+      "ideal_carbon_tons": 0.32
+    },
+    {
+      "year": 2044,
+      "predicted_energy_kwh": 770,
+      "ideal_energy_kwh": 500,
+      "predicted_carbon_tons": 0.55,
+      "ideal_carbon_tons": 0.30
+    },
+    {
+      "year": 2045,
+      "predicted_energy_kwh": 800,
+      "ideal_energy_kwh": 480,
+      "predicted_carbon_tons": 0.58,
+      "ideal_carbon_tons": 0.28
+    },
+    {
+      "year": 2046,
+      "predicted_energy_kwh": 750,
+      "ideal_energy_kwh": 460,
+      "predicted_carbon_tons": 0.54,
+      "ideal_carbon_tons": 0.26
+    },
+    {
+      "year": 2047,
+      "predicted_energy_kwh": 730,
+      "ideal_energy_kwh": 440,
+      "predicted_carbon_tons": 0.52,
+      "ideal_carbon_tons": 0.24
+    },
+    {
+      "year": 2048,
+      "predicted_energy_kwh": 710,
+      "ideal_energy_kwh": 420,
+      "predicted_carbon_tons": 0.50,
+      "ideal_carbon_tons": 0.22
+    },
+    {
+      "year": 2049,
+      "predicted_energy_kwh": 690,
+      "ideal_energy_kwh": 400,
+      "predicted_carbon_tons": 0.48,
+      "ideal_carbon_tons": 0.21
+    },
+    {
+      "year": 2050,
+      "predicted_energy_kwh": 650,
+      "ideal_energy_kwh": 350,
+      "predicted_carbon_tons": 0.45,
+      "ideal_carbon_tons": 0.20
+    }
+  ],
+  "net_zero_estimation": {
+    "current_status": "65% towards net zero",
+    "estimated_year_to_net_zero": 2045
+  }
+};
+
+// Flag to toggle between static and dynamic data
+const useStaticData = true; // Set to false to enable API fetching
+
 // Chart Instances
 let predictedEnergyChart;
 let predictedCarbonChart;
@@ -22,6 +223,11 @@ generatePredictionsBtn.addEventListener('click', () => {
 downloadPdfBtn.addEventListener('click', () => {
   downloadPredictionsAsPDF();
 });
+
+// Helper Sleep Function to Simulate Data Fetching Delay
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function showLoadingScreen() {
   document.getElementById('loading-screen').style.display = 'block';
@@ -43,20 +249,32 @@ async function generatePredictions() {
     clearNetZeroEstimation();
     hidePredictionComponents(); // Hide components before generating predictions
 
-    const response = await fetch('/api/predictions/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ schoolId: placeholderID }),
-    });
+    let data;
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to fetch predictions.');
+    if (useStaticData) {
+      // Introduce a 3-second delay
+      await sleep(3000); // 3000 milliseconds = 3 seconds
+
+      // Select static data
+      data = staticPredictionData;
+    } else {
+      // Call backend API to get predictions data
+      const response = await fetch('/api/predictions/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ schoolId: placeholderID }),
+      });
+
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch predictions.');
+      }
+
+      data = await response.json();
     }
-
-    const data = await response.json();
     const predictionsData = data.predictions;
     const netZeroData = data.net_zero_estimation;
 
