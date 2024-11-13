@@ -301,11 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Event listener for the Download as PDF button
-    downloadPdfBtn.addEventListener('click', () => {
-        downloadRecommendationsAsPDF();
-    });    
-
     // Helper Sleep Function to Simulate Data Fetching Delay
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
