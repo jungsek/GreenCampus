@@ -637,12 +637,6 @@ async function initDoughnutChart() {
         plugins: [doughnutPointer]
     });
 
-    // const ctx3 = document.getElementById('doughnutChart3').getContext('2d');
-    // const doughnutChart3 = new Chart(ctx3, {
-    //     type: 'doughnut',
-    //     data: chartData,
-    //     options: chartOptions
-    // });
 }
 initDoughnutChart();
 
@@ -971,7 +965,7 @@ async function initPieChart() {
 
         const pieChartOptions = {
             responsive: false,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
                     display: false,

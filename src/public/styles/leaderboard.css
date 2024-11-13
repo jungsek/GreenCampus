@@ -135,8 +135,8 @@
     background: rgba(75, 165, 132, 0.8);  /* More opaque version of the same color */
 }
 
-.performance-card {
-    /* background: #4b527c; */
+/* .performance-card {
+    background: #4b527c;
     background: #89cdb4;  
     padding: 16px;
     border-radius: 12px;
@@ -152,7 +152,7 @@
 .performance-card p:last-child {
     font-size: 24px;
     font-weight: bold;
-}
+} */
 
 .podium {
     display: flex;
