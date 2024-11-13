@@ -1,0 +1,137 @@
+/* ================== Green Background ================== */
+.dashboard-content { 
+    background-color: #59c19b69; 
+    padding: 15px;
+    position: relative;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: visible; 
+    min-height: 80vh;
+}  
+
+/* ================== White Layered Background ================== */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); 
+    width: 100%; 
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-direction: column;
+}
+
+.card {
+    padding: 15px;
+    gap: 15px;
+    width: 80%;
+    border-radius: 8px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+    background-color: white;
+}
+
+.btn-set-goal {
+    padding: 16px 32px; 
+    font-size: 14px; 
+    font-weight: bold;
+    color: #333;
+    background-color: #c8e6deba; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    margin-top: 10px; 
+    transition: background-color 0.3s ease;
+}
+
+.btn-set-goal:hover {
+    background-color: #c3e7deea;
+}
+
+.popup {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.popup-content {
+    background-color: #ffffff; 
+    margin: 10% auto;
+    padding: 20px; 
+    border: 1px solid #888; 
+    width: 80%; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    position: relative;
+}
+
+.cancel-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none; 
+    border: none; 
+    font-size: 20px;
+    cursor: pointer; 
+    color: #5bc7a0; 
+}
+
+form .form-group {
+    margin-bottom: 15px;
+}
+
+input, textarea {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+}
+
+textarea {
+    resize: vertical;
+}
+
+input[type="number"] {
+    width: 100%; /* Ensure number input takes full width */
+}
+
+/* Styling for current points */
+.current-points-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.points-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #59c19b;
+}
+
+/* Styling for rewards list */
+.campaign-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #666;
+}

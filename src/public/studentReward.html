@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="./styles/common.css" rel="stylesheet">
+  <link href="./styles/reward.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <title>Student Rewards</title>
+</head>
+<body>
+
+<!-- Navbar (Placeholder) -->
+<div class="nav-placeholder"></div>
+
+<!-- Main Container -->
+<div class="dashboard-content">
+  <!-- Title -->
+  <h1>Student Rewards</h1>
+
+  <!-- Current Points Display -->
+  <div class="current-points-container">
+    <h2>Your Current Points:</h2>
+    <div id="current-points" class="points-number"></div> 
+  </div>
+
+  <!-- Rewards List -->
+  <div class="card-container" id="rewards-container">
+    <!-- Rewards will be dynamically added here -->
+  </div>
+
+</div>
+
+<!-- Reward Redeem Popup (if needed) -->
+<div id="redeemPopup" class="popup">
+  <div class="popup-content">
+    <h2>Confirm Redemption</h2>
+    <p id="reward-name">Reward Name</p>
+    <p id="reward-points">Points: 0</p>
+    <button id="confirm-redeem" class="btn-set-goal">Redeem</button>
+    <button class="cancel-button" onclick="closeRedeemPopup()">✖</button>
+  </div>
+</div>
+
+<!-- Footer Placeholder -->
+<div class="footer-placeholder"></div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="./scripts/reward.js"></script>
+<script src="./scripts/common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
