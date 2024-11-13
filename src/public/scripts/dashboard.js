@@ -8,32 +8,62 @@ function getMonthFromTimestamp(timestamp) {
 }
 
 // ==================== Goal Setting ====================
+// DOM Elements
 const setgoalbtn = document.querySelector('#setGoalButton');
+const goalPopup = document.getElementById('goalPopup');
+const confirmationPopup = document.getElementById('confirmationPopup');
+const cancelButton = document.getElementById('cancelButton');
+const goalForm = document.getElementById('goalForm');
 const goalSelect = document.getElementById('goalSelect');
+const typeSelection = document.getElementById('typeSelection');
 const percentageInput = document.getElementById('percentageInput');
-const typeSelect = document.getElementById('typeSelection');
 const kwhinput = document.getElementById('kwhInput');
-const kwhGoal = document.getElementById('goalkwh')
-const tonGoal = document.getElementById('goalton')
+const kwhGoal = document.getElementById('goalkwh');
+const tonGoal = document.getElementById('goalton');
 const toninput = document.getElementById('tonInput');
-const yearinput = document.getElementById('goalYear')
-const submitgoalbtn = document.querySelector('#submitnewgoalbtn')
+const yearinput = document.getElementById('goalYear');
+const submitgoalbtn = document.querySelector('#submitnewgoalbtn');
+const yesConfirmButton = document.getElementById('yesconfirmButton');
+const noConfirmButton = document.getElementById('noconfirmButton');
 
+// Function to show goal popup
+function showGoalPopup() {
+    goalPopup.classList.add('visible');
+    resetForm();
+}
 
- // Show the goal popup when the button is clicked
- setgoalbtn.addEventListener('click', function() {
-    document.getElementById('goalPopup').style.display = 'block';
-});
+// Function to hide goal popup
+function hideGoalPopup() {
+    goalPopup.classList.remove('visible');
+    resetForm();
+}
 
-// Hide/show percentage input based on goal selection
-goalSelect.addEventListener('change', function() {
-    if (this.value === 'pctgdecrease') {
+// Function to show confirmation popup
+function showConfirmationPopup(itemName, itemValue) {
+    document.getElementById('itemName').textContent = itemName;
+    document.getElementById('itemValue').textContent = itemValue;
+    confirmationPopup.classList.add('visible');
+}
+
+// Function to hide confirmation popup
+function hideConfirmationPopup() {
+    confirmationPopup.classList.remove('visible');
+}
+
+// Function to reset form
+function resetForm() {
+    goalForm.reset();
+    updateInputVisibility();
+}
+
+// Function to update input visibility based on selections
+function updateInputVisibility() {
+    if (goalSelect.value === 'pctgdecrease') {
         percentageInput.classList.remove('hidden');
         kwhinput.classList.add('hidden');
         toninput.classList.add('hidden');
     } else {
         percentageInput.classList.add('hidden');
-        // Check the currently selected type and show the appropriate input
         const selectedType = document.querySelector('input[name="type"]:checked');
         if (selectedType) {
             if (selectedType.value === 'energy') {
@@ -45,145 +75,160 @@ goalSelect.addEventListener('change', function() {
             }
         }
     }
-});
+}
 
-// Show/hide kWh and ton inputs based on type selection
-typeSelect.addEventListener('change', function() {
+// Function to create a new goal
+async function createGoal(metric_value, selectedType) {
+    const newGoal = {
+        school_id: parseInt(placeholderID),
+        year: parseInt(yearinput.value),
+        goal: goalSelect.value,
+        metric: selectedType.value,
+        metric_value: metric_value,
+    };
+
+    const response = await fetch('/goals', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(newGoal)
+    });
+
+    if (!response.ok) throw new Error('Network response was not ok');
+    alert("Goal created! Reload to sync changes.");
+    hideGoalPopup();
+}
+
+// Event Listeners
+setgoalbtn.addEventListener('click', showGoalPopup);
+cancelButton.addEventListener('click', hideGoalPopup);
+
+goalSelect.addEventListener('change', updateInputVisibility);
+
+typeSelection.addEventListener('change', function() {
     if (goalSelect.value === 'tgtvalue') {
-        const selectedType = document.querySelector('input[name="type"]:checked');
-        if (selectedType) {
-            if (selectedType.value === 'energy') {
-                kwhinput.classList.remove('hidden');
-                toninput.classList.add('hidden');
-            } else {
-                toninput.classList.remove('hidden');
-                kwhinput.classList.add('hidden');
-            }
-        }
+        updateInputVisibility();
     }
 });
 
-// Cancel button functionality to close the popup
-const cancelButton = document.getElementById('cancelButton');
-cancelButton.addEventListener('click', function() {
-    document.getElementById('goalPopup').style.display = 'none'; // Close popup
-});
-
-
-
+// Form submission handler
 submitgoalbtn.addEventListener('click', async (event) => {
     event.preventDefault();
+    
     const selectedType = document.querySelector('input[name="type"]:checked');
-    let metric_value;
-    if (goalSelect.value === "pctgdecrease") {
-        metric_value = parseFloat(document.getElementById('goalPercentage').value);
-    } else {
-        if (selectedType.value === 'energy') {
-            metric_value = parseFloat(kwhGoal.value);
-        } else {
-            metric_value = parseFloat(tonGoal.value);
-        }
-    }
     
     // Validation
-    if (!metric_value || !goalSelect.value || !selectedType.value || !yearinput.value) {
-        alert("Please fill in all form details.");
+    if (!selectedType) {
+        alert('Please select a type (Energy Usage or Carbon Emissions)');
         return;
     }
 
-    async function createGoal() {
-        const newGoal = {
-            school_id: parseInt(placeholderID),
-            year: parseInt(yearinput.value),
-            goal: goalSelect.value,
-            metric: selectedType.value,
-            metric_value: metric_value,
-        };
-        let response = await fetch('/goals', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify(newGoal)
-        });
-        if (!response.ok) throw new Error('Network response was not ok');
-        alert("Goal created! Reload to sync changes.");
-        document.getElementById('goalPopup').style.display = 'none';
+    if (!yearinput.value || yearinput.value < 2024 || yearinput.value > 2100) {
+        alert('Please enter a valid year between 2024 and 2100');
+        return;
     }
-   
-    // Fetch previous goals
-    let prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
-    let prevdata;
-    if (prevCheckresponse.status === 404) {
-        console.log("No previous goals found.");
-    } else if (prevCheckresponse.ok) {
-        prevdata = await prevCheckresponse.json();
+
+    let metric_value;
+    if (goalSelect.value === "pctgdecrease") {
+        metric_value = parseFloat(document.getElementById('goalPercentage').value);
+        if (!metric_value || metric_value < 1 || metric_value > 100) {
+            alert('Please enter a valid percentage between 1 and 100');
+            return;
+        }
     } else {
-        throw new Error('Network response to get previous goals was not ok');
-    }
-
-    let goalNeedsOverride = false;
-    let goalToDelete = null;  // Add this to store the goal that needs to be deleted
-
-    if (prevdata) {
-        prevdata.forEach(goal => {
-            if (goal.metric === selectedType.value) {
-                goalNeedsOverride = true;
-                goalToDelete = goal;  // Store the entire goal object
-                document.getElementById('itemValue').innerText = (selectedType.value === 'energy') ? 'Energy Usage' : 'Carbon Emissions';
-                document.getElementById('itemName').innerText = (goalSelect.value === 'pctgdecrease') ? 'Percentage Decrease' : 'Target Value';
-                document.getElementById('confirmationPopup').style.display = 'block';
+        if (selectedType.value === 'energy') {
+            metric_value = parseFloat(kwhGoal.value);
+            if (!metric_value || metric_value < 0) {
+                alert('Please enter a valid kWh target value');
+                return;
             }
-        });
+        } else {
+            metric_value = parseFloat(tonGoal.value);
+            if (!metric_value || metric_value < 0) {
+                alert('Please enter a valid tonnes target value');
+                return;
+            }
+        }
     }
 
-    // Remove any existing event listeners to prevent duplicates
-    const yesButton = document.getElementById('yesconfirmButton');
-    const noButton = document.getElementById('noconfirmButton');
-    const newYesButton = yesButton.cloneNode(true);
-    const newNoButton = noButton.cloneNode(true);
-    yesButton.parentNode.replaceChild(newYesButton, yesButton);
-    noButton.parentNode.replaceChild(newNoButton, noButton);
+    try {
+        // Check for existing goals
+        const prevCheckresponse = await fetch(`/goals/school/${placeholderID}`);
+        let prevdata;
+        
+        if (prevCheckresponse.status === 404) {
+            console.log("No previous goals found.");
+            await createGoal(metric_value, selectedType);
+            return;
+        } else if (prevCheckresponse.ok) {
+            prevdata = await prevCheckresponse.json();
+        } else {
+            throw new Error('Network response to get previous goals was not ok');
+        }
 
-    // If the goal needs an override, wait for confirmation
-    if (goalNeedsOverride && goalToDelete) {
-        newYesButton.addEventListener('click', async function () {
-            try {
-                // Hide confirmation popup
-                document.getElementById('confirmationPopup').style.display = 'none';
-                
-                console.log('Attempting to delete goal with ID:', goalToDelete.id);
-                
-                // Delete the old goal (same type)
-                let deleteGoalresponse = await fetch(`/goals/${goalToDelete.id}`, {
-                    method: "DELETE"
-                });
-                
-                if (!deleteGoalresponse.ok) {
-                    throw new Error('Network response to delete old goal was not ok');
+        // Check if goal needs override
+        const existingGoal = prevdata.find(goal => goal.metric === selectedType.value);
+        
+        if (existingGoal) {
+            const itemValue = selectedType.value === 'energy' ? 'Energy Usage' : 'Carbon Emissions';
+            const itemName = goalSelect.value === 'pctgdecrease' ? 'Percentage Decrease' : 'Target Value';
+            showConfirmationPopup(itemName, itemValue);
+
+            // Remove existing event listeners
+            const newYesButton = yesConfirmButton.cloneNode(true);
+            const newNoButton = noConfirmButton.cloneNode(true);
+            yesConfirmButton.parentNode.replaceChild(newYesButton, yesConfirmButton);
+            noConfirmButton.parentNode.replaceChild(newNoButton, noConfirmButton);
+
+            // Add new event listeners
+            newYesButton.addEventListener('click', async () => {
+                try {
+                    hideConfirmationPopup();
+                    
+                    // Delete existing goal
+                    const deleteResponse = await fetch(`/goals/${existingGoal.id}`, {
+                        method: "DELETE"
+                    });
+                    
+                    if (!deleteResponse.ok) {
+                        throw new Error('Failed to delete existing goal');
+                    }
+                    
+                    // Create new goal
+                    await createGoal(metric_value, selectedType);
+                    window.location.reload();
+                } catch (error) {
+                    console.error('Error in goal deletion/creation:', error);
+                    alert('There was an error updating the goal. Please try again.');
                 }
-                
-                console.log('Successfully deleted old goal');
-                // Now create the new goal
-                await createGoal();
-                
-                // Optionally refresh the page or update the UI
-                window.location.reload();
-            } catch (error) {
-                console.error('Error in goal deletion/creation:', error);
-                alert('There was an error updating the goal. Please try again.');
-            }
-        });
+            });
 
-        newNoButton.addEventListener('click', function () {
-            document.getElementById('confirmationPopup').style.display = 'none';
-            document.getElementById('goalPopup').style.display = 'none';
-        });
-    } else {
-        // If no override is needed, just create the new goal
-        createGoal();
+            newNoButton.addEventListener('click', () => {
+                hideConfirmationPopup();
+                hideGoalPopup();
+            });
+        } else {
+            await createGoal(metric_value, selectedType);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request. Please try again.');
     }
 });
+
+// Close popups when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === goalPopup) {
+        hideGoalPopup();
+    }
+    if (e.target === confirmationPopup) {
+        hideConfirmationPopup();
+    }
+});
+
+// Initialize form visibility
+updateInputVisibility();
 
 
 
@@ -443,11 +488,13 @@ async function initImpactCard(placeholderYear) {
 async function initBarCharts() {
     let sumEnergy;
     let sumEnergyNow;
+    let metricValue; 
     let sumCarbon;
     let sumCarbonNow;
-
     const fetchedData = await fetchGoals();
     const fetchedEnergyData = await fetchEnergyUsageData();
+
+    //sumEnergy value
     const fetchedCarbonFootprintData = await fetchCarbonFootprintData();
     function filterDataById(fetchedData, selectedId, placeholderYear, type) {
         let filteredData = fetchedData.filter(item => 
@@ -470,20 +517,19 @@ async function initBarCharts() {
         return total;
     }
 
+
     sumEnergy = filterDataById(fetchedEnergyData, placeholderID, placeholderYear - 1, 'energy');
     sumEnergyNow = filterDataById(fetchedEnergyData, placeholderID, placeholderYear, 'energy');
 
     sumCarbon = filterDataById(fetchedCarbonFootprintData, placeholderID, placeholderYear - 1, 'carbon')
     sumCarbonNow = filterDataById(fetchedCarbonFootprintData, placeholderID, placeholderYear, 'carbon')
     
-
     const energyGoal = fetchedData.find(item => item.metric === 'energy');
     updateChart('energy', energyGoal, sumEnergyNow, 'kWh');
 
     const carbonGoal = fetchedData.find(item => item.metric === 'carbon');
     updateChart('carbon', carbonGoal, sumCarbonNow, 'tonnes CO₂e');
 
-   
     // Update trend indicator
     /*
     const energyProgressChangeElement = document.querySelector('.etrend');
@@ -547,6 +593,7 @@ function updateChart(type, targetGoal, currentValue, unit) {
 
 
 initBarCharts();
+
 
 // ==================== Bar + Line Graph ====================
 let energyTemperatureChart;
