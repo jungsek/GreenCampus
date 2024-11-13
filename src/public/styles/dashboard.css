@@ -1135,10 +1135,10 @@ input[type="radio"] {
 
 .bar-container {
     position: relative;
-    height: 48px;
+    height: 30px;
     background-color: #f3f4f6;
     border-radius: 5px;
-    margin: 30px 0;
+    margin: 30px 5px;
 }
 
 .usage-bar {
