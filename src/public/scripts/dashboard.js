@@ -580,6 +580,8 @@ function updateChart(type, targetGoal, currentValue, unit) {
     const maxValue = currentValue * 1.5;
     
     // Update the display values
+    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
+    
     elements.utilizedValue.textContent = `Utilized: ${currentValue.toFixed(2)} ${unit}`;
     elements.goalValue.textContent = `Goal: ${goalValue.toFixed(2)} ${unit}`;
 

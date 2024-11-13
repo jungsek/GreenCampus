@@ -1319,3 +1319,18 @@
     color: grey;
     margin-top: 20px;
 }
+
+.yearlygoalbtndiv {
+    width: 100%;
+    height: 30%;
+    display:flex;
+    justify-content: flex-end;
+}
+
+#setGoalButton {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
