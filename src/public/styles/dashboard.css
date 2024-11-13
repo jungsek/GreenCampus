@@ -761,7 +761,7 @@ input[type="radio"] {
 
     /* ===============  First row =============== */
     .card-container {
-        display: grid;
+        display: flex;
         grid-template-columns: repeat(3, 1fr); /* Two columns for side-by-side layout */
         gap: 20px; /* Space between cards */
         justify-items: center; /* Center each card horizontally */
@@ -798,13 +798,22 @@ input[type="radio"] {
 
     /* ========== Medium Cards ========== */
     .content-card {
-        width: 100%; /* Full width of container */
         padding: 20px;
         display: flex;
         flex-direction: column; /* Stack elements vertically within the card */
         align-items: flex-start;
         gap: 10px; /* Space between elements within the card */
         box-sizing: border-box;
+    }
+    
+    /* First card should be 30% of the parent container */
+    .content-card.first {
+        flex: 0 0 30%; /* Takes up 30% of the parent's width */
+    }
+    
+    /* Second card should be 70% of the parent container */
+    .content-card.second {
+        flex: 0 0 70%; /* Takes up 70% of the parent's width */
     }
 
     .content-card .header {
@@ -1108,4 +1117,90 @@ input[type="radio"] {
         font-size: 14px; 
         margin-left: -15px;
     }
+}
+
+/*chart*/
+/* Container for both progress bars */
+.consumption-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.consumption-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.bar-container {
+    position: relative;
+    height: 48px;
+    background-color: #f3f4f6;
+    border-radius: 5px;
+    margin: 30px 0;
+}
+
+.usage-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #5bc7a0;
+    transition: width 0.3s ease;
+    border-radius: 5px;
+}
+
+.target-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    transition: left 0.3s ease;
+}
+
+.target-line {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.target-label {
+    position: absolute;
+    width: 100px; /* Fixed width to ensure consistent centering */
+    text-align: center;
+    left: -49px; /* Half of width-1px to account for target line width */
+    bottom: -30px;
+    font-size: 1.1rem;
+}
+
+.value {
+    margin-top: 20px;
+}
+
+.value > div {
+    display: flex;
+    gap: 8px;
+}
+
+.utilized {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #5bc7a0;
+}
+
+.goal {
+    font-size: 1rem;
+    color: #959595;
+    font-weight: 400;
+}
+
+.change {
+    margin-top: 16px;
+}
+
+#no-goal-message {
+    text-align: center;
+    color: grey;
+    margin-top: 20px;
 }
