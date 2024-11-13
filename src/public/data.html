@@ -32,16 +32,18 @@
               </li>
         </ul>
       </nav>
-
-      <div class="container mt-4">
+<div class="dashboard-content" id="prediction">
+    <div class="carpet-container">  
+      <div class="main container">
         <h1>View Data</h1>
-        <div class="form-group">
+        <div class="form-container">
             <label for="year">Select Year:</label>
             <select id="year" class="form-control">
                 <!-- Options will be populated dynamically -->
             </select>
+            <button id="fetchDataBtn" class="btn btn-primary mt-2">Fetch Data</button>
         </div>
-        <button id="fetchDataBtn" class="btn btn-primary mt-2">Fetch Data</button>
+
         <div id="errorOutput" class="alert alert-danger mt-2 hidden"></div>
 
         <!-- Data Tables -->
@@ -95,6 +97,8 @@
             <button id="downloadCsvBtn" class="btn btn-success mt-3">Download as CSV</button>
         </div>
     </div>
+    </div>
+</div>
 
      <!--footer-->
      <div class="footer-placeholder"></div>
