@@ -5,8 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const yearSelect = document.getElementById('year');
     const downloadPdfBtn = document.getElementById('downloadPdfBtn');
     const reportOutput = document.getElementById('reportOutput');
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        console.log('Loading screen is ready');
+    }
     // Flag to toggle between static and dynamic data
     const useStaticData = true; // Set to false to enable API fetching
+
+    downloadPdfBtn.classList.add('hidden');
 
     const staticReportData2024 = {
         green_score: {
@@ -828,6 +834,19 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>Lincoln High School is on a positive path towards sustainability, with key strengths in energy management during moderate months. However, addressing high energy and carbon emissions during extreme temperature periods will be crucial. By implementing recommended actions, the school can significantly progress towards its net-zero emissions target, leading the way in environmental responsibility and sustainability education.</p>
     `;
 
+    const staticRecommendationData2024 = {
+        green_score: staticReportData2024.green_score,
+        areas_of_concern: staticReportData2024.areas_of_concern,
+        strengths: staticReportData2024.strengths,
+        path_to_net_zero: staticReportData2024.path_to_net_zero,
+        personalized_recommendations: staticReportData2024.personalized_recommendations
+    };
+    
+    const staticPredictionData2024 = {
+        predictions: staticReportData2024.predictions,
+        net_zero_estimation: staticReportData2024.net_zero_estimation
+    };
+
     // Chart Data for Areas of Concern and Strengths
     const chartData = {
         areas_of_concern: staticReportData2024.areas_of_concern.map(area => area.data),
@@ -884,6 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Only generate the report if the selected year is 2024
                 if (year === 2024) {
                     displayReport(staticReportHTML2024);
+                    await saveReportToDatabase(schoolId, year, staticRecommendationData2024, staticPredictionData2024, staticReportHTML2024);
                 } else {
                     displayError('Report data for the selected year is not available.');
                 }
@@ -930,7 +950,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearOutputs() {
         reportOutput.innerHTML = '';
-        reportOutput.classList.add('hidden');
+        reportOutput.classList.add('hidden'); // Hide the report
         downloadPdfBtn.classList.add('hidden'); // Hide the download button
     }
 
@@ -956,9 +976,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayReport(report) {
         const cleanHTML = DOMPurify.sanitize(report, { ADD_TAGS: ['style'] });
         reportOutput.innerHTML = cleanHTML;
-        reportOutput.classList.remove('hidden');
-        downloadPdfBtn.classList.remove('hidden'); // Show the download button when report is displayed
-
+        reportOutput.classList.remove('hidden'); // Make the report visible
+        downloadPdfBtn.classList.remove('hidden'); // Show the download button after generating the report
+    
         // Initialize charts after the report is displayed
         initCharts();
     }
@@ -1246,6 +1266,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function downloadReportAsPDF() {
         const reportContent = document.getElementById('reportOutput');
 
+        // Add a class for PDF-specific styles
+        reportContent.classList.add('pdf-export');
+
+        // Resize charts for PDF
+        resizeChartsForPDF();   
+
         // Define PDF options
         const opt = {
             margin:       0,
@@ -1255,7 +1281,70 @@ document.addEventListener('DOMContentLoaded', () => {
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        // Generate and save the PDF
-        html2pdf().set(opt).from(reportContent).save();
+        // Generate and save the PDF    
+        html2pdf()
+        .set(opt)
+        .from(reportContent)
+        .save()
+        .then(() => {
+            // Remove the PDF-specific class and reset chart sizes after generation
+            reportContent.classList.remove('pdf-export');
+            resetChartSizes();
+        });
+    }
+    // Resize charts for PDF width
+    function resizeChartsForPDF() {
+        const charts = document.querySelectorAll('canvas');
+        charts.forEach((chart) => {
+            const chartContainer = chart.parentElement;
+            chart.style.width = '100%';
+            chart.style.height = 'auto';
+            chartContainer.style.width = '720px'; // Match PDF width
+            chartContainer.style.height = '400px'; // Optional fixed height
+        });
+    }
+
+    // Reset chart sizes after PDF generation
+    function resetChartSizes() {
+        const charts = document.querySelectorAll('canvas');
+        charts.forEach((chart) => {
+            chart.style.width = '';
+            chart.style.height = '';
+            const chartContainer = chart.parentElement;
+            chartContainer.style.width = '';
+            chartContainer.style.height = '';
+        });
+    }
+
+     // Function to save report to the database
+     async function saveReportToDatabase(schoolId, year, recommendationData, predictionData, reportHTML) {
+        try {
+            const response = await fetch('/api/reports', { // Ensure this endpoint matches your backend API
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    schoolId: schoolId,
+                    year: year,
+                    content: reportHTML,
+                    recommendationData: recommendationData, // Pass the separated data
+                    predictionData: predictionData // Pass the separated data
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save report to the database.');
+            }
+
+            const data = await response.json();
+            console.log('Report saved successfully:', data);
+            // Optionally, notify the user of success (e.g., toast notification)
+            // showToast('Success', 'Report saved successfully!', true);
+        } catch (error) {
+            console.error('Error saving report to the database:', error);
+            displayError('An error occurred while saving the report to the database.');
+        }
     }
 });
