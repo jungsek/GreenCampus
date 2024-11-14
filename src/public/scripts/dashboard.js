@@ -321,21 +321,12 @@ function getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear) {
         return itemYear === selectedYear;
     });
 
-    // Calculate the total energy usage, incorporating percentage from breakdownData
-    const totalEnergyUsage = filteredEnergyUsage.reduce((total, item) => {
-        // Find matching breakdown entry for the current energy usage item
-        const breakdownEntries = breakdownData.filter(b => b.energyusage_id === item.id);
+    let totalEnergyUsage = 0;
+    filteredEnergyUsage.forEach(element => {
+        totalEnergyUsage += element.energy_kwh
+    });
 
-        // Sum the energy usage * percentage for each breakdown entry associated with this usage item
-        const itemTotal = breakdownEntries.reduce((subtotal, breakdown) => {
-            // Multiply energy_kwh by the percentage (converted to a decimal)
-            return subtotal + (item.energy_kwh * (breakdown.percentage / 100));
-        }, 0);
-
-        // Add this item's total to the overall total
-        return total + itemTotal;
-    }, 0);
-
+    
     return totalEnergyUsage;
 }
 
@@ -426,7 +417,6 @@ async function initImpactCard(placeholderYear) {
     const topContributorsElement = document.querySelector(".metric-value3");
     const carbonFootprintChangeElement = document.querySelector(".trend1");
     const energyUsageChangeElement = document.querySelector(".trend2");
-
 
     if (yearElement) {
         yearElement.innerText = `${placeholderYear}'s Impact`;
