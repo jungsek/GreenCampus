@@ -1,57 +1,57 @@
 const popupMessages = {
     Lighting: {
-        title: "Lighting (Average across all locations)",
-        message: `<strong>Average Total Hours of Lighting Use:</strong> 10 hours per day.<br>
-            <strong>Light Usage Patterns:</strong> Hallway and lobby lights are typically left on for 2 hours beyond school hours.<br>
-            <strong>Energy Efficiency of Lighting Fixtures:</strong> 20% energy savings from LED fixtures over older models.<br>
-            <strong>Automatic Controls:</strong> About 70% of rooms utilize motion sensors to reduce unnecessary usage.<br>
-            <strong>Brightness Level:</strong> Dimming features used in 80% of classrooms during non-peak hours.`
+        title: "Lighting",
+        message: `<strong>Average Daily Use:</strong> Lights are on for approximately 10 hours per day.<br>
+            <strong>After-Hours Use:</strong> Hallway and lobby lights remain on 2 hours past school hours.<br>
+            <strong>Energy Usage by Lighting Type:</strong> LED fixtures account for 80% of lighting, reducing overall consumption by 20% compared to older models.<br>
+            <strong>Automated Control Coverage:</strong> Motion sensors cover 70% of rooms, keeping lights off when unoccupied.<br>
+            <strong>Typical Brightness Levels:</strong> Classrooms are dimmed during non-peak hours, using 20% less power for 8 hours daily.`
     },
     HVAC: {
-        title: "HVAC System (Average across all locations)",
-        message: `<strong>Operating Hours:</strong> HVAC systems run approximately 18 hours per day, with a reduced load at night.<br>
-            <strong>Energy Efficiency:</strong> Average HVAC systems yield a 15% reduction in energy use due to high-efficiency models.<br>
-            <strong>Temperature Settings:</strong> Set between 20°C during the day and 18°C at night.<br>
-            <strong>Cooling/Heating Demand:</strong> Average peak demand for heating is 65 kW and 50 kW for cooling.<br>
-            <strong>Automatic Controls:</strong> Smart thermostats are installed in about 60% of rooms for adaptive temperature control.`
+        title: "HVAC System",
+        message: `<strong>Average Daily Operating Hours:</strong> 18 hours daily, with reduced loads at night.<br>
+            <strong>Energy Usage Per Month:</strong> HVAC systems consume an estimated 1,500 kWh monthly.<br>
+            <strong>Temperature Settings:</strong> Set between 18°C and 25°C.<br>
+            <strong>Peak Cooling/Heating Demand:</strong> Heating demand reaches 65 kW and cooling peaks at 50 kW.<br>
+            <strong>Automated Control Usage:</strong> 60% of rooms use smart thermostats, improving efficiency by reducing demand during low occupancy hours.`
     },
     Refrigeration: {
-        title: "Refrigeration (Average across all locations)",
-        message: `<strong>Energy Usage:</strong> Average monthly consumption of 250 kWh per unit.<br>
-            <strong>Temperature Settings:</strong> 4°C for refrigeration and -18°C for frozen items, consistent across locations.<br>
-            <strong>Frequency of Door Openings:</strong> Average door opening frequency is 10 times per day, with adjustments for high-use areas.<br>
-            <strong>Energy Efficiency:</strong> Energy-efficient models contribute to a 12% average energy reduction.<br>
-            <strong>Maintenance:</strong> Monthly maintenance for defrosting and cleaning for all units.`
+        title: "Refrigeration",
+        message: `<strong>Monthly Energy Usage:</strong> Average unit consumption is approximately 180 kWh due to high ambient temperatures in Singapore.<br>
+            <strong>Temperature Control:</strong> 4°C for refrigeration, -18°C for freezing, ensuring food safety compliance.<br>
+            <strong>Usage Patterns:</strong> Doors opened 8-12 times per day, increasing cooling demand.<br>
+            <strong>Efficiency Rate:</strong> Advanced models save 10-15% in energy through efficient compressors and insulation.<br>
+            <strong>Maintenance Frequency:</strong> Each unit is serviced half a year.`
     },
     Computers: {
-        title: "Computers (Average across all locations)",
-        message: `<strong>Usage Hours:</strong> Computers are used for 6 hours daily on average.<br>
-            <strong>Power Consumption per Unit:</strong> Desktops: 120W per unit; Laptops: 50W per unit.<br>
-            <strong>Energy-Saving Settings:</strong> Power-saving modes implemented in 90% of computers.<br>
-            <strong>Maintenance:</strong> Regular updates and shutdown policies applied in most labs.<br>
-            <strong>Usage Policy:</strong> Standby modes enforced after 15 minutes of inactivity.`
+        title: "Computers",
+        message: `<strong>Average Daily Usage:</strong> Computers are actively used for 6 hours daily.<br>
+            <strong>Power Consumption:</strong> Desktops consume 120W per unit, laptops 50W.<br>
+            <strong>Standby Power Use:</strong> Standby modes activate after 15 minutes of inactivity, covering 90% of devices.<br>
+            <strong>Total Lab Consumption:</strong> Computer labs consume around 300 kWh monthly.<br>
+            <strong>Maintenance:</strong> Regular updates and shutdowns ensure efficient energy use.`
     },
     Equipment: {
-        title: "Equipment (Average across all locations)",
-        message: `<strong>Operating Hours:</strong> Average of 5 hours daily across all equipment.<br>
-            <strong>Energy Efficiency:</strong> Equipment is updated regularly to meet current efficiency standards, saving an average of 10% energy.<br>
-            <strong>Usage Patterns:</strong> Increased usage during lab hours; low usage at other times.<br>
-            <strong>Maintenance Schedule:</strong> Bi-monthly maintenance to ensure optimal performance.<br>
-            <strong>Automation:</strong> Automation applied where possible to reduce idle energy consumption.`
+        title: "Equipment",
+        message: `<strong>Average Operating Hours:</strong> 5 hours daily, primarily during lab activities.<br>
+            <strong>Energy Consumption:</strong> Equipment accounts for approximately 10% of total energy use, varying by type and lab schedule.<br>
+            <strong>Usage Peaks:</strong> High usage during lab hours, minimal at other times.<br>
+            <strong>Automation Coverage:</strong> Energy-saving automation is applied to reduce idle consumption.<br>
+            <strong>Maintenance Schedule:</strong> Equipment is serviced bimonthly to maintain efficient operation.`
     },
     Appliances: {
-        title: "Appliances (Average across all locations)",
-        message: `<strong>Daily Usage:</strong> Appliances used for 3 hours daily on average.<br>
-            <strong>Energy Consumption:</strong> Energy-efficient models used, reducing consumption by approximately 15%.<br>
-            <strong>Power-Saving Features:</strong> Many appliances have timers and standby modes.<br>
-            <strong>Usage Guidelines:</strong> Users are encouraged to switch off appliances when not in use.<br>
-            <strong>Maintenance:</strong> Quarterly checks to ensure appliances are functioning efficiently.`
+        title: "Appliances",
+        message: `<strong>Average Daily Use:</strong> Common appliances are used for about 3 hours daily.<br>
+            <strong>Energy Consumption:</strong> Energy-efficient models contribute to a 15% reduction in power use.<br>
+            <strong>Power-Saving Modes:</strong> Timers and standby functions are in place for most appliances, reducing energy during idle times.<br>
+            <strong>Total Monthly Usage:</strong> Appliances consume around 200 kWh monthly across all units.<br>
+            <strong>Maintenance:</strong> Quarterly checks ensure appliances maintain energy efficiency.`
     },
     FoodWasteManagement: {
-        title: "Food Waste Management (Average across all locations)",
-        message: `<strong>Total Food Waste Generated:</strong> Approximately 30kg per week.<br>
-            <strong>Disposal Methods:</strong> Composting for organic waste, with some recyclable materials.<br>
-            <strong>Composting Efficiency:</strong> Compost bins in 50% of school locations, contributing to garden projects.<br>
-            <strong>Frequency of Waste Disposal:</strong> Disposal bins are cleared daily; compost bins are managed weekly.`
+        title: "Food Waste Management",
+        message: `<strong>Average Waste Generated:</strong> About 30kg of food waste per week, with regular disposal and composting.<br>
+            <strong>Composting Impact:</strong> Composting reduces the volume of waste disposed by 30%, primarily used for garden projects.<br>
+            <strong>Daily Disposal Frequency:</strong> Waste bins are emptied daily, compost bins weekly.<br>
+            <strong>Energy Use in Waste Management:</strong> Minimal direct energy use; disposal and composting are primarily manual processes.`
     }
 };
