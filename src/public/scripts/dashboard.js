@@ -652,8 +652,6 @@ async function initEnergyTempChart() {
             kwhtotal += row.energy_kwh;
             temptotal += row.avg_temperature_c;
         });
-        document.getElementById('avgenergy').innerText = `${(kwhtotal/12).toFixed(2)} kWh/month`
-        document.getElementById('avgtemp').innerText = `${(temptotal/12).toFixed(2)} °C/month`
         const monthlyEnergyData = {};
         const monthlyTempData = {};
 
