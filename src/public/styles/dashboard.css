@@ -576,6 +576,7 @@
         display: flex;
         align-items: center;
     }
+
     #energyTemperatureChart {
         cursor: pointer;  /* Changes cursor to pointer when hovering over the chart */
     }
@@ -625,7 +626,7 @@
         margin-right: 50px;
         height: 80px;
         width: auto;
-        position: absolute;
+        position: relative;
     }
 
     .pieChart-container {
@@ -782,61 +783,78 @@
 
     @media (min-width: 1444px) and (max-width: 1540px) {
         .legendButtons {
-            max-height: 220px; 
-            overflow-y: scroll; 
-            padding-left: 80px; 
+            height: 200px !important;
+            margin-left: 270px !important;
+            padding-right: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            grid-template-columns: 1fr !important; /* Single column layout */
         }
-        
 
-        #legendButtons {
-            margin-top: 25px;
-            height: auto;
-            grid-template-columns: repeat(1, 1fr); 
-            margin-left: 185px 
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        .legendButtons::-webkit-scrollbar {
+            width: 5px; /* Set the width of the scrollbar */
         }
+
+        .legendButtons::-webkit-scrollbar-thumb {
+            background-color: #ccc; /* Customize scrollbar color */
+            border-radius: 4px; /* Rounded edges */
+        }
+
 
         #legendButtons button {
-            width: 60%;
+            width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
-
         #pieChart {
-            margin-top: 60px;
-            margin-left: 20px;
-            width: 250px !important;
-            height: 170px !important;
-            position: absolute;
+            flex: 0 0 250px; /* Fixed width, won't shrink */
+            height: 170px;
+            margin-left: -40px;
+        }
+
+        button.analyse-chart-btn1 {
+            margin-right: 500px;
+        }
+
+        button.analyse-chart-btn2 {
+            margin-right: 650px;
         }
     }
 
     @media (min-width: 1025px) and (max-width: 1443px) {
-        .legendButtons {
-            max-height: 220px; 
-            overflow-y: scroll; 
-        }
         
-        #legendButtons {
-            margin-top: 25px;
-            height: auto;
-            grid-template-columns: repeat(1, 1fr); 
-            margin-left: 185px 
+        .legendButtons {
+            height: 200px !important;
+            padding-right: 5px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            grid-template-columns: 1fr !important; /* Single column layout */
         }
 
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        .legendButtons::-webkit-scrollbar {
+            width: 5px; /* Set the width of the scrollbar */
+        }
+
+        .legendButtons::-webkit-scrollbar-thumb {
+            background-color: #ccc; /* Customize scrollbar color */
+            border-radius: 4px; /* Rounded edges */
+        }
+
+
         #legendButtons button {
-            width: 60%;
+            width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
 
         #pieChart {
-            margin-top: 60px;
-            margin-left: -20px;
-            width: 250px !important;
-            height: 170px !important;
-            position: absolute;
+            flex: 0 0 250px; /* Fixed width, won't shrink */
+            height: 170px;
+            margin-left: -50px;
         }
 
         button.analyse-chart-btn1 {
@@ -1019,7 +1037,7 @@
             margin-right: 50px;
             height: 50px;
             width: auto;
-            position: absolute;
+            position: relative;
         }
     }
 
@@ -1038,28 +1056,6 @@
         gap: 10px;
     }
 
-    /* ========== Small Cards ========== */
-    .smallCard-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .content-card, .impact-card {
-        width: 100%;
-    }
-
-    .percentage-text {
-        font-size: 0.9rem; /* Adjust font size for smaller screens */
-    }
-
-    .amount {
-        font-size: 30px;
-    }
-
-    .units {
-        font-size: 18px;
-    }
 
     /* ====== popup modal ====== */
     .popup-modal {
@@ -1238,12 +1234,13 @@
     }
 
     #legendButtons button {
-        width: 80%;
+        width: 89%;
         height: 40px;
-        font-size: 14px; 
+        font-size: 10px; 
         margin-left: -15px;
     }
 }
+
 
 /*chart*/
 /* Container for both progress bars */
