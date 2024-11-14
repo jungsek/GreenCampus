@@ -572,6 +572,10 @@
         font-size: 1.2rem; 
     }
 
+    .yearMonthSelect-filter {
+        display: flex;
+        align-items: center;
+    }
     #energyTemperatureChart {
         cursor: pointer;  /* Changes cursor to pointer when hovering over the chart */
     }
