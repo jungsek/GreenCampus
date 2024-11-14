@@ -336,7 +336,6 @@
 
     .btn-set-goal {
         background-color: #c8e6deba;
-        margin-top: 10px;
         border: none;
         padding: 10px 20px;
         border-radius: 6px;
@@ -471,7 +470,6 @@
         font-weight: bold;
         padding: 8px 16px 8px 16px; 
         margin-top: 0;
-        margin-left: 15px;
         font-size: 14px;
     }
     /* ========= Filter by Month / Years  ========= */
@@ -1332,4 +1330,8 @@
     margin-top: 20px;
 }
 
-
+.rightbar-container {
+    display: flex;  /* Make sure this is a flex container */
+    justify-self: flex-end;  /* Align the items to the right */
+    align-items: center;  /* Vertically align items to the center */
+}
