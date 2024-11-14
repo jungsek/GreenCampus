@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadPdfBtn = document.getElementById('downloadPdfBtn');
     let selectedMonth = 6;
     let currentAreaChart = null; // For managing area chart instance
-window.areaChartInstances = {}; // For managing multiple area chart instances
+    window.areaChartInstances = {}; // For managing multiple area chart instances
     const colorMapping = {
         "Lighting": "#3498db",
         "Computers": "#5bc7a0",

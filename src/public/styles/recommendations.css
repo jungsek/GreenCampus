@@ -449,5 +449,62 @@ body, html, .main {
     position: sticky !important;
 }
 
+/* Add or update PDF-specific styles */
+@media print {
+  .report-output {
+      max-width: 100%;
+      margin: 0;
+      padding: 15px;
+      break-inside: avoid;
+  }
+
+  .area-of-concern, .strength {
+      page-break-inside: avoid;
+      margin-bottom: 20px;
+  }
+
+  canvas {
+      max-height: 400px !important;
+      margin: 20px 0;
+      page-break-inside: avoid;
+  }
+
+  h2 {
+      page-break-before: always;
+      margin-top: 20px;
+  }
+
+  h2:first-of-type {
+      page-break-before: avoid;
+  }
+
+  ul {
+      page-break-inside: avoid;
+  }
+
+  .chart-container {
+      page-break-inside: avoid;
+      margin: 20px 0;
+  }
+}
+
+/* Update existing PDF export styles */
+.pdf-export {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.pdf-export .chart-container {
+  width: 100% !important;
+  height: 400px !important;
+  margin: 20px auto;
+}
+
+.pdf-export canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
 
 
