@@ -6,42 +6,40 @@
 }
 
 .leaderboard {
-    background: #89cdb4;  
+    background-color: #e6f7f1;
     padding: 24px;
     width: 100%;
 }
 
 .header {
     display: flex;
-    justify-content: space-between; /* This keeps the toggle buttons on the right */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
     width: 100%;
 }
 
-/* Create a container for title and info button */
 .title-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between title and info button */
+    gap: 10px;
 }
 
 .title {
-    color: white;
+    color: #245D51;
     font-size: 24px;
     font-weight: 600;
-    margin: 0; /* Remove any default margins */
+    margin: 0;
 }
 
 .info-btn {
     border: none;
-    color: white;
+    color: #245D51;
     font-size: 14px;
     cursor: pointer;
-    padding: 0; /* Remove any default padding */
+    padding: 0;
 }
 
-/* modal */
 .modal {
     display: none;
     position: fixed;
@@ -49,15 +47,15 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background-color: #1a1a1a; /* Dark background for the modal */
-    color: white;
+    background-color: #1a1a1a;
+    color: #245D51;
     padding: 25px;
     border-radius: 10px;
     max-width: 600px;
@@ -71,7 +69,7 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    color: #888;
+    color: #245D51;
     font-size: 24px;
     cursor: pointer;
     background: none;
@@ -86,7 +84,7 @@
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 20px;
-    padding-right: 30px; /* Make space for close button */
+    padding-right: 30px;
 }
 
 .instruction-section {
@@ -97,7 +95,7 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #4CAF50; /* Green color for section headers */
+    color: #245D51;
 }
 
 .points-table {
@@ -110,10 +108,12 @@
     padding: 8px;
     text-align: left;
     border: 1px solid #333;
+    color: #245D51;
 }
 
 .points-table th {
     background-color: #4CAF50;
+    color: #245D51;
 }
 
 .toggle-buttons {
@@ -122,7 +122,7 @@
 }
 
 .toggle-btn {
-    background: rgba(75, 165, 132, 0.4);  /* Slightly darker for contrast */
+    background: rgba(75, 165, 132, 0.4);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -132,27 +132,8 @@
 }
 
 .toggle-btn.active {
-    background: rgba(75, 165, 132, 0.8);  /* More opaque version of the same color */
+    background: rgba(66, 145, 116, 0.8);
 }
-
-/* .performance-card {
-    background: #4b527c;
-    background: #89cdb4;  
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    color: white;
-}
-
-.performance-card p:first-child {
-    font-size: 18px;
-    margin-bottom: 4px;
-}
-
-.performance-card p:last-child {
-    font-size: 24px;
-    font-weight: bold;
-} */
 
 .podium {
     display: flex;
@@ -179,42 +160,49 @@
     overflow: hidden;
 }
 
-
 .player-name {
-    color: white;
+    color: #245D51;
     font-size: 14px;
     font-weight: 500;
     text-align: center;
 }
 
 .player-points-container {
-    display: flex;     
-    gap: 16px;            
-    justify-content: center; 
+    display: flex;
+    gap: 16px;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
 .winnerMetricsCF,
 .winnerMetricsEU,
 .sustainability-points {
-    color: rgba(255, 255, 255, 0.8);
+    color: #245D51;
     font-size: 12px;
 }
 
 .podium-step {
     width: 100%;
-    background: #6cae92bd;
+    background: #0b442cbd;
     border-radius: 8px 8px 0 0;
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center horizontally */
+    justify-content: center;
 }
 
 .rank {
-    color: white;
+    color: #ffffff;
     font-size: 24px;
     font-weight: bold;
+}
+
+.arrow-up {
+    color: rgb(37, 194, 37);
+}
+
+.arrow-down {
+    color: red;
 }
 
 .first .podium-step { height: 120px; }
@@ -223,23 +211,23 @@
 
 .crown-badge {
     position: absolute;
-    top: -8px;  /* Negative value to move it up */
-    left: 54%;  /* Center it horizontally */
-    transform: translateX(-54%);  /* Perfect centering adjustment */
+    top: -8px;
+    left: 54%;
+    transform: translateX(-54%);
     background: #fbbf24;
     padding: 4px;
     border-radius: 100%;
-    display: flex;  
-    align-items: center;  
-    justify-content: center; 
-    width: 26px; 
-    height: 26px;  
-    z-index: 1;  /* Ensures the badge stays on top */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    z-index: 1;
 }
 
 .crown-badge .fa-crown {
-    color: white;
-    font-size: 13px; 
+    color: #245D51;
+    font-size: 13px;
 }
 
 .list {
@@ -249,30 +237,30 @@
 }
 
 .list-item {
-    background: rgba(255, 255, 255, 0.352);
+    background: #6cae9232;
     padding: 12px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     gap: 12px;
-    position: relative; 
+    position: relative;
 }
 
 .list-rank {
-    color: white;
+    color: #245D51;
     font-size: 18px;
     min-width: 24px;
 }
 
 .list-profile {
-    display: flex;  
+    display: flex;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #007bff;  
-    align-items: center;  
-    justify-content: center;  
-    color: white;  
+    background-color: #007bff;
+    align-items: center;
+    justify-content: center;
+    color: white;
     font-weight: bold;
     font-size: 16px;
     text-transform: uppercase;
@@ -280,25 +268,25 @@
 }
 
 .list-info {
-    flex: 1; /* Added */
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
 .list-name {
-    color: white;
+    color: #245D51;
     font-size: 14px;
     font-weight: 500;
 }
 
 .list-points {
-    color: rgba(0, 0, 0, 0.633);
+    color: #245D51;
     font-size: 12px;
 }
 
 .metrics-container {
     display: flex;
-    justify-content: space-evenly; 
+    justify-content: space-evenly;
     align-items: center;
     flex-grow: 0.5;
     margin-right: 400px;
@@ -308,15 +296,16 @@
 .EUmetrics {
     font-weight: bold;
     font-size: 14px;
-    text-align: center; 
+    text-align: center;
+    color: #245D51;
 }
-
 
 .metric-item {
     font-size: 14px;
     padding: 4px 8px;
     border-radius: 4px;
     margin: 4px 0;
+    color: #245D51;
 }
 
 .score-box {
@@ -324,9 +313,9 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    margin-left: auto; /* Added */
+    margin-left: auto;
 }
-  
+
 .score-item {
     padding: 8px 12px;
     border-radius: 4px;
@@ -338,15 +327,16 @@
 .score-value {
     font-size: 14px;
     font-weight: bold;
+    color: #245D51;
 }
 
 .score-icon {
     font-size: 12px;
-    color: #444;
+    color: #245D51;
 }
 
 .score-icon.fa-arrow-up {
-    color: green;
+    color: rgb(37, 194, 37);
 }
 
 .score-icon.fa-arrow-down {

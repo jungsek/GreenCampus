@@ -1,826 +1,161 @@
-/* ================== Green Background ================== */
-.dashboard-content { 
-    background-color: #59c19b69; 
-    padding: 15px; /* Fixed padding */
-    position: relative;
-    display: flex; 
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
-    box-sizing: border-box;
-    width: 100%;
-    overflow-y: visible; /* Manage overflow */
-}  
-
-/* ================== White Layered Background ================== */
-.carpet-container { 
-    background-color: #ffffff; 
-    padding: 15px; 
-    border-radius: 13px; 
-    width: 100%; 
-    height: 100%;
-    box-sizing: border-box;
-}
-
-/* ================== First Row of Graphs ================== */
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
-    width: 100%; 
-    box-sizing: border-box;
-    display: flex;
-    gap: 15px; /* Controls the space between smallCard-container and content-card */
-}
-
-/* ========== Small Cards ========== */
-.smallCard-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 30%; 
-    flex-wrap: wrap;
-    gap: 15px;  
-}
-
-.impact-card {
-    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    width: 100%;
-    height: 100%;
-    color: #000;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.8s;
-    cursor: pointer;
-}
-
-.impact-card.is-flipped {
-    transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 20px;
-}
-
-.card-front {
-    background-color: #fff;
-    color: #000;
-}
-
-.card-back {
-    background-color: #245D51;
-    transform: rotateY(180deg);
-}
-
-/* Title */
-.title {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #666;
-    font-weight: bold;
-}
-
-/* Metric */
-.metric {
-    display: flex;
-    justify-content: space-between;
-    padding: 2px;
-    align-items: flex-start;
-}
-
-.metric-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-
-/* Trend and Link */
-.trend1 {
-    color: red;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.trend2 {
-    color: red;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.see-why {
-    color: blue;
-    text-decoration: underline;
-    font-size: 0.85rem;
-}
-
-/* ========== Medium Size Cards ========== */
-
-
-.content-card {
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
-    text-align: left;
-    border: 1px solid #ddd; 
-    background-color: white;
-    flex-direction: row;
-    transition: background-color 0.3s, color 0.3s;
-    width: 100%; 
-}
-
-.content-card:hover {
-    background-color: #245D51;
-}
-
-.doughnut-chart-container {
-    position: relative;
-    display: inline-block;
-    margin-left: auto;
-    padding-right: 20px;
-}
-
-/* Styles for the percentage text */
-.percentage-text {
-    position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-60%, -50%); /* Center the text */
-    font-size: 1.0rem; /* Base font size */
-    color: #000;
-    font-weight: bold;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.menu-icon {
-    cursor: pointer;
-    margin-top: -10px;
-    margin-right: 10px;
-}
-
-.income-value {
-    display: flex;
-    align-items: baseline;
-}
-
-.units {
-    font-size: 20px;
-    color: #666;
-    margin-right: 5px;
-}
-
-.amount {
-    font-size: 40px;
-    font-weight: bold;
-    color: #000;
-}
-
-.change {
-    margin-top: -10px;
-    font-size: 14px;
-    color: #666;
-}
-
-.increase-icon {
-    font-size: 20px; 
-    color: rgb(25, 176, 25); 
-    margin-right: 5px; /* Add some space between the icon and the text */
-    vertical-align: middle; /* Align the icon with the text */
-    display: inline-block; 
-}
-
-.change-text {
-    color: rgb(25, 176, 25); 
-    font-weight: bold;
-}
-
-.content-card:hover .header span,
-.content-card:hover .value span,
-.content-card:hover .last-month {
-    color: white; 
-}
-
-.value {
-    display: flex;
-    margin-top: -10px;
-    align-items: center; 
-}
-
-.value canvas {
-    margin-left: 10px; 
-}
-
-
-/* =============== Filters  =============== */
-.filter-container {
-    position: relative;
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
-    gap: 10px;
-}
-
-.filter {
-    display: flex;
-    align-items: flex-start; /* Align items vertically centered */
-}
-
-.filter i {
-    margin-right: 5px; /* Space between the icon and the select */
-    font-size: 1.2rem; 
-}
-
-/* ========= Set Goal ========*/
-/* Set Goal Button */
-.btn-set-goal {
-    padding: 16px 32px; /* Padding for the button */
-    font-size: 14px; /* Font size */
-    font-weight: bold; /* Bold text */
-    color: #333; /* Text color */
-    background-color: #c8e6deba; /* Background color */
-    border: none; /* Remove default border */
-    border-radius: 6px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    margin-top: 10px; /* Space above the button */
-    transition: background-color 0.3s ease; /* Smooth background color transition */
-}
-
-/* Hover effect for the Set Goal button */
-.btn-set-goal:hover {
-    background-color: #c3e7deea; /* Darker background on hover */
-}
-
-/* Set Goal Button option styling */
-.btn-set-goal:focus {
-    outline: none; /* Remove outline on focus */
-    box-shadow: 0 0 0 2px rgba(75, 192, 192, 0.5); /* Optional: Add focus shadow */
-}
-/* Popup Container */
-.popup {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
-}
-
-/* Popup Content */
-.popup-content {
-    background-color: #ffffff; /* White background */
-    margin: 10% auto; /* 10% from the top and centered */
-    padding: 20px; /* Padding */
-    border: 1px solid #888; /* Border */
-    width: 80%; /* Could be more or less, depending on screen size */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    position: relative; /* For positioning the cancel button */
-}
-
-/* Cancel Button */
-.cancel-button {
-    position: absolute; /* Position in the top right corner */
-    top: 10px;
-    right: 10px;
-    background: none; /* No background */
-    border: none; /* No border */
-    font-size: 20px; /* Adjust font size */
-    cursor: pointer; /* Pointer cursor */
-    color: #5bc7a0; /* Match theme color */
-}
-
-/* Header Styles */
-h1 {
-    text-align: center; /* Center the title */
-    color: #5bc7a0; /* Primary color */
-    margin-bottom: 20px; /* Space below header */
-}
-
-/* Form Styles */
-.form-group {
-    margin-bottom: 15px; /* Space between form elements */
-}
-
-label {
-    display: block; /* Block display for labels */
-    margin-bottom: 5px; /* Space below labels */
-    font-weight: bold; /* Bold labels */
-    color: #333; /* Dark color for text */
-}
-
-.select, .form-control {
-    padding: 10px; /* Padding for inputs */
-    font-size: 16px; /* Font size */
-    width: 100%; /* Full width */
-    border: 1px solid #ddd; /* Border */
-    border-radius: 4px; /* Rounded corners */
-    transition: border-color 0.3s ease; /* Smooth transition */
-}
-
-/* Hover effect for selects */
-.select:hover, .form-control:hover {
-    border-color: #5bc7a0; /* Highlight border on hover */
-}
-
-/* Submit Button */
-button[type="submit"] {
-    background-color: #5bc7a0; /* Primary button color */
-    color: white; /* Button text color */
-    padding: 10px 15px; /* Button padding */
-    border: none; /* No border */
-    border-radius: 4px; /* Rounded corners */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer; /* Pointer cursor */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease; /* Smooth transition */
-    width: 100%; /* Full width */
-}
-
-button[type="submit"]:hover {
-    background-color: #4a9b82; /* Darker shade on hover */
-}
-
-/* Hidden Class */
-.hidden {
-    display: none; /* Hide element */
-}
-
-/* Radio Button Styles */
-input[type="radio"] {
-    margin-right: 10px; /* Space between radio and label */
-}
-
-/* Additional styling for the type selection */
-#typeSelection {
-    margin-top: 10px; /* Space above type selection */
-    display: flex; /* Flexbox for radio buttons */
-    gap: 20px; /* Space between radio buttons */
-    align-items: center; /* Center align */
-}
-
-#typeSelection label {
-    font-weight: normal; /* Normal weight for radio labels */
-    color: #333; /* Dark color for text */
-}
-
-
-/* ========= Filter by Years  ========= */
-#yearsFilter {
-    padding: 8px 16px 8px 16px; 
-    font-size: 14px;
-    margin-right: 15px;
-    font-weight: bold;
-    color: #333;
-    background-color: #c8e6deba;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative; /* Positioning for custom arrow */
-    transition: background-color 0.3s ease;
-}
-
-/* Hover effect for the dropdown */
-#yearsFilter:hover {
-    background-color: #c3e7deea;
-}
-
-/* Dropdown options styling */
-#yearsFilter option {
-    background-color: #f0efefe7; 
-}
-
-/* ========= Filter by Locations  ========= */
-#locationSelect {
-    padding: 8px 16px 8px 16px; 
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-    background-color: #c8e6deba;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative; /* Positioning for custom arrow */
-    transition: background-color 0.3s ease;
-}
-
-#locationSelect option {
-    background-color: #f0efefe7; 
-}
-
-#locationSelect:hover {
-    background-color: #c3e7deea;
-}
-
-/* ========= Filter by Month / Years  ========= */
-#yearMonthSelect {
-    padding: 8px 16px 8px 16px; 
-    font-size: 14px;
-    margin-right: -5px;
-    font-weight: bold;
-    color: #333;
-    background-color: #c8e6deba;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative; /* Positioning for custom arrow */
-    transition: background-color 0.3s ease;
-}
-
-/* Hover effect for the dropdown */
-#yearMonthSelect:hover {
-    background-color: #c3e7deea;
-}
-
-/* Dropdown options styling */
-#yearMonthSelect option {
-    background-color: #f0efefe7; 
-}
-
-#yearMonthSelect:hover {
-    background-color: #c3e7deea;
-}
-
-/* ================== Line Bar Graph ================== */
-.middle-graphs-container {
-    display: flex; 
-    gap: 15px; /* Space between bar and pie charts */
-    justify-content: space-between; 
-    align-items: flex-start;
-    flex-wrap: nowrap; /* Wrap items on smaller screens */
-    width: 100%;
-    height: 100%;
-}
-
-.barChart {
-    width: 75%;
-    height: 100%;
-}
-
-.barChart-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
-.graph-name-container1 {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; /* Vertically center the elements */
-    width: 100%; /* Full width of container */
-    max-width: 100%; /* Ensure container scales */
-    font-size: 1.3rem;
-    font-weight: bold;
-    padding: 5px;
-}
-
-.barChart-container {
-    display: flex;
-    min-height: 271px;/* Set a minimum height */
-    height: 100%; 
-    width: 100%; 
-    border-radius: 8px; /* Slightly smaller border radius */
-    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
-    text-align: left;
-    border: 1px solid #ddd;
-    background-color: white;
-    transition: background-color 0.3s, color 0.3s;
-    justify-content: space-between;
-    align-items: stretch; /* Ensure children fit height */
-}
-
-.barChart-info {
-    padding: 35px;
-    width: 24%; 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    font-size: 1rem; 
-}
-
-.barChart-info p {
-    font-weight: bold;
-}
-
-.barChart-info strong {
-    font-weight: normal;
-}
-
-.yearMonthSelect-filter i {
-    margin-right: 5px; /* Space between the icon and the select */
-    font-size: 1.2rem; 
-}
-
-#energyTemperatureChart {
-    cursor: pointer;  /* Changes cursor to pointer when hovering over the chart */
-}
-
-
-/* ================== Pie Chart ================== */
-.graph-name-container2 {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; /* Vertically center the elements */
-    width: 100%; /* Full width of container */
-    max-width: 100%; 
-    font-size: 1.3rem;
-    font-weight: bold;
-    padding: 5px;
-}
-
-.pie {
-    width: 30%;
-    height: 100%;
-}
-
-#pieChart {
-    margin-top: 40px;
-    margin-left: -50px;
-    margin-right: 50px;
-    height: 80px;
-    width: auto;
-    position: absolute;
-}
-
-.pieChart-container {
-    height: 100%; 
-    width: 100%; 
-    min-height: 270px;
-    border-radius: 8px; 
-    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); 
-    border: 1px solid #ddd;
-    background-color: white;
-    display: flex;
-    transition: background-color 0.3s, color 0.3s;
-    position: relative; 
-}
-
-#legendButtons {
-    display: grid;
-    position: absolute;
-    margin-left: 230px;
-    margin-top: 25px;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 7px; 
-    height: 50%;
-    justify-items: center;
-}
-
-#legendButtons button {
-    background-color: #eee;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    font-size: 12px;
-    border-radius: 5px;
-    text-align: center;
-    transition: background-color 0.3s;
-    width: 80px; 
-    height: 45px; 
-}
-
-.legend-button {
-    display: none; /* Hide buttons by default */
-}
-
-/* Make the buttons visible when their corresponding data is matched */
-.legend-button.show {
-    display: inline-block;
-}
-
-/* Hover effect for buttons */
-#legendButtons button:hover {
-    background-color: #ddd;
-}
-
-
-/* ================== Popup Modal ================== */
-.popup-modal {
-    position: fixed;
-    top: 305px;
-    left: 700px;
-    width: 33%;
-    height: 38%;
-    padding: 15px;
-    border-radius: 15px;
-    background-color: #7d898469; 
-    display: none; /* Initially hidden */
-    justify-content: center;
-    align-items: center;
-    z-index: 800;
-}
-
-.popup-content {
-    background-color: white;
-    padding: 15px;
-    border-radius: 15px;
-    text-align: start;
-    width: 600px;
-    height: 100%;
-}
-
-.popup-content h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.popup-content p {
-    font-size: 16px;
-}
-
-.close-btn {
-    font-size: 50px;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 30px;
-    color: black;
-    background-color: 0.3s;
-}
-
-.close-btn:hover {
-    color: red;
-}
-
-
-
-/* ================== Line Graph ================== */
-.bottom-graph-name-container {
-    font-size: 1.3rem;
-    font-weight: bold;
-    padding: 5px 10px;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; /* Vertically center the elements */
-    width: 100%; /* Full width of container */
-    max-width: 100%; /* Ensure container scales */
-}
-
-
-.line-graph-container {
-    display: flex;
-    flex-grow: 1;
-    padding: 3px; 
-    height: 215px; 
-    width: 100%; 
-    border-radius: 8px; /* Slightly smaller border radius */
-    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
-    text-align: left;
-    border: 1px solid #ddd;
-    background-color: white;
-    transition: background-color 0.3s, color 0.3s;
-    justify-content: space-between;
-}
-
-@media (min-width: 1444px) and (max-width: 1540px) {
-    .legendButtons {
-        max-height: 220px; 
-        overflow-y: scroll; 
-        padding-left: 80px; 
-    }
-    
-
-    #legendButtons {
-        margin-top: 25px;
-        height: auto;
-        grid-template-columns: repeat(1, 1fr); 
-        margin-left: 185px 
-    }
-
-    #legendButtons button {
-        width: 60%;
-        height: 40px;
-        font-size: 12px; 
-    }
-    
-
-    #pieChart {
-        margin-top: 60px;
-        margin-left: 20px;
-        width: 250px !important;
-        height: 170px !important;
-        position: absolute;
-    }
-}
-
-@media (min-width: 1025px) and (max-width: 1443px) {
-    .legendButtons {
-        max-height: 220px; 
-        overflow-y: scroll; 
-    }
-    
-
-    #legendButtons {
-        margin-top: 25px;
-        height: auto;
-        grid-template-columns: repeat(1, 1fr); 
-        margin-left: 185px 
-    }
-
-    #legendButtons button {
-        width: 60%;
-        height: 40px;
-        font-size: 12px; 
-    }
-    
-
-    #pieChart {
-        margin-top: 60px;
-        margin-left: -20px;
-        width: 250px !important;
-        height: 170px !important;
-        position: absolute;
-    }
-}
-
-
-/* Medium screens (tablets, smaller laptops) */
-@media (min-width: 767px) and (max-width: 1024px) {
-    .dashboard-content {
+    /* ================== Green Background ================== */
+    .dashboard-content { 
+        background-color: #59c19b69; 
+        padding: 15px; /* Fixed padding */
+        position: relative;
+        display: flex; 
         flex-direction: column;
-        align-items: center;
-        height: 100%;
-        padding-bottom: 20px;
-    }
+        justify-content: center; 
+        align-items: center; 
+        box-sizing: border-box;
+        width: 100%;
+        overflow-y: visible; /* Manage overflow */
+    }  
 
-    /* ===============  First row =============== */
-    .card-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Two columns for side-by-side layout */
-        gap: 20px; /* Space between cards */
-        justify-items: center; /* Center each card horizontally */
-    }
-
-    /* ===== popup modal ===== */
-    .popup-modal {
-        width: 90%; 
-        height: auto; /* Allow the height to adjust according to content */
-        top: 20%; 
-        left: 50%;
-        transform: translateX(-50%); /* Keep it centered horizontally */
-        padding: 10px;
-    }
-
-    .popup-content {
+    /* ================== White Layered Background ================== */
+    .carpet-container { 
+        background-color: #ffffff; 
+        padding: 15px; 
+        border-radius: 13px; 
         width: 100%; 
-        padding: 10px;
-    }
-
-    .popup-content h2 {
-        font-size: 18px; 
-    }
-
-    .popup-content p {
-        font-size: 14px; 
-    }
-
-    .close-btn {
-        font-size: 40px; 
-        right: 15px; 
-        top: 5px; 
-    }
-
-    /* ========== Medium Cards ========== */
-    .content-card {
-        width: 100%; /* Full width of container */
-        padding: 20px;
-        display: flex;
-        flex-direction: column; /* Stack elements vertically within the card */
-        align-items: flex-start;
-        gap: 10px; /* Space between elements within the card */
+        height: 100%;
         box-sizing: border-box;
     }
 
-    .content-card .header {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-
-    .content-card .value {
+    /* ================== First Row of Graphs ================== */
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Responsive grid */
+        width: 100%; 
+        box-sizing: border-box;
         display: flex;
-        flex-direction: column; /* Stack elements within .value vertically */
-        align-items: flex-start;
-        gap: 5px;
+        gap: 15px; /* Controls the space between smallCard-container and content-card */
     }
 
-    .content-card .value div {
-        font-size: 1rem;
+    /* ========== Small Cards ========== */
+    .smallCard-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 30%; 
+        flex-wrap: wrap;
+        gap: 15px;  
+    }
+
+    .impact-card {
+        box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        width: 100%;
+        height: 100%;
+        color: #000;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.8s;
+        cursor: pointer;
+    }
+
+    .impact-card.is-flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .card-front {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .card-back {
+        background-color: #245D51;
+        transform: rotateY(180deg);
+    }
+
+    /* Title */
+    .title {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #666;
+        font-weight: bold;
+    }
+
+    /* Metric */
+    .metric {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px;
+        align-items: flex-start;
+    }
+
+    .metric-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+
+    /* Trend and Link */
+    .trend1 {
+        color: red;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .trend2 {
+        color: red;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .see-why {
+        color: blue;
+        text-decoration: underline;
+        font-size: 0.85rem;
+    }
+
+    /* ========== Medium Size Cards ========== */
+
+
+    .content-card {
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+        text-align: left;
+        border: 1px solid #ddd; 
+        background-color: white;
+        flex-direction: row;
+        transition: background-color 0.3s, color 0.3s;
+        width: 100%; 
+    }
+
+    .content-card:hover {
+        background-color: #00b58e2e;
+    }
+
+    .doughnut-chart-container {
+        position: relative;
+        display: inline-block;
+        margin-left: auto;
+        padding-right: 20px;
+    }
+
+    /* Styles for the percentage text */
+    .percentage-text {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-60%, -50%); /* Center the text */
+        font-size: 1.0rem; /* Base font size */
+        color: #000;
+        font-weight: bold;
     }
 
     .header {
@@ -831,79 +166,882 @@ input[type="radio"] {
         margin-bottom: 10px;
         font-weight: bold;
     }
-    
+
     .menu-icon {
         cursor: pointer;
         margin-top: -10px;
         margin-right: 10px;
     }
 
-    .amount {
-        font-size: 2rem;
-    }
-    
-    /* ===============  Bar Chart =============== */
-    .middle-graphs-container {
+    .income-value {
         display: flex;
-        flex-direction: column;
+        align-items: baseline;
+    }
+
+    .units {
+        font-size: 20px;
+        color: #666;
+        margin-right: 5px;
+    }
+
+    .amount {
+        font-size: 40px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .change {
+        margin-top: -10px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .increase-icon {
+        font-size: 20px; 
+        color: rgb(25, 176, 25); 
+        margin-right: 5px; /* Add some space between the icon and the text */
+        vertical-align: middle; /* Align the icon with the text */
+        display: inline-block; 
+    }
+
+    .change-text {
+        color: rgb(25, 176, 25); 
+        font-weight: bold;
+    }
+
+    .content-card:hover .header span,
+    .content-card:hover .value span,
+    .content-card:hover .last-month {
+        color: white; 
+    }
+
+    .value {
+        display: flex;
+        margin-top: -10px;
+        align-items: center; 
+    }
+
+    .value canvas {
+        margin-left: 10px; 
+    }
+
+
+    /* =============== Filters  =============== */
+    .filter-container {
+        position: relative;
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        gap: 10px;
+    }
+
+    .filter {
+        display: flex;
+        align-items: flex-start; /* Align items vertically centered */
+    }
+
+    .filter i {
+        margin-right: 5px; /* Space between the icon and the select */
+        font-size: 1.2rem; 
+    }
+
+    /* ========= Set Goal ========*/
+    /* Popup Styles */
+    .popup {
+        visibility: hidden; /* Use visibility instead of display */
+        opacity: 0; /* Start fully transparent */
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex; /* Always use flex */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        transition: visibility 0s linear 0.2s, opacity 0.2s; /* Smooth transition */
+    }
+
+    .popup-content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        position: relative;
+        width: 90%;
+        max-width: 500px;
+        max-height: 540px;
+        transform: translateY(0%)
+    }
+
+    /* Add this class for when popup is visible */
+    .popup.visible {
+        visibility: visible;
+        opacity: 1;
+        transition-delay: 0s;
+    }
+
+    .popup-content h1 {
+        color: #245D51;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .popup-content h3 {
+        color: #245D51;
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #245D51;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #89cdb4;
+        box-shadow: 0 0 0 2px rgba(137, 205, 180, 0.2);
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23245D51' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .btn-set-goal {
+        background-color: #c8e6deba;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.2s;
+    }
+
+    .btn-set-goal:hover {
+        background-color: #c3e7deea;
+    }
+
+    #submitnewgoalbtn {
+        width: 100%;
+        background-color: #89cdb4;
+        color: white;
+        text-align: center;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 16px;
+        max-width: 440px;
+        transition: background-color 0.2s;
+    }
+
+    #submitnewgoalbtn:hover {
+        background-color: #6cae92;
+    }
+
+    .cancel-button {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #245D51;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .cancel-button:hover {
+        color: red;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Radio button styling */
+    input[type="radio"] {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #89cdb4;
+        border-radius: 50%;
+        margin-right: 8px;
+        position: relative;
+        cursor: pointer;
+    }
+
+    input[type="radio"]:checked::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background-color: #89cdb4;
+        border-radius: 50%;
+    }
+
+    #typeSelection div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+
+
+    /* ========= Filter by Years  ========= */
+    #yearsFilter {
+        padding: 8px 16px 8px 16px; 
+        font-size: 14px;
+        margin-right: 15px;
+        font-weight: bold;
+        color: #333;
+        background-color: #c8e6deba;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative; /* Positioning for custom arrow */
+        transition: background-color 0.3s ease;
+    }
+
+    /* Hover effect for the dropdown */
+    #yearsFilter:hover {
+        background-color: #c3e7deea;
+    }
+
+    /* Dropdown options styling */
+    #yearsFilter option {
+        background-color: #f0efefe7; 
+    }
+
+    /* ========= Filter by Locations  ========= */
+    #locationSelect {
+        padding: 8px 16px 8px 16px; 
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        background-color: #c8e6deba;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative; /* Positioning for custom arrow */
+        transition: background-color 0.3s ease;
+    }
+
+    #locationSelect option {
+        background-color: #f0efefe7; 
+    }
+
+    #locationSelect:hover {
+        background-color: #c3e7deea;
+    }
+
+    #setGoalButton {
+        font-weight: bold;
+        padding: 8px 16px 8px 16px; 
+        margin-top: 0;
+        font-size: 14px;
+    }
+    /* ========= Filter by Month / Years  ========= */
+    #yearMonthSelect {
+        padding: 8px 16px 8px 16px; 
+        font-size: 14px;
+        margin-right: -5px;
+        font-weight: bold;
+        color: #333;
+        background-color: #c8e6deba;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative; /* Positioning for custom arrow */
+        transition: background-color 0.3s ease;
+    }
+
+    /* Hover effect for the dropdown */
+    #yearMonthSelect:hover {
+        background-color: #c3e7deea;
+    }
+
+    /* Dropdown options styling */
+    #yearMonthSelect option {
+        background-color: #f0efefe7; 
+    }
+
+    #yearMonthSelect:hover {
+        background-color: #c3e7deea;
+    }
+
+    /* ================== Line Bar Graph ================== */
+    .middle-graphs-container {
+        display: flex; 
+        gap: 15px; /* Space between bar and pie charts */
+        justify-content: space-between; 
+        align-items: flex-start;
+        flex-wrap: nowrap; /* Wrap items on smaller screens */
+        width: 100%;
+        height: 100%;
+    }
+
+    .barChart {
+        width: 75%;
+        height: 100%;
     }
 
     .barChart-wrapper {
-        display: flex;
-        width: 91.5vw; /* Full viewport width */
+        width: 100%;
+        height: 100%;
     }
 
-    /* ===============  Bar Chart =============== */
+    .graph-name-container1 {
+        display: flex; 
+        justify-content: flex-start; 
+        align-items: center; /* Vertically center the elements */
+        width: 100%; /* Full width of container */
+        max-width: 100%; /* Ensure container scales */
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 5px;
+    }
+
     .barChart-container {
-        width: 100%;
+        display: flex;
+        min-height: 271px;/* Set a minimum height */
         height: 100%; 
-        padding: 15px; 
-        box-sizing: border-box;
+        width: 100%; 
+        border-radius: 8px; /* Slightly smaller border radius */
+        box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow */
+        text-align: left;
+        border: 1px solid #ddd;
+        background-color: white;
+        transition: background-color 0.3s, color 0.3s;
+        justify-content: space-between;
+        align-items: stretch; /* Ensure children fit height */
     }
 
     .barChart-info {
-        padding: 15px;
-        font-size: 15px;
+        padding: 35px;
+        width: 24%; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        font-size: 1rem; 
     }
 
-    /* ===============  Pie Chart =============== */
-    .pie {
-        width: 100%;
+    .barChart-info p {
+        font-weight: bold;
+    }
+
+    .barChart-info strong {
+        font-weight: normal;
+    }
+
+    .yearMonthSelect-filter i {
+        margin-right: 5px; /* Space between the icon and the select */
+        font-size: 1.2rem; 
+    }
+
+    .yearMonthSelect-filter {
+        display: flex;
+        align-items: center;
+    }
+
+    .yearMonthSelect-filter {
+        display: flex;
+        align-items: center;
+    }
+    #energyTemperatureChart {
+        cursor: pointer;  /* Changes cursor to pointer when hovering over the chart */
+    }
+
+    button.analyse-chart-btn1 {
+        background-color: #c8e6deba; /* Light green background */
+        color: black;
+        border: none;
+        padding: 5px 20px;
+        border-radius: 5px;
+        font-size: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-left: 10px;
     }
     
-    .pieChart-container {
-        width: 100%; 
-        height: 100%; 
-        padding: 15px; 
-        box-sizing: border-box;
+    button.analyse-chart-btn:hover {
+        background-color: #b2d6cb; /* Darken background on hover */
+    }
+    
+    button.analyse-chart-btn:active {
+        background-color: #a0cfc0; /* Darker shade on click */
     }
 
-    .graph-names-container, .bottom-graph-name-container {
-        flex-direction: column; /* Stack items on smaller screens */
-        align-items: flex-start; /* Align to the left */
+    
+    /* ================== Pie Chart ================== */
+    .graph-name-container2 {
+        display: flex; 
+        justify-content: flex-start; 
+        align-items: center; /* Vertically center the elements */
+        width: 100%; /* Full width of container */
+        max-width: 100%; 
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 5px;
     }
 
-    #legendButtons {
-        margin-top: 25px;
-        height: auto;
-    }
-
-    #legendButtons button {
-        width: 80%;
-        height: 40px;
-        font-size: 14px; 
+    .pie {
+        width: 30%;
+        height: 100%;
     }
 
     #pieChart {
         margin-top: 40px;
         margin-left: -50px;
         margin-right: 50px;
-        height: 50px;
+        height: 80px;
         width: auto;
-        position: absolute;
+        position: relative;
     }
-}
+
+    .pieChart-container {
+        height: 100%; 
+        width: 100%; 
+        min-height: 270px;
+        border-radius: 8px; 
+        box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); 
+        border: 1px solid #ddd;
+        background-color: white;
+        display: flex;
+        transition: background-color 0.3s, color 0.3s;
+        position: relative; 
+    }
+
+    #legendButtons {
+        display: grid;
+        position: absolute;
+        margin-left: 230px;
+        margin-top: 25px;
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 7px; 
+        height: 50%;
+        justify-items: center;
+    }
+
+    #legendButtons button {
+        background-color: #eee;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        font-size: 12px;
+        border-radius: 5px;
+        text-align: center;
+        transition: background-color 0.3s;
+        width: 80px; 
+        height: 45px; 
+    }
+
+    .legend-button {
+        display: none; /* Hide buttons by default */
+    }
+
+    /* Make the buttons visible when their corresponding data is matched */
+    .legend-button.show {
+        display: inline-block;
+    }
+
+    /* Hover effect for buttons */
+    #legendButtons button:hover {
+        background-color: #ddd;
+    }
+
+
+    /* ================== Popup Modal ================== */
+    .popup-modal {
+        position: fixed;
+        top: 305px;
+        left: 700px;
+        width: 33%;
+        height: 38%;
+        padding: 15px;
+        border-radius: 15px;
+        background-color: #7d898469; 
+        display: none; /* Initially hidden */
+        justify-content: center;
+        align-items: center;
+        z-index: 800;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 15px;
+        border-radius: 15px;
+        text-align: start;
+        width: 600px;
+        height: 100%;
+    }
+
+    .popup-content h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .popup-content p {
+        font-size: 16px;
+    }
+
+    .close-btn {
+        font-size: 50px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 30px;
+        color: black;
+        background-color: 0.3s;
+    }
+
+    .close-btn:hover {
+        color: red;
+    }
+
+
+
+    /* ================== Line Graph ================== */
+    .bottom-graph-name-container {
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 5px 10px;
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; /* Vertically center the elements */
+        width: 100%; /* Full width of container */
+        max-width: 100%; 
+    }
+
+
+    .line-graph-container {
+        display: flex;
+        flex-grow: 1;
+        padding: 3px; 
+        height: 215px; 
+        width: 100%; 
+        border-radius: 8px; /* Slightly smaller border radius */
+        box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
+        text-align: left;
+        border: 1px solid #ddd;
+        background-color: white;
+        transition: background-color 0.3s, color 0.3s;
+        justify-content: space-between;
+    }
+
+    button.analyse-chart-btn2 {
+        background-color: #c8e6deba; /* Light green background */
+        color: black;
+        border: none;
+        padding: 5px 20px;
+        border-radius: 5px;
+        font-size: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-left: 10px;
+    }
+    
+    button.analyse-chart-btn2:hover {
+        background-color: #b2d6cb; /* Darken background on hover */
+    }
+    
+    button.analyse-chart-btn2:active {
+        background-color: #a0cfc0; /* Darker shade on click */
+    }
+
+    
+
+    @media (min-width: 1444px) and (max-width: 1540px) {
+        .legendButtons {
+            height: 200px !important;
+            margin-left: 270px !important;
+            padding-right: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            grid-template-columns: 1fr !important; /* Single column layout */
+        }
+
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        .legendButtons::-webkit-scrollbar {
+            width: 5px; /* Set the width of the scrollbar */
+        }
+
+        .legendButtons::-webkit-scrollbar-thumb {
+            background-color: #ccc; /* Customize scrollbar color */
+            border-radius: 4px; /* Rounded edges */
+        }
+
+
+        #legendButtons button {
+            width: 90px;
+            height: 40px;
+            font-size: 12px; 
+        }
+        
+        #pieChart {
+            flex: 0 0 250px; /* Fixed width, won't shrink */
+            height: 170px;
+            margin-left: -40px;
+        }
+
+        button.analyse-chart-btn1 {
+            margin-right: 500px;
+        }
+
+        button.analyse-chart-btn2 {
+            margin-right: 650px;
+        }
+    }
+
+    @media (min-width: 1025px) and (max-width: 1443px) {
+        
+        .legendButtons {
+            height: 200px !important;
+            padding-right: 5px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            grid-template-columns: 1fr !important; /* Single column layout */
+        }
+
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        .legendButtons::-webkit-scrollbar {
+            width: 5px; /* Set the width of the scrollbar */
+        }
+
+        .legendButtons::-webkit-scrollbar-thumb {
+            background-color: #ccc; /* Customize scrollbar color */
+            border-radius: 4px; /* Rounded edges */
+        }
+
+
+        #legendButtons button {
+            width: 90px;
+            height: 40px;
+            font-size: 12px; 
+        }
+        
+
+        #pieChart {
+            flex: 0 0 250px; /* Fixed width, won't shrink */
+            height: 170px;
+            margin-left: -50px;
+        }
+
+        button.analyse-chart-btn1 {
+            margin-right: 500px;
+        }
+
+        button.analyse-chart-btn2 {
+            margin-right: 650px;
+        }
+    }
+
+
+    /* Medium screens (tablets, smaller laptops) */
+    @media (min-width: 767px) and (max-width: 1024px) {
+        .dashboard-content {
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            padding-bottom: 20px;
+        }
+
+        /* ===============  First row =============== */
+        .card-container {
+            display: flex;
+            grid-template-columns: repeat(3, 1fr); /* Two columns for side-by-side layout */
+            gap: 20px; /* Space between cards */
+            justify-items: center; /* Center each card horizontally */
+        }
+
+        /* ===== popup modal ===== */
+        .popup-modal {
+            width: 90%; 
+            height: auto; /* Allow the height to adjust according to content */
+            top: 20%; 
+            left: 50%;
+            transform: translateX(-50%); /* Keep it centered horizontally */
+            padding: 10px;
+        }
+
+        .popup-content {
+            width: 100%; 
+            padding: 10px;
+        }
+
+        .popup-content h2 {
+            font-size: 18px; 
+        }
+
+        .popup-content p {
+            font-size: 14px; 
+        }
+
+        .close-btn {
+            font-size: 40px; 
+            right: 15px; 
+            top: 5px; 
+        }
+
+        /* ========== Medium Cards ========== */
+
+        .content-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically within the card */
+            align-items: flex-start;
+            gap: 10px; /* Space between elements within the card */
+            box-sizing: border-box;
+        }
+
+        /* First card should be 30% of the parent container */
+        .content-card.first {
+            width: 30%;
+        }
+        
+        /* Second card should be 70% of the parent container */
+        .content-card.second {
+            width: 70%; /* Takes up 70% of the parent's width */
+        }
+
+        .content-card .header {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .content-card .value {
+            display: flex;
+            flex-direction: column; /* Stack elements within .value vertically */
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .content-card .value div {
+            font-size: 1rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .menu-icon {
+            cursor: pointer;
+            margin-top: -10px;
+            margin-right: 10px;
+        }
+
+        .amount {
+            font-size: 2rem;
+        }
+        
+        /* ===============  Bar Chart =============== */
+        .middle-graphs-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .barChart-wrapper {
+            display: flex;
+            width: 91.5vw; /* Full viewport width */
+        }
+
+        /* ===============  Bar Chart =============== */
+        .barChart-container {
+            width: 100%;
+            height: 100%; 
+            padding: 15px; 
+            box-sizing: border-box;
+        }
+
+        .barChart-info {
+            padding: 15px;
+            font-size: 15px;
+        }
+
+        button.analyse-chart-btn1 {
+            margin-right: 370px;
+        }
+
+        button.analyse-chart-btn2 {
+            margin-right: 370px;
+            margin-bottom: 10px;
+        }
+
+        /* ===============  Pie Chart =============== */
+        .pie {
+            width: 100%;
+        }
+        
+        .pieChart-container {
+            width: 100%; 
+            height: 100%; 
+            padding: 15px; 
+            box-sizing: border-box;
+        }
+
+        .graph-names-container, .bottom-graph-name-container {
+            flex-direction: column; /* Stack items on smaller screens */
+            align-items: flex-start; /* Align to the left */
+        }
+
+        #legendButtons {
+            margin-top: 25px;
+            height: auto;
+        }
+
+        #legendButtons button {
+            width: 80%;
+            height: 40px;
+            font-size: 14px; 
+        }
+
+        #pieChart {
+            margin-top: 40px;
+            margin-left: -50px;
+            margin-right: 50px;
+            height: 50px;
+            width: auto;
+            position: relative;
+        }
+    }
 
 /* Smaller screens (phones) */
 @media (max-width: 767px) {
@@ -920,28 +1058,6 @@ input[type="radio"] {
         gap: 10px;
     }
 
-    /* ========== Small Cards ========== */
-    .smallCard-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .content-card, .impact-card {
-        width: 100%;
-    }
-
-    .percentage-text {
-        font-size: 0.9rem; /* Adjust font size for smaller screens */
-    }
-
-    .amount {
-        font-size: 30px;
-    }
-
-    .units {
-        font-size: 18px;
-    }
 
     /* ====== popup modal ====== */
     .popup-modal {
@@ -1057,7 +1173,15 @@ input[type="radio"] {
 
     .barChart-wrapper {
         display: flex;
-        width: 87vw; 
+        width: 91.5vw; 
+    }
+
+    button.analyse-chart-btn1 {
+        margin-right: 400px;
+    }
+
+    button.analyse-chart-btn2 {
+        margin-right: 400px;
     }
 
     /* ===============  Bar Chart =============== */
@@ -1072,10 +1196,19 @@ input[type="radio"] {
         font-size: 14px; /* Smaller font size */
     }
 
+    button.analyse-chart-btn1 {
+        margin-right: 120px;
+    }
+
     /* ===============  Pie Chart =============== */
+    .pie {
+        width: 100%;
+    }
+
     .pieChart-container {
         width: 100%; /* Full width */
-        height: 200px; /* Fixed height for mobile */
+        height: 200px; 
+        max-width: 700px;
         padding: 10px; /* Reduced padding */
         box-sizing: border-box;
     }
@@ -1103,9 +1236,102 @@ input[type="radio"] {
     }
 
     #legendButtons button {
-        width: 80%;
+        width: 89%;
         height: 40px;
-        font-size: 14px; 
+        font-size: 10px; 
         margin-left: -15px;
     }
+}
+
+
+/*chart*/
+/* Container for both progress bars */
+.consumption-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.consumption-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.bar-container {
+    position: relative;
+    height: 30px;
+    background-color: #f3f4f6;
+    border-radius: 5px;
+    margin: 30px 5px;
+}
+
+.usage-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #5bc7a0;
+    transition: width 0.3s ease;
+    border-radius: 5px;
+}
+
+.target-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    transition: left 0.3s ease;
+}
+
+.target-line {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.target-label {
+    position: absolute;
+    width: 100px; /* Fixed width to ensure consistent centering */
+    text-align: center;
+    left: -49px; /* Half of width-1px to account for target line width */
+    bottom: -30px;
+    font-size: 1.1rem;
+}
+
+.value {
+    margin-top: 20px;
+}
+
+.value > div {
+    display: flex;
+    gap: 8px;
+}
+
+.utilized {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #5bc7a0;
+}
+
+.goal {
+    font-size: 1rem;
+    color: #959595;
+    font-weight: 400;
+}
+
+.change {
+    margin-top: 16px;
+}
+
+#no-goal-message {
+    text-align: center;
+    color: grey;
+    margin-top: 20px;
+}
+
+.rightbar-container {
+    display: flex;  /* Make sure this is a flex container */
+    justify-self: flex-end;  /* Align the items to the right */
+    align-items: center;  /* Vertically align items to the center */
 }

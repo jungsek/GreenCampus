@@ -196,8 +196,8 @@ function displayLeaderboard(data) {
                 <div class="sustainability-points">
                     Points: ${school.sustainability_points}
                     <span class="rank-change ${rankChange > 0 ? 'positive' : rankChange < 0 ? 'negative' : 'neutral'}">
-                        (${rankChange > 0 ? '+' : ''}${rankChange || '0'})
-                        <i class="fas fa-arrow-${rankChange > 0 ? 'up' : rankChange < 0 ? 'down' : 'right'}"></i>
+                        (${rankChange > 0 ? '+' : ''}${rankChange || '-'})
+                        <i class="fas fa-arrow-${rankChange > 0 ? 'up arrow-up' : rankChange < 0 ? 'down arrow-down' : ''}"></i>
                     </span>
                 </div>
             </div>
@@ -240,8 +240,8 @@ function displayLeaderboard(data) {
 
             <div class="score-box">
                 <div class="score-item ${rankChange > 0 ? 'positive' : rankChange < 0 ? 'negative' : 'neutral'}">
-                    <span class="score-value">${rankChange > 0 ? `+${rankChange}` : rankChange || '0'}</span>
-                    <i class="score-icon fas fa-arrow-${rankChange > 0 ? 'up' : rankChange < 0 ? 'down' : 'right'}"></i>
+                    <span class="score-value">${rankChange > 0 ? `+${rankChange}` : rankChange || '-'}</span>
+                    <i class="score-icon fas fa-arrow-${rankChange > 0 ? 'up' : rankChange < 0 ? 'down' : ''}"></i>
                 </div>
             </div>
         `;

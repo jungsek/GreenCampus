@@ -12,15 +12,17 @@
     box-sizing: border-box;
     width: 100%;
     overflow-y: visible;
+    padding-top: 0px;
+    padding-bottom: 40px;
 }  
 
 /* ================== White Layered Background ================== */
 .carpet-container { 
-    background-color: #ffffff; 
-    padding: 20px; 
+    padding: 50px; 
     border-radius: 13px; 
     width: 100%; 
     box-sizing: border-box;
+    padding-top: 0px;
 }
 
 /* ================== Header Section ================== */
@@ -218,4 +220,433 @@ canvas {
 #downloadPdfBtn {
     margin-top: 20px;
 }
+
+
+
+/* report.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #59c19b69 !important;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555555;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+.report, .error {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.report {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* In your CSS file or within a <style> tag */
+#reportOutput {
+    width: 1000px; /* Fixed width suitable for PDF */
+    margin: 0 auto; /* Center the content */
+}
+
+#reportOutput h1, #reportOutput h2, #reportOutput h3 {
+    color: #333;
+}
+
+#reportOutput table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+#reportOutput th, #reportOutput td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+#reportOutput th {
+    background-color: #f4f4f4;
+}
+
+/* Style for the mini navbar */
+  
+  .mini-navbar .nav-tabs .nav-link {
+    color: #047857;
+  }
+  
+  .mini-navbar .nav-tabs .nav-link.active {
+    background-color: #e9ecef;
+  }
+
+  .chart-container {
+      position: relative;
+      height: 400px; /* Set desired height */
+      width: 100%;   /* Optional, adjust as needed */
+  }
+  canvas {
+      width: 100%;
+      height: 100%;
+  }
+
+.chart-placeholder {
+    height: 400px !important;
+}
+
+#predictedEnergyChartContainer {
+    height: 400px !important;
+}
+
+#predictedCarbonChartContainer {
+    height: 400px !important;
+}
+
+.poppins-regular {
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .poppins-medium {
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+
+body {
+    font-family: 'Poppins', serif !important;
+  }
+
+  /* Mini Navbar */
+  .mini-navbar {
+    background-color: #f3f4f6;
+    border-bottom: 2px solid #d1d5db;
+  }
+
+  .mini-navbar ul {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0.5rem 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  .mini-navbar a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #6b7280;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .mini-navbar a.active {
+    background-color: #ffffff;
+    border: 2px solid #d1d5db;
+    border-bottom: none;
+    font-weight: 600;
+    color: #059669;
+    position: relative;
+    top: 2px;
+  }
+
+  .mini-navbar a:hover {
+    color: #059669;
+  }
+
+  /* Form Container */
+  .form-container {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 700px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-container h2 {
+    font-size: 1.25rem;
+    color: #374151;
+    margin-bottom: 16px;
+  }
+
+  .form-container select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    background-color: #f9fafb;
+  }
+
+  .form-container button {
+    width: 95%;
+    padding: 12px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #059669;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .form-container button:hover {
+    background-color: #047857;
+  }
+
+  /* Report Output */
+  .report-output {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 1000px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .report-output h2 {
+    color: #374151;
+    margin-bottom: 16px;
+  }
+
+  .report-output p {
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  .report-output ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: #6b7280;
+  }
+
+  .report-output ul li {
+    margin-bottom: 8px;
+  }
+
+  .report-output button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #059669;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  .report-output button:hover {
+    background-color: #047857;
+  }
+
+  #downloadPdfBtn {
+    max-width: 600px;
+  }
+
+  .report-output .h1, .h2 {
+    font-size: large !important;
+    font-weight: bold !important;
+  }
+
+
+  .report-output {
+    max-width: 960px; /* Ensure compatibility for web and PDF */
+    margin: 2rem auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .report-output h1 {
+    font-size: 1.75rem; /* Larger font size for H1 */
+    font-weight: 800; /* Bold font weight */
+    color: #374151;
+    margin-bottom: 1rem;
+    text-align: center; /* Center align for report title */
+  }
+
+  .report-output h2 {
+    font-size: 1.75rem; /* Larger font size for H2 */
+    font-weight: 700; /* Bold font weight */
+    color: #1f2937;
+    margin-top: 2rem; /* Padding between sections */
+    margin-bottom: 1rem;
+  }
+
+  .report-output h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .report-output p {
+    font-size: 1rem;
+    color: #4b5563;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .report-output ul {
+    list-style-type: disc;
+    padding-left: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .report-output table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .report-output table th,
+  .report-output table td {
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  .report-output table th {
+    background-color: #f3f4f6;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .report-output table td {
+    background-color: #ffffff;
+    color: #4b5563;
+  }
+
+  .report-output .area-of-concern,
+  .report-output .strength {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-left: 4px solid #059669; /* Accent color */
+    border-radius: 4px;
+  }
+
+  .report-output .area-of-concern h4,
+  .report-output .strength h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .report-output .chart-placeholder {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* PDF-specific styles */
+.pdf-export {
+    max-width: 600px; /* Adjust the width to fit the PDF page */
+    margin: 0 auto; /* Center content */
+    padding: 20px; /* Add padding for a cleaner layout */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* PDF-specific styles for charts */
+.pdf-export canvas {
+    width: 100% !important; /* Ensure charts scale to fit container */
+    height: auto !important; /* Maintain aspect ratio */
+}
+
+.pdf-export .chart-container {
+    width: 600px !important; /* Ensure chart container matches PDF width */
+    margin: 0 auto; /* Center the chart in the PDF */
+}
+
+body, html, .main {
+    position: relative;
+    z-index: auto;
+}
+.nav-placeholder {
+    position: sticky;
+    top: 0;
+    z-index: 999; /* Ensure it's above other content */
+}
+.nav-placeholder, nav, ul, li, a {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.nav-placeholder {
+    z-index: 999 !important;
+    position: sticky !important;
+}
+
 

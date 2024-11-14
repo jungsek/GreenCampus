@@ -1,0 +1,114 @@
+/* Main container styles */
+.dashboard-content {
+    padding: 2rem;
+    background-color: #e6f7f1;
+    min-height: calc(100vh - 60px);
+}
+
+.dashboard-content h1 {
+    color: #1B3C34;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+/* Grid layout for campaigns */
+.campaign-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+/* Campaign card styles */
+.campaign-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.campaign-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Campaign image container */
+.campaign-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.campaign-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Campaign content */
+.campaign-content {
+    padding: 1.5rem;
+}
+
+.campaign-title {
+    font-size: 1.25rem;
+    color: #1B3C34;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.campaign-creator {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.campaign-points {
+    color: #2E856E;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.points-icon {
+    color: #2E856E;
+}
+
+/* Sign up button */
+.signup-btn {
+    background-color: #2E856E;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+    width: 90%;
+}
+
+.signup-btn:hover {
+    background-color: #236857;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-content {
+        padding: 1rem;
+    }
+    
+    .campaign-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .dashboard-content h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+}

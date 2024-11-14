@@ -54,6 +54,16 @@ const getSignedUpCampaignsByStudent = async (req, res) => {
         res.status(500).send("Error retrieving signed up campaigns for this student");
     }
 }
+const getCampaignSignUps = async (req, res) => {
+    const id = parseInt(req.params.id)
+    try {
+        const count = await Campaign.getCampaignSignUps(id);
+        res.json(count);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving signed up campaigns for this student");
+    }
+}
 // Create a new campaign
 const createCampaign = async (req, res) => {
     const newCampaignData = req.body;
@@ -116,4 +126,5 @@ module.exports = {
     createCampaign,
     updateCampaign,
     deleteCampaign,
+    getCampaignSignUps
 };

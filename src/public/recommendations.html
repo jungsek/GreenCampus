@@ -33,34 +33,35 @@
         </ul>
     </nav>
 
-    <div id="loading-screen" style="display: none;">
+    <div id="loading-screen" style="display: none; z-index: 10000; min-height: 100%;">
         <dotlottie-player src="./assets/general/Animation - 1705413706609.json" class="loading-animation" background="transparent" speed="1" loop autoplay></dotlottie-player>
         <h2 style="margin-top: 500px; text-align: center;">Generating recommendations... Please wait.</h2>
     </div>
     
-
-    <div class="container mt-4">
-        <h1>Generate Sustainability Recommendations</h1>
-        
-        <!-- Year Selection -->
-        <div class="form-group">
-            <label for="year">Select Year:</label>
-            <select id="year" class="form-control">
-                <!-- Options will be populated dynamically -->
-            </select>
-        </div>
-        <button id="generateRecommendationsBtn" class="btn btn-primary mt-2">Generate Recommendations</button>
-        
-
-        <!-- Recommendations Display -->
-        <div id="recommendationsOutput" class="mt-4 hidden">
-            <div id="recommendationsContainer" style="width: 80%;"></div>
-            <button id="downloadPdfBtn" class="hidden btn btn-success mt-3">Download Recommendations as PDF</button>
+<div class="dashboard-content">
+    <div class="carpet-container">
+        <div class="container mt-4">
+            <h1>Generate Sustainability Recommendations</h1>
+            
+            <!-- Year Selection -->
+            <div class="form-container">
+                <label for="year">Select Year:</label>
+                <select id="year" class="form-control">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <button id="generateRecommendationsBtn" class="btn btn-primary mt-2">Generate Recommendations</button>
+            </div>
+           
+            <!-- Recommendations Display -->
+            <div id="recommendationsOutput" class="mt-4 hidden">
+                <div id="recommendationsContainer" style="width: 100%;"></div>
+                <button id="downloadPdfBtn" class="hidden btn btn-success mt-3">Download Recommendations as PDF</button>
+            </div>
         </div>
     </div>
-    <!-- Footer -->
-    <div class="footer-placeholder"></div>
-
+</div>
+    
+    
     <!-- Include Bootstrap JS and dependencies -->
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
