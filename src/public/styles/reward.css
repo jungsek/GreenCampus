@@ -235,6 +235,10 @@ body {
     margin-bottom: 5px;
 }
 
+#reward-description {
+    margin-bottom: 5px;
+}
+
 #reward-points {
     color: #666;
     margin-bottom: 15px;
