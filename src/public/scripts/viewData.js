@@ -124,8 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         data.forEach(item => {
             const row = document.createElement('tr');
+            const date = new Date(item.timestamp);
+            const month = date.toLocaleString('default', { month: 'long' });
             row.innerHTML = `
-                <td>${new Date(item.timestamp).toISOString().split('T')[0]}</td>
+                <td>${month}</td>
                 <td>${item.total_carbon_tons.toFixed(2)}</td>
             `;
             carbonFootprintTableBody.appendChild(row);
