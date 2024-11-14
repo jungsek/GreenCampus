@@ -1281,7 +1281,7 @@ yearSelect.addEventListener('change', function() {
 });
 
 
-document.querySelectorAll('.analyse-chart-btn').forEach(button => {
+document.querySelectorAll('.analyse-chart-btn1, .analyse-chart-btn2').forEach(button => {
     button.addEventListener('click', () => {
         const chartType = button.getAttribute('data-chart-type');
         const selectedYear = parseInt(yearSelect.value) || new Date().getFullYear();
