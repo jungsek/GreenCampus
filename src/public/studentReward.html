@@ -13,34 +13,40 @@
 <body>
 
 <!-- Navbar (Placeholder) -->
-<div class="nav-placeholder"></div>
+<div class="studentnav-placeholder"></div>
 
 <!-- Main Container -->
-<div class="dashboard-content">
-  <!-- Title -->
-  <h1>Student Rewards</h1>
-
-  <!-- Current Points Display -->
-  <div class="current-points-container">
-    <h2>Your Current Points:</h2>
-    <div id="current-points" class="points-number"></div> 
+<div class="header">
+  <div class="nav-container">
+      <h1>Coins</h1>
+      <div style="width: 24px;"></div>
   </div>
-
-  <!-- Rewards List -->
-  <div class="card-container" id="rewards-container">
-    <!-- Rewards will be dynamically added here -->
+  <div class="coins-display">
+      <span class="coin-icon">🌟</span>
+      <span class="coin-amount" id="current-points"></span>
   </div>
-
+  <div class="action-buttons">
+      <button class="action-button earn-button" onclick="window.location.href='./studentCampaign.html'">Earn</button>
+  </div>
 </div>
 
+<div class="section-header">
+  <h2>Rewards</h2>
+  <span id="reward-count">3 Rewards</span>
+</div>
+<div class="coupon-grid" id="rewards-container"></div>
+
 <!-- Reward Redeem Popup (if needed) -->
-<div id="redeemPopup" class="popup">
-  <div class="popup-content">
-    <h2>Confirm Redemption</h2>
-    <p id="reward-name">Reward Name</p>
-    <p id="reward-points">Points: 0</p>
-    <button id="confirm-redeem" class="btn-set-goal">Redeem</button>
-    <button class="cancel-button" onclick="closeRedeemPopup()">✖</button>
+<div class="modal" id="redeemPopup">
+  <div class="modal-content">
+      <div class="modal-icon">🌟</div>
+      <h2 class="modal-title">Do you want to redeem?</h2>
+      <p class="modal-description">Coins once redeemed will not be refunded.</p>
+      <p id="reward-name">Reward Name</p>
+      <p id="reward-description">Description</p>
+      <p id="reward-points">Points: 0</p>
+      <button class="modal-button" id="confirm-redeem" onclick="closeRedeemPopup()">Redeem</button>
+      <button class="cancel-button" onclick="closeRedeemPopup()">✖</button>
   </div>
 </div>
 

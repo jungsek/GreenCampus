@@ -39,7 +39,7 @@
         <div class="carpet-container">
             <div class="allContent-container">
                 <div class="filter-container flex justify-between items-left mb-4">
-                    <div class="filterSelect" style="font-size: 0.9rem; display: flex;">
+                    <div class="filterSelect" style="font-size: 0.9rem; display: flex; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
                             <select id="yearsFilter" class="years-filter">
@@ -49,10 +49,18 @@
                                 <option value="2022">2022</option>
                                 <option value="2021">2021</option>
                             </select>
-                            <select id="locationSelect">
-                                <option value="" class="placeholder" disabled hidden>Locations</option>
-                            </select>
-                            <button id="setGoalButton" class="btn-set-goal">Set Yearly Goal</button>
+                            <button id="setGoalButton" class="btn-set-goal" id="savetoPDFbtn" style="margin-top: 0;">Set Yearly Goal</button>
+                            
+                            
+                            
+                        </div>
+                        <div class="rightbar-container">
+                            <button class="btn-set-goal" title="Download to PDF">
+                                <img src="assets/general/pdf.svg" alt="Icon" class="icon" height="20px" width="20px">
+                            </button>
+                            <button class="btn-set-goal" style="margin-left: 15px;" title="Download to CSV">
+                                <img src="assets/general/csv.svg" alt="Icon" class="icon" height="20px" width="20px">
+                            </button>
                         </div>
                     </div>
                     <div class="card-container flex">
@@ -139,7 +147,7 @@
                     <div class="barChart">
                         <div class="graph-name-container1">
                             <span class="energyUsage"><i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;" ></i> Energy Usage</span>
-                            <button class="btn btn-secondary analyse-chart-btn1" data-chart-type="energy";">Analyse Chart</button>
+                            <button class="btn btn-secondary analyse-chart-btn1" data-chart-type="energy">Analyse Chart</button>
                         </div>
                         <div class="barChart-wrapper">
                             <!-- ============ Bar Chart ============ -->
@@ -161,9 +169,14 @@
                             <span class="energyBreakdown">
                                 <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown
                             </span>
+                            <select id="locationSelect" style="margin-left: 8px;">
+                                <option value="" class="placeholder" disabled hidden>Locations</option>
+                            </select>
                         </div>
+                        
                         <!-- ============ Pie Chart ============ -->
                         <div class="pieChart-container">
+                            
                             <canvas id="pieChart" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
 
                             <div class="legendButtons" id="legendButtons">

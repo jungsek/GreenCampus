@@ -1,5 +1,15 @@
 // Add this to your existing JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    let role = 'student' // temp
+    let navbar = document.createElement('div')
+    if (role == 'student') {
+        navbar.classList.add('studentnav-placeholder')
+    }
+    else {
+        navbar.classList.add('nav-placeholder')
+    }
+    document.body.insertBefore(navbar, document.body.firstChild);
+
     const modal = document.getElementById('instructionsModal');
     const infoBtn = document.querySelector('.info-btn');
     const closeBtn = document.querySelector('.close-btn');
@@ -25,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.querySelector('.modal-content').addEventListener('click', function(event) {
         event.stopPropagation();
     });
+
+    // Dynamically load the next script to load the navbar content
+    const script = document.createElement('script');
+    script.src = './scripts/common.js';  // Path to the script that loads the navbar content
+    script.onload = function() {
+        console.log('Navbar loaded successfully!');
+    };
+    document.head.appendChild(script);
 });
 
 // Toggle between Monthly and Yearly data
