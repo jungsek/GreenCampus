@@ -6,12 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const recommendationsOutput = document.getElementById('recommendationsOutput');
     const recommendationsContainer = document.getElementById('recommendationsContainer'); 
     const downloadPdfBtn = document.getElementById('downloadPdfBtn'); 
+    let currentAreaChart = null;
+    window.areaChartInstances = {};
 
     // Assume the user is the principal of Lincoln High School with schoolId = 1
     const schoolId = 1;
 
     // Fetch available years on page load
     fetchAvailableYears(schoolId);
+
 
     // Add Event Listener to the "Generate Recommendations" Button
     generateRecommendationsBtn.addEventListener('click', async () => {
@@ -52,23 +55,24 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         "areas_of_concern": [
           {
-            "title": "High Energy Usage in July",
-            "problem": "July recorded the highest energy consumption of the year.",
-            "data": {
-              "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-              "values": [1300, 1200, 1400, 1100, 1150, 1250, 1500, 1400, 1300, 1200, 1250, 1350]
-            },
-            "conclusion": "The peak in energy usage during July can be attributed to higher average temperatures, leading to increased cooling needs. Targeting energy-efficient cooling solutions could mitigate this issue."
+              "title": "High Energy Usage in July",
+              "problem": "July recorded the highest energy consumption of the year.",
+              "data": {
+                  "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                  "values": [1300, 1200, 1400, 1100, 1150, 1250, 1500, 1400, 1300, 1200, 1250, 1350],
+                  "temperature": [22, 21, 23, 20, 19, 25, 28, 27, 24, 22, 21, 23]
+              },
+              "conclusion": "The peak in energy usage during July can be attributed to higher average temperatures, leading to increased cooling needs. Targeting energy-efficient cooling solutions could mitigate this issue."
           },
           {
             "title": "Increased Carbon Emissions in July, September, and December",
             "problem": "Carbon emissions peaked in July, September, and December at 1.00 tons.",
             "data": {
-              "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-              "values": [0.80, 0.70, 0.90, 0.80, 0.90, 0.80, 1.00, 0.90, 1.00, 0.70, 0.80, 1.00]
+                "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                "values": [0.80, 0.70, 0.90, 0.80, 0.90, 0.80, 1.00, 0.90, 1.00, 0.70, 0.80, 1.00]
             },
             "conclusion": "Higher emissions during these months suggest a correlation with increased energy usage. Implementing renewable energy sources could help reduce the carbon footprint."
-          }
+        }
         ],
         "personalized_recommendations": [
           "Install energy-efficient HVAC systems to reduce energy usage during warmer months.",
@@ -416,22 +420,63 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlContent += '<h2>Areas of Concern</h2>';
 
         recommendationData.areas_of_concern.forEach((area, index) => {
-            htmlContent += `
-                <div class="area-of-concern">
-                    <h3>${area.title}</h3>
-                    <p>${area.problem}</p>
-                    <p>${area.conclusion}</p>
-                    <canvas id="areaChart${index}"></canvas>
-                </div>
-            `;
-        });
+          if (index === 0) {
+              // First area of concern - Energy Usage
+              htmlContent += `
+                  <div class="area-of-concern">
+                      <h3>${area.title}</h3>
+                      <p>${area.problem}</p>
+                      <p>High summer cooling energy consumption. 
+                      July maintains high HVAC usage (29%) for cooling. Reduced occupancy during summer break helps moderate overall energy consumption in classrooms and common areas.</p>
+                      <p>${area.conclusion}</p>
+                      <canvas id="areaChart${index}"></canvas>
+                      <h2>Energy Usage Reduction Strategies</h2>
+                      <h3>Summer Break Energy Conservation</h3>
+                      <p>Reduced HVAC Operation: Lower HVAC settings during summer break when occupancy is minimal, ensuring only essential areas remain cooled.
+                      Dormant Mode for Classrooms: Implement a dormant mode for classrooms, where non-essential systems are turned off or set to energy-saving modes.</p>
+                      <h3>Common Area Cooling Efficiency</h3>
+                      <p>Shared Cooling Zones: Consolidate cooling in common areas such as libraries and cafeterias where occupancy remains higher during summer.
+                      Ventilation Adjustments: Adjust ventilation rates in common areas to optimize cooling without overusing HVAC systems.</p>
+                      <h3>Energy-Efficient Summer Programs</h3>
+                      <p>Eco-Friendly Summer Camps: Design summer programs with energy efficiency in mind, using facilities that are already cooled and minimizing the need for additional cooling.
+                      Sustainability Workshops: Incorporate sustainability workshops into summer programs to educate participants on energy conservation practices.</p>
+                      <h3>Regular Energy Audits</h3>
+                      <p>Summer Energy Audits: Conduct energy audits during summer break to identify and address any inefficiencies in the school's cooling systems.
+                      Maintenance Scheduling: Schedule preventive maintenance for HVAC systems during low-occupancy periods to ensure optimal performance when the school reopens.</p>
+                  </div>
+              `;
+          } else {
+              // Second area of concern - Carbon Emissions
+              htmlContent += `
+                  <div class="area-of-concern">
+                      <h3>${area.title}</h3>
+                      <p>${area.problem}</p>
+                      <p>Sustained high emissions during summer break due to ongoing transportation and limited oversight of waste.
+                      July maintains elevated carbon emissions with reduced oversight during summer break. Continuing sustainable transportation programs and monitoring waste disposal can mitigate these emissions.</p>
+                      <p>${area.conclusion}</p>
+                      <canvas id="areaChart${index}"></canvas>
+                      <h2>Carbon Emission Reduction Strategies</h2>
+                      <h3>Plan for Sustainable Summer Breaks</h3>
+                      <p>Encourage staff to participate in local environmental initiatives during summer months.
+                      Provide guidelines for minimizing energy and resource use while the school is on break.</p>
+                      <h3>Implement Green Landscaping Practices</h3>
+                      <p>Use native plants in school landscaping to reduce water usage and support local ecosystems.
+                      Install rain gardens to manage stormwater runoff and decrease flooding risks.</p>
+                      <h3>Promote Carbon-Neutral Travel for School Trips</h3>
+                      <p>Offset carbon emissions from school trips by investing in carbon offset projects.
+                      Choose eco-friendly transportation methods, such as buses or trains, over individual car travel.</p>
+                  </div>
+              `;
+          }
+      });
 
         // Display Personalized Recommendations
         htmlContent += `
-            <h2>Personalized Recommendations</h2>
+            <h2>Recommendations</h2>
             <ul>
-                ${recommendationData.personalized_recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                ${recommendationData.personalized_recommendations.map(rec => `<li>${rec}</li><br>`).join('')}
             </ul>
+            <br>
         `;
 
         // Display Strengths
@@ -452,8 +497,9 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlContent += `
             <h2>Path to Net Zero</h2>
             <ul>
-                ${recommendationData.path_to_net_zero.map(item => `<li>${item}</li>`).join('')}
+                ${recommendationData.path_to_net_zero.map(item => `<li>${item}</li><br>`).join('')}
             </ul>
+            <br>
         `;
 
         // Set the HTML content
@@ -462,11 +508,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Now that the HTML is set, the canvas elements exist in the DOM.
         // We can render the charts.
 
-        // Render charts for Areas of Concern
-        recommendationData.areas_of_concern.forEach((area, index) => {
-            // Render Chart
-            renderAreaChart(`areaChart${index}`, area.data);
-        });
+        // After setting innerHTML, render the charts
+        // After setting innerHTML, render the charts
+        if (recommendationData.areas_of_concern) {
+          recommendationData.areas_of_concern.forEach((area, index) => {
+              try {
+                  const chartData = {
+                      labels: area.data.labels,
+                      values: area.data.values,
+                      temperature: area.data.temperature // Only exists for first chart
+                  };
+
+                  // Destroy existing chart instance if it exists
+                  if (window.areaChartInstances[`areaChart${index}`]) {
+                      window.areaChartInstances[`areaChart${index}`].destroy();
+                  }
+
+                  if (index === 0) {
+                      renderEnergyChart(`areaChart${index}`, chartData);
+                  } else {
+                      renderCarbonChart(`areaChart${index}`, chartData);
+                  }
+              } catch (error) {
+                  console.error('Error creating charts:', error);
+              }
+          });
+        }
+
 
         // Render charts for Strengths
         recommendationData.strengths.forEach((strength, index) => {
@@ -480,19 +548,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to Download Recommendations as a PDF
     function downloadRecommendationsAsPDF() {
-        const recommendationsContent = document.getElementById('recommendationsContainer');
-
-        // Define PDF options
-        const opt = {
-            margin:       0.5,
-            filename:     'Recommendations.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-
-        // Generate and save the PDF
-        html2pdf().set(opt).from(recommendationsContent).save();
+      const recommendationsContent = document.getElementById('recommendationsContainer');
+  
+      // Define PDF options
+      const opt = {
+          margin: [0.75, 0.75, 0.75, 0.75], // [top, left, bottom, right]
+          filename: 'Recommendations.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+              scale: 2,
+              useCORS: true,
+              logging: false,
+              letterRendering: true,
+              windowWidth: 1200 // Set a fixed width for consistent rendering
+          },
+          jsPDF: { 
+              unit: 'in', 
+              format: 'a4',
+              orientation: 'portrait',
+              compress: true
+          },
+          pagebreak: { 
+              mode: ['avoid-all', 'css', 'legacy'],
+              before: '.page-break-before',
+              after: '.page-break-after',
+              avoid: ['canvas', '.area-of-concern', '.strength', 'table', 'img']
+          }
+      };
+  // Generate and save the PDF
+    html2pdf().set(opt)
+        .from(recommendationsContent)
+        .save()
+        .then(() => {
+            // Remove loading indicator
+            document.body.removeChild(loadingDiv);
+        })
+        .catch(error => {
+            console.error('PDF generation error:', error);
+            document.body.removeChild(loadingDiv);
+            alert('Error generating PDF. Please try again.');
+        });
     }
 
     // Function to Show Recommendation Components
@@ -533,6 +628,180 @@ document.addEventListener('DOMContentLoaded', () => {
             errorElement.style.display = 'none';
         }
     }
+
+    function renderEnergyChart(canvasId, chartData) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+  
+      // Debugging: Log chartData
+      console.log(`Rendering Energy Chart on canvas: ${canvasId}`, chartData);
+  
+      // Destroy existing chart instance if it exists
+      if (window.areaChartInstances[canvasId]) {
+          window.areaChartInstances[canvasId].destroy();
+      }
+  
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthLabels = chartData.labels.map(label => {
+          const monthIndex = monthNames.findIndex(month => label.startsWith(month));
+          return monthNames[monthIndex !== -1 ? monthIndex : 0];
+      });
+  
+      const config = {
+          type: 'bar',
+          data: {
+              labels: monthLabels,
+              datasets: [{
+                  label: 'Energy Usage (kWh)',
+                  data: chartData.values,
+                  backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                  borderColor: 'rgba(255, 159, 64, 1)',
+                  borderWidth: 1,
+                  yAxisID: 'y1'
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              aspectRatio: 1,
+              plugins: {
+                  legend: {
+                      display: true,
+                      position: 'top'
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              if (context.dataset.yAxisID === 'y2') {
+                                  return `${context.parsed.y}°C`;
+                              }
+                              return `${context.parsed.y} kWh`;
+                          }
+                      }
+                  }
+              },
+              scales: {
+                  y1: {
+                      type: 'linear',
+                      position: 'left',
+                      beginAtZero: true,
+                      title: {
+                          display: true,
+                          text: 'Energy Usage (kWh)'
+                      }
+                  }
+              }
+          }
+      };
+  
+      // Add temperature dataset if available
+      if (chartData.temperature) {
+          config.data.datasets.push({
+              label: 'Temperature (°C)',
+              data: chartData.temperature,
+              type: 'line',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: false,
+              yAxisID: 'y2'
+          });
+  
+          config.options.scales.y2 = {
+              type: 'linear',
+              position: 'right',
+              beginAtZero: true,
+              title: {
+                  display: true,
+                  text: 'Temperature (°C)'
+              },
+              grid: {
+                  drawOnChartArea: false
+              }
+          };
+      }
+  
+      try {
+          window.areaChartInstances[canvasId] = new Chart(ctx, config);
+      } catch (error) {
+          console.error('Error initializing Energy Chart:', error);
+      }
+  }
+
+  function renderCarbonChart(canvasId, chartData) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // Debugging: Log chartData
+    console.log(`Rendering Carbon Chart on canvas: ${canvasId}`, chartData);
+
+    // Destroy existing chart instance if it exists
+    if (window.areaChartInstances[canvasId]) {
+        window.areaChartInstances[canvasId].destroy();
+    }
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthLabels = chartData.labels.map(label => {
+        // Attempt to parse the label as a date
+        const date = new Date(label);
+        if (!isNaN(date)) {
+            const monthIndex = date.getMonth();
+            return monthNames[monthIndex];
+        }
+        // Fallback: Check if label is a full month name
+        const monthIndex = monthNames.findIndex(month => label.startsWith(month));
+        return monthIndex !== -1 ? monthNames[monthIndex] : label;
+    });
+
+    const config = {
+        type: 'line',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Carbon Emissions (tonnes)',
+                data: chartData.values,
+                backgroundColor: 'rgba(91, 199, 160, 0.2)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.parsed.y} tonnes`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Carbon Emissions (tonnes)'
+                    }
+                }
+            }
+        }
+    };
+
+    try {
+        window.areaChartInstances[canvasId] = new Chart(ctx, config);
+    } catch (error) {
+        console.error('Error initializing Carbon Chart:', error);
+    }
+}
 
     // Function to Render Area Chart
     function renderAreaChart(canvasId, data) {
@@ -582,11 +851,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     borderColor: 'rgba(54,162,235,1)',
                     borderWidth: 2,
                     fill: false,
+                    tension: 0.4,
                 }],
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
             },
         });
     }    

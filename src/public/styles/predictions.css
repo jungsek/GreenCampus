@@ -12,7 +12,6 @@
     box-sizing: border-box;
     width: 100%;
     overflow-y: visible;
-    padding-top: 0px;
     padding-bottom: 40px;
 }  
 
@@ -649,4 +648,179 @@ body, html, .main {
     position: sticky !important;
 }
 
+/* PDF Export Styles */
+@media print {
+  #predictionComponents {
+      width: 100%;
+      margin: 0;
+      padding: 20px;
+  }
 
+  .prediction-cards-container,
+  .additional-charts-container {
+      break-inside: avoid;
+      margin-bottom: 30px;
+  }
+
+  .card, .chart-card {
+      break-inside: avoid;
+      margin-bottom: 30px;
+      page-break-inside: avoid;
+  }
+
+  canvas {
+      max-height: 300px !important;
+      margin: 20px 0;
+      page-break-inside: avoid;
+  }
+
+  h2, h3 {
+      break-before: page;
+      margin-top: 20px;
+  }
+
+  h2:first-of-type {
+      break-before: avoid;
+  }
+
+  .net-zero-container {
+      break-inside: avoid;
+      margin: 30px 0;
+  }
+
+  ul {
+      break-inside: avoid;
+  }
+}
+
+/* Loading indicator styles */
+.pdf-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 9999;
+}
+
+/* PDF-specific chart container styles */
+.pdf-export .chart-container {
+  width: 100% !important;
+  height: 300px !important;
+  margin: 20px 0;
+  page-break-inside: avoid;
+}
+
+.pdf-export canvas {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 300px !important;
+}
+
+
+
+/* PDF Export Styles */
+.pdf-export {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+}
+
+.pdf-export .predictions-section {
+  margin-bottom: 30px;
+  page-break-before: always;
+  page-break-inside: avoid;
+}
+
+.pdf-export .predictions-section:first-of-type {
+  page-break-before: avoid;
+}
+
+.pdf-export .chart-container {
+  width: 100% !important;
+  height: 400px !important;
+  margin: 20px 0;
+  page-break-inside: avoid;
+}
+
+.pdf-export canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.pdf-export .net-zero-container {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  page-break-inside: avoid;
+}
+
+.pdf-export ul {
+  padding-left: 20px;
+  margin: 20px 0;
+  page-break-inside: avoid;
+}
+
+.pdf-export li {
+  margin-bottom: 10px;
+}
+
+.pdf-only {
+  display: none;
+}
+
+.pdf-export .pdf-only {
+  display: block;
+}
+
+.pdf-export .main-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* PDF Export Styles */
+.pdf-export {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pdf-export .card,
+.pdf-export .chart-card {
+  page-break-inside: avoid;
+  margin-bottom: 30px;
+}
+
+.pdf-export canvas {
+  max-width: 100% !important;
+  height: auto !important;
+  page-break-inside: avoid;
+}
+
+.pdf-export .net-zero-container {
+  page-break-inside: avoid;
+  margin: 30px 0;
+}
+
+.pdf-export #downloadPdfBtn {
+  display: none;
+}
+
+.pdf-export h2, 
+.pdf-export h3 {
+  page-break-before: always;
+  margin-top: 20px;
+}
+
+.pdf-export h2:first-of-type {
+  page-break-before: avoid;
+}
