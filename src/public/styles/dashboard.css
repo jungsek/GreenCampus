@@ -1257,8 +1257,8 @@
     position: relative;
     height: 30px;
     background-color: #f3f4f6;
-    border-radius: 5px;
-    margin: 30px 5px;
+    margin: 10px 0px;
+    margin-bottom: 10px;
 }
 
 .usage-bar {
@@ -1266,8 +1266,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    background-color: #5bc7a0;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease, background-color 0.3s ease;
     border-radius: 5px;
 }
 
@@ -1313,6 +1312,7 @@
     font-size: 1rem;
     color: #959595;
     font-weight: 400;
+    display: none;
 }
 
 .change {
@@ -1323,6 +1323,42 @@
     text-align: center;
     color: grey;
     margin-top: 20px;
+}
+
+/* Add specific traffic light colors */
+.green {
+    background-color: #28a745; /* Green */
+}
+
+.yellow {
+    background-color: #ffc107; /* Yellow */
+}
+
+.red {
+    background-color: #dc3545; /* Red */
+}
+
+
+.value {
+    margin-top: 8px;
+}
+
+.status-message.excess,
+.status-message.under {
+    opacity: 1 !important; /* Force full opacity */
+    color: inherit !important; /* Maintain original color */
+    font-size: 14px;
+}
+
+/* Or if you want specific colors for excess/under states */
+.status-message.excess {
+    color: #ff0000 !important; /* Red for excess */
+    opacity: 1 !important;
+}
+
+.status-message.under {
+    color: #0000ff !important; /* Blue for under */
+    opacity: 1 !important;
 }
 
 .rightbar-container {
