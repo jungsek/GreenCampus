@@ -101,7 +101,6 @@ document.getElementById('createForm').addEventListener('submit', async function(
 
         alert("Campaign created!");
         closeCreatePopup();
-        await loadCurrentCampaigns();
     } catch (error) {
         console.error("Error:", error);
         alert("Error creating campaign. Please try again.");
@@ -163,7 +162,6 @@ document.getElementById('modifyForm').addEventListener('submit', async function(
 
         alert("Campaign modified!");
         closeModifyPopup();
-        await loadCurrentCampaigns();
     } catch (error) {
         console.error("Error:", error);
         alert("Error modifying campaign. Please try again.");
@@ -245,7 +243,6 @@ document.getElementById('modifyForm').addEventListener('submit', async function(
 
         alert("Campaign modified!");
         closeModifyPopup();
-        await loadCurrentCampaigns();
     } catch (error) {
         console.error("Error:", error);
         alert("Error modifying campaign. Please try again.");
@@ -274,7 +271,6 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
 
         alert("Campaign deleted!");
         closeDeletePopup();
-        await loadCurrentCampaigns();
     } catch (error) {
         console.error("Error:", error);
         alert("Error deleting campaign. Please try again.");

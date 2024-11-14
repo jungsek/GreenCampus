@@ -5,6 +5,10 @@ $(".nav-placeholder").load("./commonHTML/navbar.html", () => {
 
 })
 
+
+$(".studentnav-placeholder").load("./commonHTML/studentnavbar.html", () => {
+
+})
 //load the footer html into the class
 $(".footer-placeholder").load("./commonHTML/footer.html")
 

@@ -1,111 +1,21 @@
 /* ================== Green Background ================== */
-.dashboard-content { 
-    background-color: #59c19b69; 
-    padding: 15px;
-    position: relative;
-    display: flex; 
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    width: 100%;
-    overflow-y: visible; 
-    min-height: 80vh;
-}  
-
-/* ================== White Layered Background ================== */
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); 
-    width: 100%; 
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    flex-direction: column;
-}
-
-.card {
-    padding: 15px;
-    gap: 15px;
-    width: 80%;
-    border-radius: 8px;
-    text-align: center;
     font-family: Arial, sans-serif;
-    box-shadow: 0 4px 5px rgba(122, 120, 120, 0.519);
+}
+
+body {
     background-color: white;
+    min-height: 100vh;
 }
 
-.btn-set-goal {
-    padding: 16px 32px; 
-    font-size: 14px; 
-    font-weight: bold;
-    color: #333;
-    background-color: #c8e6deba; 
-    border: none; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    margin-top: 10px; 
-    transition: background-color 0.3s ease;
-}
-
-.btn-set-goal:hover {
-    background-color: #c3e7deea;
-}
-
-.popup {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); 
-}
-
-.popup-content {
-    background-color: #ffffff; 
-    margin: 10% auto;
-    padding: 20px; 
-    border: 1px solid #888; 
-    width: 80%; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    position: relative;
-}
-
-.cancel-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none; 
-    border: none; 
-    font-size: 20px;
-    cursor: pointer; 
-    color: #5bc7a0; 
-}
-
-form .form-group {
-    margin-bottom: 15px;
-}
-
-input, textarea {
-    padding: 10px;
-    font-size: 16px;
-    width: 100%; 
-    border: 1px solid #ddd; 
-    border-radius: 4px; 
-}
-
-textarea {
-    resize: vertical;
-}
-
-input[type="number"] {
-    width: 100%; /* Ensure number input takes full width */
+.header {
+    background-color: #245D51;
+    padding: 20px;
+    color: white;
+    border-radius: 0 0 15px 15px;
 }
 
 /* Styling for current points */
@@ -120,18 +30,216 @@ input[type="number"] {
     color: #59c19b;
 }
 
-/* Styling for rewards list */
-.campaign-image {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.card h2 {
-    font-size: 1.5rem;
+.back-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
 }
 
-.card p {
-    font-size: 1rem;
+.coins-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.coin-icon {
+    font-size: 32px;
+    color: #FFD700;
+    margin-right: 10px;
+}
+
+.coin-amount {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Center the button */
+    gap: 10px;
+    margin-bottom: 10px; /* Add some space below */
+}
+
+.action-button {
+    padding: 8px 24px; /* Reduced padding */
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px; /* Smaller font size */
+    text-decoration: none;
+    display: inline-block;
+}
+
+.earn-button {
+    background-color: #245D51;
+    color: white;
+    border: 2px solid white;
+    width: auto; /* Remove flex: 1 to prevent stretching */
+    min-width: 100px; /* Set a minimum width */
+    max-width: 150px; /* Set a maximum width */
+}
+
+.earn-button:hover {
+    background-color: white;
+    color: #245D51;
+    transform: translateY(-2px); /* Slight lift effect */
+    transition: all ease-in-out 0.3s;
+}
+
+/* ================== White Layered Background ================== */
+.cancel-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none; 
+    border: none; 
+    font-size: 20px;
+    cursor: pointer; 
+    color: #5bc7a0; 
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.coupon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 0 20px;
+}
+
+.coupon-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.card-icon {
+    font-size: 24px;
+    color: #245D51;;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.card-type {
+    font-size: 12px;
     color: #666;
+    margin-bottom: 5px;
+}
+
+.discount-amount {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.redeem-link {
+    color: #2196F3;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.coin-indicator {
+    color: #FFD700;
+    margin: 0 5px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-icon {
+    font-size: 48px;
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Adds consistent spacing between elements */
+}
+
+.modal-button {
+    background-color: #245D51;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 90%; /* Reduce width to match design */
+    margin-top: 10px; /* Add some space above the button */
+    transition: background-color 0.3s ease;
+    position: relative; /* Ensure button stays within modal */
+    bottom: 0; /* Align to bottom of content */
+}
+
+/* Optional hover effect */
+.modal-button:hover {
+    background-color: #1a4439;
+}
+
+/* Style for the modal text elements */
+.modal-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #245D51;
+}
+
+.modal-description {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+#reward-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#reward-description {
+    margin-bottom: 5px;
+}
+
+#reward-points {
+    color: #666;
+    margin-bottom: 15px;
 }

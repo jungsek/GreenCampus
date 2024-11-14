@@ -39,7 +39,7 @@
         <div class="carpet-container">
             <div class="allContent-container">
                 <div class="filter-container flex justify-between items-left mb-4">
-                    <div class="filterSelect" style="font-size: 0.9rem; display: flex;">
+                    <div class="filterSelect" style="font-size: 0.9rem; display: flex; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
                             <select id="yearsFilter" class="years-filter">
@@ -49,10 +49,18 @@
                                 <option value="2022">2022</option>
                                 <option value="2021">2021</option>
                             </select>
-                            <select id="locationSelect">
-                                <option value="" class="placeholder" disabled hidden>Locations</option>
-                            </select>
-                            <button id="setGoalButton" class="btn-set-goal">Set Yearly Goal</button>
+                            <button id="setGoalButton" class="btn-set-goal" id="savetoPDFbtn" style="margin-top: 0;">Set Yearly Goal</button>
+                            
+                            
+                            
+                        </div>
+                        <div class="rightbar-container">
+                            <button class="btn-set-goal" title="Download to PDF">
+                                <img src="assets/general/pdf.svg" alt="Icon" class="icon" height="20px" width="20px">
+                            </button>
+                            <button class="btn-set-goal" style="margin-left: 15px;" title="Download to CSV">
+                                <img src="assets/general/csv.svg" alt="Icon" class="icon" height="20px" width="20px">
+                            </button>
                         </div>
                     </div>
                     <div class="card-container flex">
@@ -91,6 +99,10 @@
                             </div>
                     
                             <!-- Energy Usage Chart -->
+                            <div class="goalTitlEU">
+                                <strong id="goalTitleenergy">Energy Usage Goal</strong>
+                            </div>
+                    
                             <div class="bar-container w-full">
                                 <div class="usage-bar" id="energyUsageBar"></div>
                                 <div class="target-container" id="energyTargetContainer">
@@ -101,9 +113,9 @@
                     
                             <div class="value">
                                 <div>
-                                    <strong id="goalTitleenergy">Energy Usage Goal</strong>
                                     <div class="utilized" id="energyUtilizedValue">Utilized: </div>
                                     <div class="goal" id="energyGoalValue">Goal: </div>
+                                    <div class="status-container" id="carbonStatusContainer"></div>
                                 </div>
                             </div>
                     
@@ -112,6 +124,10 @@
                             </div>
                     
                             <!-- Carbon Footprint Chart -->
+                            <div class="goalTitleCF" style="margin-top: 10px;">
+                                <strong id="goalTitlecarbon">Carbon Footprint Goal</strong>
+                            </div>
+                            
                             <div class="bar-container w-full">
                                 <div class="usage-bar" id="carbonUsageBar"></div>
                                 <div class="target-container" id="carbonTargetContainer">
@@ -122,14 +138,25 @@
                     
                             <div class="value">
                                 <div>
-                                    <strong id="goalTitlecarbon">Carbon Footprint Goal</strong>
-                                    <div class="utilized" id="carbonUtilizedValue">Utilized: </div>
+                                    <div class="utilized" id="carbonUtilizedValue">Utilized: 0/0"</div>
                                     <div class="goal" id="carbonGoalValue">Goal: </div>
+                                    <div class="status-container" id="energyStatusContainer"></div>
                                 </div>
                             </div>
                         
-                            <div id="carbonNoGoalMessage" class="no-goal-message" style="display: none;">
-                                No goal set!
+                            <div class="color-legend mt-2 flex items-center text-sm">
+                                <div class="legend-item flex items-center mr-4">
+                                    <div class="w-3 h-3 rounded-full bg-green-500 mr-1"></div>
+                                    <span>Within goal</span>
+                                </div>
+                                <div class="legend-item flex items-center mr-4">
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500 mr-1"></div>
+                                    <span>Up to 20% over goal</span>
+                                </div>
+                                <div class="legend-item flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
+                                    <span>More than 20% over goal</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,9 +188,14 @@
                             <span class="energyBreakdown">
                                 <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i> Energy Breakdown
                             </span>
+                            <select id="locationSelect" style="margin-left: 8px;">
+                                <option value="" class="placeholder" disabled hidden>Locations</option>
+                            </select>
                         </div>
+                        
                         <!-- ============ Pie Chart ============ -->
                         <div class="pieChart-container">
+                            
                             <canvas id="pieChart" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
 
                             <div class="legendButtons" id="legendButtons">

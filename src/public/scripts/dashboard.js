@@ -579,11 +579,23 @@ function updateChart(type, targetGoal, currentValue, unit) {
 
     const maxValue = currentValue * (1 + Math.random() * 0.5);
     
-    // Update the display values
-    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
+    // Calculate excess/progress towards goal
+    const difference = currentValue - goalValue;
+    const percentageDifference = ((difference) / goalValue * 100).toFixed(1);
     
-    elements.utilizedValue.textContent = `Utilized: ${currentValue.toFixed(2)} ${unit}`;
-    elements.goalValue.textContent = `Goal: ${goalValue.toFixed(2)} ${unit}`;
+    // Create status message based on progress
+    let statusMessage = '';
+    if (difference > 0) {
+        statusMessage = `Exceeded by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else if (difference < 0) {
+        statusMessage = `Under by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else {
+        statusMessage = 'Exactly at goal';
+    }
+
+    // Update the display values
+    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`;
+    elements.utilizedValue.innerHTML = `Utilized: ${currentValue.toFixed(2)} / ${goalValue} ${unit}<br><span class="status-message ${difference > 0 ? 'excess' : 'under'}">${statusMessage}</span>`;
 
     // Update the bar and target line positions
     const usagePercentage = (currentValue / maxValue) * 100;
@@ -591,6 +603,21 @@ function updateChart(type, targetGoal, currentValue, unit) {
     
     elements.usageBar.style.width = `${usagePercentage}%`;
     elements.targetContainer.style.left = `${targetPercentage}%`;
+    
+    // Add the traffic light logic for colors
+    if (currentValue <= goalValue) {
+        // Under or at goal (green)
+        elements.usageBar.classList.remove('yellow', 'red');
+        elements.usageBar.classList.add('green');
+    } else if (difference/goalValue * 100 <= 20) {
+        // Exceeded by up to 20% (yellow)
+        elements.usageBar.classList.remove('green', 'red');
+        elements.usageBar.classList.add('yellow');
+    } else {
+        // Exceeded by more than 20% (red)
+        elements.usageBar.classList.remove('green', 'yellow');
+        elements.usageBar.classList.add('red');
+    }
 }
 
 
@@ -1067,7 +1094,6 @@ initPieChart();
 let carbonFootprintChart;
 async function initCarbonFootprintChart() {
     const fetchedData = await fetchCarbonFootprintData();
-
     let goalton = 0;
     
     // Check for goal data
@@ -1076,8 +1102,7 @@ async function initCarbonFootprintChart() {
         for (const goal of goalData) {
             if (goal.metric === 'carbon') {
                 if (goal.goal === 'tgtvalue') {
-                    goalton = goal.metric_value / 12 ;
-                    console.log("target goalton: ", goalton)
+                    goalton = goal.metric_value / 12;
                 } else {
                     try {
                         const currenttonresponse = await fetch(`/carbon-footprints/school/${placeholderID}`);
@@ -1118,7 +1143,7 @@ async function initCarbonFootprintChart() {
 
         filteredData.forEach(item => {
             const date = new Date(item.timestamp);
-            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1; // 0 = January, 11 = December
+            const monthIndex = getMonthFromTimestamp(item.timestamp) - 1;
             const year = date.getFullYear();
 
             if (!monthlyData[monthIndex]) {
@@ -1133,7 +1158,7 @@ async function initCarbonFootprintChart() {
         });
 
         return {
-            labels: Object.keys(monthlyData).map(monthIndex => monthNames[monthIndex]), // Convert index to month name
+            labels: Object.keys(monthlyData).map(monthIndex => monthNames[monthIndex]),
             yearLabels: Object.keys(yearlyData),
             totalCarbonTons: Object.values(monthlyData),
             totalCarbonYear: Object.values(yearlyData)
@@ -1144,6 +1169,7 @@ async function initCarbonFootprintChart() {
         const selection = document.getElementById('yearMonthSelect').value;
         let filteredLabels;
         let filteredData;
+        let adjustedGoalton = goalton;
 
         if (selection === 'years') {
             // Use the full fetched data to filter for all years
@@ -1153,47 +1179,25 @@ async function initCarbonFootprintChart() {
                 if (!yearlyData[year]) {
                     yearlyData[year] = 0;
                 }
-                yearlyData[year] += item.total_carbon_tons; // Aggregate by year
+                yearlyData[year] += item.total_carbon_tons;
             });
 
-            filteredLabels = Object.keys(yearlyData); // Year labels
-            filteredData = Object.values(yearlyData); // Yearly carbon data
+            filteredLabels = Object.keys(yearlyData);
+            filteredData = Object.values(yearlyData);
+            adjustedGoalton = goalton * 12; // Adjust goalton for yearly view
         } else if (selection === 'months') {
-            // Re-filter based on the placeholderYear for monthly data
             const updatedFilteredData = filterDataByIdandMonth(fetchedData, placeholderID);
             filteredLabels = updatedFilteredData.labels;
             filteredData = updatedFilteredData.totalCarbonTons;
+            adjustedGoalton = goalton; // Use monthly goalton
         }
 
-        // Update the chart with the selected data
-        if (carbonFootprintChart) {
-            carbonFootprintChart.data.labels = filteredLabels;
-            carbonFootprintChart.data.datasets[0].data = filteredData;
-            // Calculate the maximum value for the y-axis
-            const maxDataValue = Math.max(...filteredData); // Get the maximum data value
-            carbonFootprintChart.options.scales.y1.max = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
-            carbonFootprintChart.update();
-        } else {
-            createChart(filteredLabels, filteredData); // Create chart if it doesn't exist
-        }
+        updateChart(filteredLabels, filteredData, adjustedGoalton);
     }
 
-    // Initialize the chart with the default data
-    const filteredCarbonData = filterDataByIdandMonth(fetchedData, placeholderID);
-    createChart(filteredCarbonData.labels, filteredCarbonData.totalCarbonTons);
-
-    // Add event listener to the dropdown to call filterData on change
-    const yearMonthSelect = document.getElementById('yearMonthSelect');
-    yearMonthSelect.addEventListener('change', filterData);
-
-    function createChart(labels, data) {
-        // Destroy the current chart if it exists
-        if (carbonFootprintChart) {
-            carbonFootprintChart.destroy();
-        }
-
+    function updateChart(labels, data, currentGoalton) {
         const maxDataValue = Math.max(...data);
-        const dynamicMax = Math.ceil(maxDataValue * 1.1); // Set max to 10% above the max data value
+        const dynamicMax = Math.ceil(maxDataValue * 1.1);
 
         const datasets = [
             {
@@ -1207,16 +1211,12 @@ async function initCarbonFootprintChart() {
             }
         ];
 
-        // If goalton exists, add goal line to datasets
-        if (goalton > 0) {
-            const goalLineData = (document.getElementById('yearMonthSelect').value === 'years') 
-                ? Array(labels.length).fill(goalton * 12) // For year, multiply by 12
-                : Array(labels.length).fill(goalton); // For months, use goalton directly
-
+        // Add goal line if goalton exists
+        if (currentGoalton > 0) {
             datasets.push({
                 label: 'Goal Line (tonnes)',
                 type: 'line',
-                data: goalLineData,
+                data: Array(labels.length).fill(currentGoalton),
                 borderColor: 'rgba(255, 99, 132, 1)',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderWidth: 2,
@@ -1225,6 +1225,21 @@ async function initCarbonFootprintChart() {
                 pointRadius: 0,
                 lineTension: 0
             });
+        }
+
+        if (carbonFootprintChart) {
+            carbonFootprintChart.data.labels = labels;
+            carbonFootprintChart.data.datasets = datasets;
+            carbonFootprintChart.options.scales.y1.max = dynamicMax;
+            carbonFootprintChart.update();
+        } else {
+            createChart(labels, datasets, dynamicMax);
+        }
+    }
+
+    function createChart(labels, datasets, dynamicMax) {
+        if (carbonFootprintChart) {
+            carbonFootprintChart.destroy();
         }
 
         const carbonFootprintConfig = {
@@ -1241,10 +1256,10 @@ async function initCarbonFootprintChart() {
                         type: 'linear',
                         position: 'left',
                         beginAtZero: true,
-                        max: dynamicMax, // Adjust based on expected maximum carbon footprint
+                        max: dynamicMax,
                         ticks: {
                             callback: function(value) {
-                                return value + ' tonnes'; // Add unit to tick labels
+                                return value + ' tonnes';
                             }
                         }
                     }
@@ -1252,10 +1267,48 @@ async function initCarbonFootprintChart() {
             }
         };
 
-        // Initialize the chart
         const carbonCtx = document.getElementById('carbonFootprintGraph').getContext('2d');
         carbonFootprintChart = new Chart(carbonCtx, carbonFootprintConfig);
     }
+
+    // Initialize the chart with the default data
+    const filteredCarbonData = filterDataByIdandMonth(fetchedData, placeholderID);
+    const initialDatasets = [
+        {
+            label: 'Carbon Footprint (tonnes)',
+            data: filteredCarbonData.totalCarbonTons,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: true,
+            borderWidth: 2,
+            yAxisID: 'y1'
+        }
+    ];
+
+    if (goalton > 0) {
+        initialDatasets.push({
+            label: 'Goal Line (tonnes)',
+            type: 'line',
+            data: Array(filteredCarbonData.labels.length).fill(goalton),
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 2,
+            fill: false,
+            yAxisID: 'y1',
+            pointRadius: 0,
+            lineTension: 0
+        });
+    }
+
+    createChart(
+        filteredCarbonData.labels,
+        initialDatasets,
+        Math.ceil(Math.max(...filteredCarbonData.totalCarbonTons) * 1.1)
+    );
+
+    // Add event listener to the dropdown
+    const yearMonthSelect = document.getElementById('yearMonthSelect');
+    yearMonthSelect.addEventListener('change', filterData);
 }
 
 // Call the function to initialize everything
