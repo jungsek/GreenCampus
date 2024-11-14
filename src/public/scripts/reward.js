@@ -33,45 +33,50 @@ async function loadRewards() {
     if (!currentPointsresponse.ok) {throw new Error("Network response to fetching current student was not ok")}
     else {
         let currentstudentobj =  await currentPointsresponse.json()
-        currentPoints = currentstudentobj.points
+        currentPoints = parseInt(currentstudentobj.points);
+        if (isNaN(currentPoints)) {
+          currentPoints = 0; // Set to default if not a valid number
+      }
     }
 
     
     document.getElementById("current-points").innerText = currentPoints;
+    document.getElementById("reward-count").innerText = `${rewards.length} Rewards`;
 
     let rewardsContainer = document.getElementById('rewards-container');
     rewardsContainer.innerHTML = ''; // Clear previous rewards
 
     rewards.forEach(reward => {
-        let card = document.createElement('div');
-        card.classList.add('card');
+      let cardElement = document.createElement("div");
+      cardElement.classList.add("coupon-card");
+    
+      let iconElement = document.createElement("div");
+      iconElement.classList.add("card-icon");
+      iconElement.textContent = "🌟";
+      cardElement.appendChild(iconElement);
+    
+      let titleElement = document.createElement("div");
+      titleElement.classList.add("card-title");
+      titleElement.innerText = reward.name;
+      cardElement.appendChild(titleElement);
+    
+      let redeemLinkElement = document.createElement("a");
+      redeemLinkElement.classList.add("redeem-link");
+      redeemLinkElement.href = "#";
+      redeemLinkElement.textContent = `REDEEM ● ${reward.points}`;
+      redeemLinkElement.addEventListener("click", (e) => {
+        e.preventDefault();
+        openRedeemModal(reward)
+      });
+      cardElement.appendChild(redeemLinkElement);
 
-        let rewardName = document.createElement('h2');
-        rewardName.innerText = reward.name;
-
-        let rewardDesc = document.createElement('p');
-        rewardDesc.innerText = reward.description;
-
-        let rewardPoints = document.createElement('p');
-        rewardPoints.innerText = `Points: ${reward.points}`;
-
-        let redeemBtn = document.createElement('button');
-        redeemBtn.innerText = 'Redeem';
-        redeemBtn.classList.add('btn-set-goal');
-        redeemBtn.addEventListener('click', () => openRedeemPopup(reward));
-
-        card.appendChild(rewardName);
-        card.appendChild(rewardDesc);
-        card.appendChild(rewardPoints);
-        card.appendChild(redeemBtn);
-
-        rewardsContainer.appendChild(card);
+      rewardsContainer.appendChild(cardElement);
     });
 }
 
 // Open the Redeem Popup
-function openRedeemPopup(reward) {
-  document.getElementById("redeemPopup").style.display = "block";
+function openRedeemModal(reward) {
+  document.getElementById('redeemPopup').style.display = 'flex';
   document.getElementById("reward-name").innerText = reward.name;
   document.getElementById("reward-points").innerText = `Points: ${reward.points}`;
 
@@ -90,10 +95,21 @@ async function redeemReward(reward) {
     await updateStudentPoints(currentPoints); // Wait for the points to be updated in the database
     alert(`You have redeemed "${reward.name}"!`);
     closeRedeemPopup();
+    await loadRewards();
   } else {
     alert("You do not have enough points to redeem this reward.");
   }
 }
 
 // Load the rewards when the page loads
-window.onload = loadRewards;
+window.addEventListener("DOMContentLoaded", () => {
+  loadRewards();
+
+  // Close modal when clicking outside
+  window.addEventListener("click", (event) => {
+      const modal = document.getElementById("redeemPopup");
+      if (event.target == modal) {
+      closeRedeemPopup();
+      }
+  });
+});
