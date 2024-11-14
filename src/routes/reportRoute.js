@@ -12,6 +12,8 @@ const reportRoute = (app, upload) => {
 
     // Route to get a report by ID
     app.get("/api/reports/id/:reportId", reportController.getReportById);
+
+    app.post("/api/reports", reportController.createReport);
     
 };
 

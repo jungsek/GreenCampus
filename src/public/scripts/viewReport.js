@@ -57,68 +57,221 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function downloadReportAsPDF() {
         const reportContent = document.getElementById('reportContent');
-
+    
+        // Add a class for PDF-specific styles
+        reportContent.classList.add('pdf-export');
+    
+        // Resize charts for PDF
+        resizeChartsForPDF();   
+    
         // Define PDF options
         const opt = {
-            margin:       0,
-            filename:     `Report_${reportId}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            margin: 1,
+            filename: `Report_${reportId}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all', before: '.page-break' }
         };
-
-        // Generate and save the PDF
-        html2pdf().set(opt).from(reportContent).save();
+    
+        // Generate and save the PDF    
+        html2pdf()
+            .set(opt)
+            .from(reportContent)
+            .save()
+            .then(() => {
+                // Remove the PDF-specific class and reset chart sizes after generation
+                reportContent.classList.remove('pdf-export');
+                resetChartSizes();
+            });
+    }
+    
+    // Add these two functions from generate-report.js
+    function resizeChartsForPDF() {
+        const charts = document.querySelectorAll('canvas');
+        charts.forEach((chart) => {
+            const chartContainer = chart.parentElement;
+            chart.style.width = '100%';
+            chart.style.height = 'auto';
+            chartContainer.style.maxWidth = '720px';
+            chartContainer.style.maxHeight = '500px';
+        });
+    }
+    
+    function resetChartSizes() {
+        const charts = document.querySelectorAll('canvas');
+        charts.forEach((chart) => {
+            chart.style.width = '';
+            chart.style.height = '';
+            const chartContainer = chart.parentElement;
+            chartContainer.style.maxWidth = '';
+            chartContainer.style.maxHeight = '';
+        });
     }
 
-    // Function to initialize charts
     function initCharts() {
         // Initialize Recommendation Charts
         if (recommendationData) {
-            initRecommendationCharts();
+            // Initialize Areas of Concern Charts
+            recommendationData.areas_of_concern.forEach((area, index) => {
+                try {
+                    const chartData = {
+                        labels: area.data.labels,
+                        values: area.data.values,
+                        temperature: area.data.temperature
+                    };
+    
+                    const canvas = document.getElementById(`areaChart${index}`);
+                    if (canvas) {
+                        canvas.height = 500; // Set fixed height
+                        if (index === 0) {
+                            renderEnergyChart(canvas, chartData);
+                        } else {
+                            renderCarbonChart(canvas, chartData);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error creating area charts:', error);
+                }
+            });
+    
+            // Initialize Strengths Charts
+            recommendationData.strengths.forEach((strength, index) => {
+                try {
+                    const canvas = document.getElementById(`strengthChart${index}`);
+                    if (canvas) {
+                        canvas.height = 500; // Set fixed height
+                        renderStrengthChart(canvas, strength.data);
+                    }
+                } catch (error) {
+                    console.error('Error creating strength charts:', error);
+                }
+            });
         }
-
+    
         // Initialize Prediction Charts
         if (predictionData) {
             initPredictionCharts();
         }
-                // Enable the download button after charts are rendered
-                setTimeout(() => {
-                    downloadPdfBtn.disabled = false;
-                }, 1000); // Adjust the timeout as needed
+    
+        // Enable the download button after charts are rendered
+        setTimeout(() => {
+            downloadPdfBtn.disabled = false;
+        }, 1000);
     }
-
-    // Functions to initialize charts for recommendations and predictions
-    function initRecommendationCharts() {
-        // For Areas of Concern
-        document.querySelectorAll('.chart-placeholder[data-chart-type="areaOfConcern"]').forEach((placeholder) => {
-            const index = placeholder.getAttribute('data-index');
-            const area = recommendationData.areas_of_concern[index];
-
-            // Create canvas element
-            const canvas = document.createElement('canvas');
-            canvas.height = 400;
-            placeholder.appendChild(canvas);
-
-            // Render the chart
-            renderAreaOfConcernChart(canvas, area.data);
-        });
-
-        // For Strengths
-        document.querySelectorAll('.chart-placeholder[data-chart-type="strength"]').forEach((placeholder) => {
-            const index = placeholder.getAttribute('data-index');
-            const strength = recommendationData.strengths[index];
-
-            // Create canvas element
-            const canvas = document.createElement('canvas');
-            canvas.height = 400;
-            placeholder.appendChild(canvas);
-
-            // Render the chart
-            renderStrengthChart(canvas, strength.data);
+    
+    function renderEnergyChart(canvas, data) {
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Energy Usage (kWh)',
+                    data: data.values,
+                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                }, {
+                    label: 'Temperature (°C)',
+                    data: data.temperature,
+                    type: 'line',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                aspectRatio: 1,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (context.dataset.yAxisID === 'y2') {
+                                    return `${context.parsed.y}°C`;
+                                }
+                                return `${context.parsed.y} kWh`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Energy Usage (kWh)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
         });
     }
-
+    
+    function renderCarbonChart(canvas, data) {
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Carbon Emissions (tons)',
+                    data: data.values,
+                    backgroundColor: 'rgba(91, 199, 160, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                aspectRatio: 1,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y} tonnes`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Emissions (tons)'
+                        }
+                    }
+                }
+            }
+        });
+    }
     function initPredictionCharts() {
         // Predicted Energy Chart
         const energyChartContainer = document.getElementById('predictedEnergyChartContainer');
@@ -190,26 +343,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     borderColor: 'rgba(54,162,235,1)',
                     borderWidth: 2,
                     fill: false,
+                    tension: 0.4,
                 }],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Values',
-                        },
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Labels',
-                        },
-                    },
-                },
+                aspectRatio: 1,
             },
         });
     }
