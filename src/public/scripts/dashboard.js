@@ -25,8 +25,6 @@ const yearinput = document.getElementById('goalYear');
 const submitgoalbtn = document.querySelector('#submitnewgoalbtn');
 const yesConfirmButton = document.getElementById('yesconfirmButton');
 const noConfirmButton = document.getElementById('noconfirmButton');
-const downloadCsvBtn = document.querySelector('.rightbar-container button[title="Download to CSV"]');
-const downloadPdfBtn = document.querySelector('.rightbar-container button[title="Download to PDF"]');
 
 // Function to show goal popup
 function showGoalPopup() {
@@ -234,12 +232,6 @@ updateInputVisibility();
 
 
 
-
-
-// function flipCard(card) {
-//     card.classList.toggle('is-flipped');
-// 
-
 async function fetchEnergyUsageData() {
     let response = await fetch(`/energy-usage/school/${placeholderID}`, {
         method: 'GET',
@@ -295,153 +287,6 @@ async function fetchEnergyBreakdownData() {
     return Edata;
 }
 
-function downloadDashboardDataAsCsv() {
-    const selectedYear = parseInt(document.getElementById('yearsFilter').value);
-    
-    // Create temporary tables to hold the data
-    const tempContainer = document.createElement('div');
-    tempContainer.style.display = 'none';
-    
-    // Create Energy Usage Table
-    const energyTable = document.createElement('table');
-    energyTable.id = 'tempEnergyUsageTable';
-    
-    // Create Carbon Footprint Table
-    const carbonTable = document.createElement('table');
-    carbonTable.id = 'tempCarbonFootprintTable';
-    
-    // Create Energy Breakdown Table
-    const breakdownTable = document.createElement('table');
-    breakdownTable.id = 'tempEnergyBreakdownTable';
-    
-    // Add tables to container
-    tempContainer.appendChild(energyTable);
-    tempContainer.appendChild(carbonTable);
-    tempContainer.appendChild(breakdownTable);
-    document.body.appendChild(tempContainer);
-
-    // Fetch all necessary data
-    Promise.all([
-        fetch(`/api/energy-usage/${placeholderID}/monthly/${selectedYear}`),
-        fetch(`/api/carbon-footprint/${placeholderID}/year/${selectedYear}`),
-        fetch(`/api/energy-breakdown/${placeholderID}/year/${selectedYear}`)
-    ])
-    .then(responses => Promise.all(responses.map(response => response.json())))
-    .then(([energyData, carbonData, breakdownData]) => {
-        // Populate Energy Usage Table
-        energyTable.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Energy Usage (kWh)</th>
-                    <th>Average Temperature (°C)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${energyData.map(item => {
-                    return `
-                        <tr>
-                            <td>${item.month}</td>
-                            <td>${item.energy_kwh.toFixed(2)}</td>
-                            <td>${item.avg_temperature_c.toFixed(1)}</td>
-                        </tr>
-                    `;
-                }).join('')}
-            </tbody>
-        `;
-
-        // Populate Carbon Footprint Table
-        carbonTable.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Total Carbon Emissions (tons)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${carbonData.map(item => `
-                    <tr>
-                        <td>${new Date(item.timestamp).toLocaleString('default', { month: 'long' })}</td>
-                        <td>${item.total_carbon_tons.toFixed(2)}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
-
-        // Populate Energy Breakdown Table
-        breakdownTable.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Percentage (%)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${breakdownData.map(item => `
-                    <tr>
-                        <td>${item.month}</td>
-                        <td>${item.location}</td>
-                        <td>${item.category}</td>
-                        <td>${item.percentage}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
-
-        // Create CSV content using the same function as viewData.js
-        const energyUsageData = tableToCsv('tempEnergyUsageTable');
-        const carbonFootprintData = tableToCsv('tempCarbonFootprintTable');
-        const energyBreakdownData = tableToCsv('tempEnergyBreakdownTable');
-
-        // Combine data
-        const csvContent = `Energy Usage\n${energyUsageData}\n\nCarbon Footprint\n${carbonFootprintData}\n\nEnergy Breakdown\n${energyBreakdownData}`;
-
-        // Create and trigger download
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const downloadLink = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        downloadLink.href = url;
-        downloadLink.download = `Dashboard_Data_${selectedYear}.csv`;
-        downloadLink.click();
-        URL.revokeObjectURL(url);
-
-        // Clean up temporary elements
-        document.body.removeChild(tempContainer);
-    })
-    .catch(error => {
-        console.error('Error downloading CSV:', error);
-        alert('An error occurred while downloading the CSV file.');
-        // Clean up temporary elements in case of error
-        if (document.body.contains(tempContainer)) {
-            document.body.removeChild(tempContainer);
-        }
-    });
-}
-function tableToCsv(tableId) {
-    const table = document.getElementById(tableId);
-    let csv = '';
-    const rows = table.querySelectorAll('tr');
-    rows.forEach(row => {
-        const cols = row.querySelectorAll('th, td');
-        const rowData = [];
-        cols.forEach(col => {
-            // Escape commas and quotes
-            let data = col.innerText.replace(/"/g, '""');
-            if (data.indexOf(',') > -1 || data.indexOf('"') > -1) {
-                data = `"${data}"`;
-            }
-            rowData.push(data);
-        });
-        csv += rowData.join(',') + '\n';
-    });
-    return csv.trim();
-}
-
-// Add event listener for the CSV download button
-downloadCsvBtn.addEventListener('click', downloadDashboardDataAsCsv);
-
 
 // ==================== Impact Card ====================
 document.addEventListener("DOMContentLoaded", () => {
@@ -470,19 +315,9 @@ function getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear) {
         return itemYear === selectedYear;
     });
 
-    // Calculate the total energy usage, incorporating percentage from breakdownData
+    // Calculate the total energy usage by summing energy_kwh without considering the percentage breakdown
     const totalEnergyUsage = filteredEnergyUsage.reduce((total, item) => {
-        // Find matching breakdown entry for the current energy usage item
-        const breakdownEntries = breakdownData.filter(b => b.energyusage_id === item.id);
-
-        // Sum the energy usage * percentage for each breakdown entry associated with this usage item
-        const itemTotal = breakdownEntries.reduce((subtotal, breakdown) => {
-            // Multiply energy_kwh by the percentage (converted to a decimal)
-            return subtotal + (item.energy_kwh * (breakdown.percentage / 100));
-        }, 0);
-
-        // Add this item's total to the overall total
-        return total + itemTotal;
+        return total + item.energy_kwh;
     }, 0);
 
     return totalEnergyUsage;
@@ -633,7 +468,7 @@ async function initImpactCard(placeholderYear) {
 }
 
 
-// ==================== Doughnut Progress Chart ====================
+// ==================== Goal Progress Chart ====================
 async function initBarCharts() {
     let sumEnergy;
     let sumEnergyNow;
@@ -703,29 +538,29 @@ async function initBarCharts() {
 
 function updateChart(type, targetGoal, currentValue, unit) {
     const elements = {
-        noGoal: document.getElementById(`${type}NoGoalMessage`),
-        barContainer: document.getElementById(`${type}UsageBar`).parentElement,
-        usageBar: document.getElementById(`${type}UsageBar`),
-        targetContainer: document.getElementById(`${type}TargetContainer`),
-        utilizedValue: document.getElementById(`${type}UtilizedValue`),
-        goalValue: document.getElementById(`${type}GoalValue`)
+      noGoal: document.getElementById(`${type}NoGoalMessage`),
+      barContainer: document.getElementById(`${type}UsageBar`).parentElement,
+      usageBar: document.getElementById(`${type}UsageBar`),
+      targetContainer: document.getElementById(`${type}TargetContainer`),
+      utilizedValue: document.getElementById(`${type}UtilizedValue`),
+      goalValue: document.getElementById(`${type}GoalValue`)
     };
-
+  
     if (!targetGoal) {
-        elements.noGoal.style.display = 'block';
-        elements.barContainer.style.display = 'none';
-        elements.utilizedValue.style.display = 'none';
-        elements.goalValue.style.display = 'none';
-        return;
+      elements.noGoal.style.display = 'block';
+      elements.barContainer.style.display = 'none';
+      elements.utilizedValue.style.display = 'none';
+      elements.goalValue.style.display = 'none';
+      return;
     }
-
+  
     let goalValue;
     if (targetGoal.goal === 'tgtvalue') {
-        goalValue = targetGoal.metric_value;
+      goalValue = targetGoal.metric_value;
     } else {
-        goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
+      goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
     }
-
+  
     const maxValue = currentValue * (1 + Math.random() * 0.5);
     
     // Calculate excess/progress towards goal
@@ -735,39 +570,42 @@ function updateChart(type, targetGoal, currentValue, unit) {
     // Create status message based on progress
     let statusMessage = '';
     if (difference > 0) {
-        statusMessage = `Exceeded by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+      statusMessage = `Exceeded by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
     } else if (difference < 0) {
-        statusMessage = `Under by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+      statusMessage = `Under by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
     } else {
-        statusMessage = 'Exactly at goal';
+      statusMessage = 'Exactly at goal';
     }
-
+  
     // Update the display values
     document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`;
     elements.utilizedValue.innerHTML = `Utilized: ${currentValue.toFixed(2)} / ${goalValue} ${unit}<br><span class="status-message ${difference > 0 ? 'excess' : 'under'}">${statusMessage}</span>`;
-
+  
     // Update the bar and target line positions
     const usagePercentage = (currentValue / maxValue) * 100;
     const targetPercentage = (goalValue / maxValue) * 100;
     
     elements.usageBar.style.width = `${usagePercentage}%`;
-    elements.targetContainer.style.left = `${targetPercentage}%`;
     
+    // Update the target container position
+    elements.targetContainer.style.left = `${targetPercentage}%`;
+    elements.targetContainer.style.display = 'block'; // Ensure the target container is visible
+  
     // Add the traffic light logic for colors
     if (currentValue <= goalValue) {
-        // Under or at goal (green)
-        elements.usageBar.classList.remove('yellow', 'red');
-        elements.usageBar.classList.add('green');
+      // Under or at goal (green)
+      elements.usageBar.classList.remove('yellow', 'red');
+      elements.usageBar.classList.add('green');
     } else if (difference/goalValue * 100 <= 20) {
-        // Exceeded by up to 20% (yellow)
-        elements.usageBar.classList.remove('green', 'red');
-        elements.usageBar.classList.add('yellow');
+      // Exceeded by up to 20% (yellow)
+      elements.usageBar.classList.remove('green', 'red');
+      elements.usageBar.classList.add('yellow');
     } else {
-        // Exceeded by more than 20% (red)
-        elements.usageBar.classList.remove('green', 'yellow');
-        elements.usageBar.classList.add('red');
+      // Exceeded by more than 20% (red)
+      elements.usageBar.classList.remove('green', 'yellow');
+      elements.usageBar.classList.add('red');
     }
-}
+  }
 
 
 initBarCharts();
@@ -1495,11 +1333,3 @@ document.querySelectorAll('.analyse-chart-btn1, .analyse-chart-btn2').forEach(bu
         window.location.href = `analyseChart.html?chartType=${chartType}&year=${selectedYear}&schoolId=${schoolId}`;
     });
 });
-
-function downloadDashboardPDF() {
-    window.location.href = `generateReport.html`;
-}
-// Add event listener for PDF download button
-downloadPdfBtn.addEventListener('click', downloadDashboardPDF);
-
-
