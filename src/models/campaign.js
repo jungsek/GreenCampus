@@ -84,6 +84,14 @@ class Campaign{
         return result.length ? result.map((x) => this.toCampaignObj(x)) : null
     }
 
+    static async getCampaignSignUps(id){
+        const params ={"id": id}
+        const result = (await this.query(`SELECT COUNT(*) AS student_count
+        FROM CampaignStudents
+        WHERE campaign_id = @id`,params)).recordset[0]
+        return result.student_count
+    }
+
     static async createCampaign(newCampaignData) {
         const params = {
             "school_id": newCampaignData.school_id,

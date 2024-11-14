@@ -24,11 +24,16 @@ async function loadCurrentCampaigns() {
 }
 
 // Render campaigns to the DOM
-function renderCampaigns() {
+async function renderCampaigns() {
     const parentContainer = document.getElementById('campaignGrid');
     parentContainer.innerHTML = ""; // Clear previous cards
-
-    currentCampaigns.forEach(campaign => {
+    currentCampaigns.forEach(async (campaign) => {
+        let signups = 0
+        let signupresponse = await fetch(`/campaigns/count/${campaign.id}`)
+        if (!signupresponse.ok) {throw new Error("Network response to get campaign signups was not ok")}
+        else {
+            signups = await signupresponse.json()
+        }
         const card = document.createElement("div");
         card.classList.add("campaign-card");
         card.innerHTML = `
@@ -40,6 +45,8 @@ function renderCampaigns() {
                     <i class='bx bx-star'></i>
                     ${campaign.points} Points
                 </div>
+                <div class="campaign-signups">
+                    ${signups} Sign-ups
                 <div class="campaign-actions">
                     <button class="action-button edit-button" onclick="openModifyPopup(${campaign.id})">
                         <i class='bx bx-pencil'></i> Edit
