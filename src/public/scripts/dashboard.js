@@ -579,11 +579,23 @@ function updateChart(type, targetGoal, currentValue, unit) {
 
     const maxValue = currentValue * (1 + Math.random() * 0.5);
     
-    // Update the display values
-    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
+    // Calculate excess/progress towards goal
+    const difference = currentValue - goalValue;
+    const percentageDifference = ((difference) / goalValue * 100).toFixed(1);
     
-    elements.utilizedValue.textContent = `Utilized: ${currentValue.toFixed(2)} ${unit}`;
-    elements.goalValue.textContent = `Goal: ${goalValue.toFixed(2)} ${unit}`;
+    // Create status message based on progress
+    let statusMessage = '';
+    if (difference > 0) {
+        statusMessage = `Exceeded by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else if (difference < 0) {
+        statusMessage = `Under by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else {
+        statusMessage = 'Exactly at goal';
+    }
+
+    // Update the display values
+    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`;
+    elements.utilizedValue.innerHTML = `Utilized: ${currentValue.toFixed(2)} / ${goalValue} ${unit}<br><span class="status-message ${difference > 0 ? 'excess' : 'under'}">${statusMessage}</span>`;
 
     // Update the bar and target line positions
     const usagePercentage = (currentValue / maxValue) * 100;
@@ -591,6 +603,21 @@ function updateChart(type, targetGoal, currentValue, unit) {
     
     elements.usageBar.style.width = `${usagePercentage}%`;
     elements.targetContainer.style.left = `${targetPercentage}%`;
+    
+    // Add the traffic light logic for colors
+    if (currentValue <= goalValue) {
+        // Under or at goal (green)
+        elements.usageBar.classList.remove('yellow', 'red');
+        elements.usageBar.classList.add('green');
+    } else if (difference/goalValue * 100 <= 20) {
+        // Exceeded by up to 20% (yellow)
+        elements.usageBar.classList.remove('green', 'red');
+        elements.usageBar.classList.add('yellow');
+    } else {
+        // Exceeded by more than 20% (red)
+        elements.usageBar.classList.remove('green', 'yellow');
+        elements.usageBar.classList.add('red');
+    }
 }
 
 

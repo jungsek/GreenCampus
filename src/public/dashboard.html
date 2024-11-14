@@ -99,6 +99,10 @@
                             </div>
                     
                             <!-- Energy Usage Chart -->
+                            <div class="goalTitlEU">
+                                <strong id="goalTitleenergy">Energy Usage Goal</strong>
+                            </div>
+                    
                             <div class="bar-container w-full">
                                 <div class="usage-bar" id="energyUsageBar"></div>
                                 <div class="target-container" id="energyTargetContainer">
@@ -109,9 +113,9 @@
                     
                             <div class="value">
                                 <div>
-                                    <strong id="goalTitleenergy">Energy Usage Goal</strong>
                                     <div class="utilized" id="energyUtilizedValue">Utilized: </div>
                                     <div class="goal" id="energyGoalValue">Goal: </div>
+                                    <div class="status-container" id="carbonStatusContainer"></div>
                                 </div>
                             </div>
                     
@@ -120,6 +124,10 @@
                             </div>
                     
                             <!-- Carbon Footprint Chart -->
+                            <div class="goalTitleCF" style="margin-top: 10px;">
+                                <strong id="goalTitlecarbon">Carbon Footprint Goal</strong>
+                            </div>
+                            
                             <div class="bar-container w-full">
                                 <div class="usage-bar" id="carbonUsageBar"></div>
                                 <div class="target-container" id="carbonTargetContainer">
@@ -130,14 +138,25 @@
                     
                             <div class="value">
                                 <div>
-                                    <strong id="goalTitlecarbon">Carbon Footprint Goal</strong>
-                                    <div class="utilized" id="carbonUtilizedValue">Utilized: </div>
+                                    <div class="utilized" id="carbonUtilizedValue">Utilized: 0/0"</div>
                                     <div class="goal" id="carbonGoalValue">Goal: </div>
+                                    <div class="status-container" id="energyStatusContainer"></div>
                                 </div>
                             </div>
                         
-                            <div id="carbonNoGoalMessage" class="no-goal-message" style="display: none;">
-                                No goal set!
+                            <div class="color-legend mt-2 flex items-center text-sm">
+                                <div class="legend-item flex items-center mr-4">
+                                    <div class="w-3 h-3 rounded-full bg-green-500 mr-1"></div>
+                                    <span>Within goal</span>
+                                </div>
+                                <div class="legend-item flex items-center mr-4">
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500 mr-1"></div>
+                                    <span>Up to 20% over goal</span>
+                                </div>
+                                <div class="legend-item flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
+                                    <span>More than 20% over goal</span>
+                                </div>
                             </div>
                         </div>
                     </div>
