@@ -129,6 +129,39 @@ module.exports.generateReport = async (req, res) => {
     }
 };
 
+// Add this new controller method
+module.exports.createReport = async (req, res) => {
+    try {
+        const { schoolId, year, content, recommendationData, predictionData } = req.body;
+
+        // Validate inputs
+        if (!schoolId || !year || !content) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Create report using the Report model
+        const report = await Report.createReport(
+            schoolId,
+            year,
+            content,
+            recommendationData,
+            predictionData
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Report saved successfully',
+            report
+        });
+    } catch (error) {
+        console.error('Error creating report:', error);
+        res.status(500).json({ 
+            error: 'An error occurred while saving the report.',
+            details: error.message 
+        });
+    }
+};
+
 function generatePrompt(schoolName, year, energyUsages, carbonFootprints, energyBreakdowns, recommendationData, predictionData) {
     // Prepare data tables in HTML format
     const energyUsageTable = generateEnergyUsageTable(energyUsages);
