@@ -467,6 +467,13 @@
         background-color: #c3e7deea;
     }
 
+    #setGoalButton {
+        font-weight: bold;
+        padding: 8px 16px 8px 16px; 
+        margin-top: 0;
+        margin-left: 15px;
+        font-size: 14px;
+    }
     /* ========= Filter by Month / Years  ========= */
     #yearMonthSelect {
         padding: 8px 16px 8px 16px; 
@@ -1319,3 +1326,5 @@
     color: grey;
     margin-top: 20px;
 }
+
+
