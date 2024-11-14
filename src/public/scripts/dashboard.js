@@ -577,7 +577,7 @@ function updateChart(type, targetGoal, currentValue, unit) {
         goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
     }
 
-    const maxValue = currentValue * 1.5;
+    const maxValue = currentValue * (1 + Math.random() * 0.5);
     
     // Update the display values
     document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
