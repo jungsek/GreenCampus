@@ -433,11 +433,11 @@ async function initImpactCard(placeholderYear) {
     }
 
     if (totalCarbonFootprintElement) {
-        totalCarbonFootprintElement.innerText = `${totalCarbonFootprint.toFixed(2)}`;
+        totalCarbonFootprintElement.innerText = `${totalCarbonFootprint.toFixed(2)} tonnes`;
     }
 
     if (totalEnergyUsageElement) {
-        totalEnergyUsageElement.innerText = `${totalEnergyUsage.toFixed(2)}`;
+        totalEnergyUsageElement.innerText = `${totalEnergyUsage.toFixed(2)} kWh`;
     }
 
     if (topContributorsElement) {
@@ -452,11 +452,11 @@ async function initImpactCard(placeholderYear) {
         } else if (Math.abs(carbonFootprintChange) == 0.0) {
             // No change case (near zero)
             carbonFootprintChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
-            carbonFootprintChangeElement.style.color = "blue"; // Blue color for no change
+            carbonFootprintChangeElement.style.color = "black"; // Blue color for no change
         } else {
             // Set up icon and color based on increase or decrease
             const iconClass = carbonFootprintChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
-            const color = carbonFootprintChange < 0 ? 'rgb(25, 176, 25)' : 'red';
+            const color = carbonFootprintChange < 0 ? 'rgb(37 99 235)' : 'rgb(220 38 38)';
             
             carbonFootprintChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(carbonFootprintChange)}% from last year`;
             carbonFootprintChangeElement.style.color = color; // Apply color based on trend
@@ -475,7 +475,7 @@ async function initImpactCard(placeholderYear) {
         } else {
             // Set up icon and color based on increase or decrease
             const iconClass = energyUsageChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
-            const color = energyUsageChange < 0 ? 'rgb(25, 176, 25)' : 'red';
+            const color = energyUsageChange < 0 ? 'rgb(37 99 235)' : 'rgb(220 38 38)';
             
             energyUsageChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(energyUsageChange)}% from last year`;
             energyUsageChangeElement.style.color = color; // Apply color based on trend
@@ -580,6 +580,8 @@ function updateChart(type, targetGoal, currentValue, unit) {
     const maxValue = currentValue * 1.5;
     
     // Update the display values
+    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
+    
     elements.utilizedValue.textContent = `Utilized: ${currentValue.toFixed(2)} ${unit}`;
     elements.goalValue.textContent = `Goal: ${goalValue.toFixed(2)} ${unit}`;
 
@@ -650,8 +652,6 @@ async function initEnergyTempChart() {
             kwhtotal += row.energy_kwh;
             temptotal += row.avg_temperature_c;
         });
-        document.getElementById('avgenergy').innerText = `${(kwhtotal/12).toFixed(2)} kWh/month`
-        document.getElementById('avgtemp').innerText = `${(temptotal/12).toFixed(2)} °C/month`
         const monthlyEnergyData = {};
         const monthlyTempData = {};
 
