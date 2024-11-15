@@ -549,3 +549,47 @@ body, html, .main {
       display: none;
   }
 }
+
+.report-output canvas {
+  max-height: 500px !important;
+}
+
+.chart-container {
+  height: 500px;
+  max-height: 500px;
+  position: relative;
+  margin: 20px 0;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+.chart-placeholder, .area-of-concern, .strength {
+  page-break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.chart-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.report-output {
+  margin: 20px 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h2, h3, p {
+  margin-bottom: 16px;
+}
+
+h1, h2, h3 {
+  font-weight: bold !important;
+}

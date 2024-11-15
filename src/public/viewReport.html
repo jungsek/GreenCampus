@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>View Report</title>
-    <!-- Include necessary styles -->
     <link rel="stylesheet" href="./styles/common.css">
-    <link rel="stylesheet" href="./styles/viewReport.css">
-    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./styles/generate-report.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Navbar -->
     <div class="nav-placeholder"></div>
 
-    <div class="container mt-4">
-        <div id="errorOutput" class="alert alert-danger hidden"></div>
-        <div id="reportContent">
-            <!-- Report content will be loaded here -->
+    <div class="dashboard-content">
+        <div class="carpet-container">
+            <div class="main container">
+                <section class="text-center">
+                    <h1>Sustainability Report</h1>
+                    <p class="mt-2 text-gray-600">View and download your campus sustainability report.</p>
+                </section>
+
+                <div class="reportContainer">
+                    <div id="errorOutput" class="alert alert-danger hidden"></div>
+                    <div id="reportContent" class="report-output">
+                        <!-- Report content will be loaded here -->
+                    </div>
+                    <button id="downloadPdfBtn" class="btn btn-success mt-3" style="background-color: #059669 !important;">
+                        Download Report as PDF
+                    </button>
+                </div>
+            </div>
         </div>
-        <button id="downloadPdfBtn" class="btn btn-primary mt-3" style="background-color: #059669 !important;">Download Report as PDF</button>
     </div>
 
-    <!-- Footer -->
     <div class="footer-placeholder"></div>
 
-    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./scripts/common.js"></script>
     <script src="./scripts/viewReport.js"></script>

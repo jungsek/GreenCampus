@@ -680,50 +680,53 @@
     /* ================== Popup Modal ================== */
     .popup-modal {
         position: fixed;
-        top: 305px;
-        left: 700px;
-        width: 33%;
-        height: 38%;
-        padding: 15px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 35%;
+        padding: 30px;
         border-radius: 15px;
-        background-color: #7d898469; 
-        display: none; /* Initially hidden */
+        background-color: rgba(125, 137, 132, 0.4);
+        display: none;
         justify-content: center;
         align-items: center;
         z-index: 800;
-    }
-
-    .popup-content {
+      }
+      
+      .popup-content {
         background-color: white;
-        padding: 15px;
+        padding: 30px;
         border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         text-align: start;
-        width: 600px;
+        width: 100%;
         height: 100%;
-    }
-
-    .popup-content h2 {
+      }
+      
+      .popup-content h2 {
         font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .popup-content p {
-        font-size: 16px;
-    }
-
-    .close-btn {
-        font-size: 50px;
+        margin-bottom: 16px;
+      }
+      
+      .popup-content p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      
+      .close-btn {
+        font-size: 18px;
         cursor: pointer;
         position: absolute;
-        top: 10px;
-        right: 30px;
-        color: black;
+        top: 15px;
+        right: 15px;
+        color: #333;
         background-color: 0.3s;
-    }
-
-    .close-btn:hover {
-        color: red;
-    }
+      }
+      
+      .close-btn:hover {
+        color: #c0392b;
+      }
 
 
 
@@ -1053,6 +1056,49 @@
         gap: 10px;
     }
 
+    /* Adjust flex direction and item width for small screens */
+    .card-container.flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* Set cards to full width on small screens */
+    .card-container.flex > div {
+        width: 100%;
+    }
+
+    /* Adjust content card to take full width on small screens */
+    .content-card.second {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    /* Adjust titles and text size for readability */
+    .title, .goalTitlEU, .goalTitleCF {
+        font-size: 1.1rem;
+    }
+
+    /* Adjust bar containers for responsive progress bars */
+    .bar-container {
+        display: flex;
+        align-items: center;
+        height: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .usage-bar {
+        height: 100%;
+    }
+
+    /* Adjust legend items to stack vertically */
+    .color-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .legend-item {
+        margin-bottom: 0.5rem;
+    }
 
     /* ====== popup modal ====== */
     .popup-modal {
@@ -1366,3 +1412,4 @@
     justify-self: flex-end;  /* Align the items to the right */
     align-items: center;  /* Vertically align items to the center */
 }
+
