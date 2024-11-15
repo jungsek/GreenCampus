@@ -232,12 +232,6 @@ updateInputVisibility();
 
 
 
-
-
-// function flipCard(card) {
-//     card.classList.toggle('is-flipped');
-// 
-
 async function fetchEnergyUsageData() {
     let response = await fetch(`/energy-usage/school/${placeholderID}`, {
         method: 'GET',
@@ -321,19 +315,9 @@ function getTotalEnergyUsage(energyUsageData, breakdownData, selectedYear) {
         return itemYear === selectedYear;
     });
 
-    // Calculate the total energy usage, incorporating percentage from breakdownData
+    // Calculate the total energy usage by summing energy_kwh without considering the percentage breakdown
     const totalEnergyUsage = filteredEnergyUsage.reduce((total, item) => {
-        // Find matching breakdown entry for the current energy usage item
-        const breakdownEntries = breakdownData.filter(b => b.energyusage_id === item.id);
-
-        // Sum the energy usage * percentage for each breakdown entry associated with this usage item
-        const itemTotal = breakdownEntries.reduce((subtotal, breakdown) => {
-            // Multiply energy_kwh by the percentage (converted to a decimal)
-            return subtotal + (item.energy_kwh * (breakdown.percentage / 100));
-        }, 0);
-
-        // Add this item's total to the overall total
-        return total + itemTotal;
+        return total + item.energy_kwh;
     }, 0);
 
     return totalEnergyUsage;
@@ -484,7 +468,7 @@ async function initImpactCard(placeholderYear) {
 }
 
 
-// ==================== Doughnut Progress Chart ====================
+// ==================== Goal Progress Chart ====================
 async function initBarCharts() {
     let sumEnergy;
     let sumEnergyNow;
@@ -554,44 +538,74 @@ async function initBarCharts() {
 
 function updateChart(type, targetGoal, currentValue, unit) {
     const elements = {
-        noGoal: document.getElementById(`${type}NoGoalMessage`),
-        barContainer: document.getElementById(`${type}UsageBar`).parentElement,
-        usageBar: document.getElementById(`${type}UsageBar`),
-        targetContainer: document.getElementById(`${type}TargetContainer`),
-        utilizedValue: document.getElementById(`${type}UtilizedValue`),
-        goalValue: document.getElementById(`${type}GoalValue`)
+      noGoal: document.getElementById(`${type}NoGoalMessage`),
+      barContainer: document.getElementById(`${type}UsageBar`).parentElement,
+      usageBar: document.getElementById(`${type}UsageBar`),
+      targetContainer: document.getElementById(`${type}TargetContainer`),
+      utilizedValue: document.getElementById(`${type}UtilizedValue`),
+      goalValue: document.getElementById(`${type}GoalValue`)
     };
-
+  
     if (!targetGoal) {
-        elements.noGoal.style.display = 'block';
-        elements.barContainer.style.display = 'none';
-        elements.utilizedValue.style.display = 'none';
-        elements.goalValue.style.display = 'none';
-        return;
+      elements.noGoal.style.display = 'block';
+      elements.barContainer.style.display = 'none';
+      elements.utilizedValue.style.display = 'none';
+      elements.goalValue.style.display = 'none';
+      return;
     }
-
+  
     let goalValue;
     if (targetGoal.goal === 'tgtvalue') {
-        goalValue = targetGoal.metric_value;
+      goalValue = targetGoal.metric_value;
     } else {
-        goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
+      goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
     }
-
+  
     const maxValue = currentValue * (1 + Math.random() * 0.5);
     
-    // Update the display values
-    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`
+    // Calculate excess/progress towards goal
+    const difference = currentValue - goalValue;
+    const percentageDifference = ((difference) / goalValue * 100).toFixed(1);
     
-    elements.utilizedValue.textContent = `Utilized: ${currentValue.toFixed(2)} ${unit}`;
-    elements.goalValue.textContent = `Goal: ${goalValue.toFixed(2)} ${unit}`;
-
+    // Create status message based on progress
+    let statusMessage = '';
+    if (difference > 0) {
+      statusMessage = `Exceeded by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else if (difference < 0) {
+      statusMessage = `Under by ${Math.abs(difference).toFixed(2)} ${unit} (${Math.abs(percentageDifference)}%)`;
+    } else {
+      statusMessage = 'Exactly at goal';
+    }
+  
+    // Update the display values
+    document.getElementById(`goalTitle${type}`).innerText += ` by ${targetGoal.year}`;
+    elements.utilizedValue.innerHTML = `Utilized: ${currentValue.toFixed(2)} / ${goalValue} ${unit}<br><span class="status-message ${difference > 0 ? 'excess' : 'under'}">${statusMessage}</span>`;
+  
     // Update the bar and target line positions
     const usagePercentage = (currentValue / maxValue) * 100;
     const targetPercentage = (goalValue / maxValue) * 100;
     
     elements.usageBar.style.width = `${usagePercentage}%`;
+    
+    // Update the target container position
     elements.targetContainer.style.left = `${targetPercentage}%`;
-}
+    elements.targetContainer.style.display = 'block'; // Ensure the target container is visible
+  
+    // Add the traffic light logic for colors
+    if (currentValue <= goalValue) {
+      // Under or at goal (green)
+      elements.usageBar.classList.remove('yellow', 'red');
+      elements.usageBar.classList.add('green');
+    } else if (difference/goalValue * 100 <= 20) {
+      // Exceeded by up to 20% (yellow)
+      elements.usageBar.classList.remove('green', 'red');
+      elements.usageBar.classList.add('yellow');
+    } else {
+      // Exceeded by more than 20% (red)
+      elements.usageBar.classList.remove('green', 'yellow');
+      elements.usageBar.classList.add('red');
+    }
+  }
 
 
 initBarCharts();

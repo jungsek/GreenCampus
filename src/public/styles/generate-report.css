@@ -479,3 +479,117 @@ body, html, .main {
 .hidden {
     display: none !important;
 }
+/* generate-report.css */
+/* src/public/styles/generate-report.css */
+
+/* Existing styles... */
+
+/* PDF Export Styles */
+.pdf-export {
+  background: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.pdf-export h1, 
+.pdf-export h2, 
+.pdf-export h3, 
+.pdf-export h4 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.pdf-export p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.pdf-export ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.pdf-export li {
+  margin-bottom: 10px;
+}
+
+.pdf-export .strength, 
+.pdf-export .area-of-concern {
+  page-break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+.pdf-export .chart-placeholder {
+  margin: 20px 0;
+  height: 400px;
+}
+
+.pdf-export canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.pdf-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 9999;
+}
+
+/* Hide download button in print */
+@media print {
+  #downloadPdfBtn {
+      display: none;
+  }
+}
+
+.report-output canvas {
+  max-height: 500px !important;
+}
+
+.chart-container {
+  height: 500px;
+  max-height: 500px;
+  position: relative;
+  margin: 20px 0;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+.chart-placeholder, .area-of-concern, .strength {
+  page-break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.chart-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.report-output {
+  margin: 20px 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h2, h3, p {
+  margin-bottom: 16px;
+}
+
+h1, h2, h3 {
+  font-weight: bold !important;
+}
