@@ -9,6 +9,8 @@ const predictionsRoute = require("./predictionsRoute.js");
 const goalRoute = require("./goalRoute.js")
 const campaignRoute = require("./campaignRoute.js")
 const analyseChartRoute = require("./analyseChartRoute.js");
+const chatbotRoute = require("./chatbotRoute.js");
+
 
 const route = (app, upload, getPool) => {
     userRoute(app, upload, getPool);
@@ -22,6 +24,7 @@ const route = (app, upload, getPool) => {
     goalRoute(app, upload, getPool);
     campaignRoute(app, upload, getPool);
     analyseChartRoute(app, upload, getPool);
+    chatbotRoute(app, upload, getPool);
 };
 
 module.exports = route;

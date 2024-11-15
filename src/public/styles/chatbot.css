@@ -1,0 +1,288 @@
+/* Chatbot specific styles with 'gc-' prefix to avoid conflicts */
+.gc-chat-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+
+.gc-hidden {
+    display: none !important;
+}
+
+.gc-chat-header {
+    background-color: #059669;
+    color: white;
+    padding: 12px 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gc-chat-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gc-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.gc-chat-messages {
+    flex-grow: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+
+.gc-message {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.gc-user-message {
+    background-color: #059669;
+    color: white;
+    margin-left: auto;
+}
+
+.gc-bot-message {
+    background-color: #e9ecef;
+    color: #212529;
+    margin-right: auto;
+}
+
+.gc-chat-input-container {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #e2e8f0;
+    background-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.gc-chat-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.gc-chat-input:focus {
+    outline: none;
+    border-color: #059669;
+}
+
+.gc-send-btn {
+    background-color: #059669;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+
+.gc-chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 10px;
+    background-color: white;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: transform 0.2s;
+}
+
+.gc-chat-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Loading animation */
+.gc-typing-indicator {
+    display: flex;
+    padding: 8px;
+    gap: 4px;
+}
+
+.gc-typing-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #059669;
+    border-radius: 50%;
+    animation: gc-typing 1.4s infinite ease-in-out;
+}
+
+.gc-typing-dot:nth-child(1) { animation-delay: 0s; }
+.gc-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.gc-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes gc-typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+/* Add these styles to your existing chatbot.css */
+
+.gc-typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin: 8px 0;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    width: fit-content;
+}
+
+.gc-typing-dot {
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #059669;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: gc-typing 1s infinite ease-in-out;
+}
+
+.gc-typing-dot:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.gc-typing-dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.gc-typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes gc-typing {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.gc-hidden {
+    display: none !important;
+}
+
+/* Disable input while loading */
+.gc-chat-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.gc-send-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Message styling */
+.gc-message {
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.5;
+}
+
+.gc-user-message {
+    background-color: #059669;
+    color: white;
+    margin-left: auto;
+}
+
+.gc-bot-message {
+    background-color: #f0f2f5;
+    color: #1a1a1a;
+    margin-right: auto;
+}
+
+/* Formatted content styling */
+.gc-bot-message ul, 
+.gc-bot-message ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+.gc-bot-message li {
+    margin: 4px 0;
+}
+
+.gc-bot-message p {
+    margin: 8px 0;
+}
+
+.gc-bot-message strong {
+    font-weight: 600;
+}
+
+.gc-bot-message h1, 
+.gc-bot-message h2, 
+.gc-bot-message h3, 
+.gc-bot-message h4 {
+    margin: 16px 0 8px 0;
+    font-weight: 600;
+}
+
+.gc-bot-message code {
+    background-color: #e8e8e8;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.gc-bot-message a {
+    color: #2b7de9;
+    text-decoration: none;
+}
+
+.gc-bot-message a:hover {
+    text-decoration: underline;
+}
+
+/* Add divider between different points */
+.gc-bot-message hr {
+    margin: 12px 0;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+}
