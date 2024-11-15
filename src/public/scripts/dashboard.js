@@ -25,7 +25,12 @@ const yearinput = document.getElementById('goalYear');
 const submitgoalbtn = document.querySelector('#submitnewgoalbtn');
 const yesConfirmButton = document.getElementById('yesconfirmButton');
 const noConfirmButton = document.getElementById('noconfirmButton');
+const downloadCsvBtn = document.querySelector('.rightbar-container button[title="Download to CSV"]');
+const downloadPdfBtn = document.getElementById('downloadPdfBtn');
 
+downloadPdfBtn.addEventListener('click', () => {
+    window.location.href = 'generateReport.html';
+});
 // Function to show goal popup
 function showGoalPopup() {
     goalPopup.classList.add('visible');
@@ -1332,3 +1337,151 @@ document.querySelectorAll('.analyse-chart-btn1, .analyse-chart-btn2').forEach(bu
         window.location.href = `analyseChart.html?chartType=${chartType}&year=${selectedYear}&schoolId=${schoolId}`;
     });
 });
+
+function downloadDashboardDataAsCsv() {
+    const selectedYear = parseInt(document.getElementById('yearsFilter').value);
+
+    // Create temporary tables to hold the data
+    const tempContainer = document.createElement('div');
+    tempContainer.style.display = 'none';
+
+    // Create Energy Usage Table
+    const energyTable = document.createElement('table');
+    energyTable.id = 'tempEnergyUsageTable';
+
+    // Create Carbon Footprint Table
+    const carbonTable = document.createElement('table');
+    carbonTable.id = 'tempCarbonFootprintTable';
+
+    // Create Energy Breakdown Table
+    const breakdownTable = document.createElement('table');
+    breakdownTable.id = 'tempEnergyBreakdownTable';
+
+    // Add tables to container
+    tempContainer.appendChild(energyTable);
+    tempContainer.appendChild(carbonTable);
+    tempContainer.appendChild(breakdownTable);
+    document.body.appendChild(tempContainer);
+
+    // Fetch all necessary data
+    Promise.all([
+        fetch(`/api/energy-usage/${placeholderID}/monthly/${selectedYear}`),
+        fetch(`/api/carbon-footprint/${placeholderID}/year/${selectedYear}`),
+        fetch(`/api/energy-breakdown/${placeholderID}/year/${selectedYear}`)
+    ])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(([energyData, carbonData, breakdownData]) => {
+        // Populate Energy Usage Table
+        energyTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Energy Usage (kWh)</th>
+                    <th>Average Temperature (°C)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${energyData.map(item => {
+                    return `
+                        <tr>
+                            <td>${item.month}</td>
+                            <td>${item.energy_kwh.toFixed(2)}</td>
+                            <td>${item.avg_temperature_c.toFixed(1)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        `;
+
+        // Populate Carbon Footprint Table
+        carbonTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Carbon Emissions (tons)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${carbonData.map(item => `
+                    <tr>
+                        <td>${new Date(item.timestamp).toLocaleString('default', { month: 'long' })}</td>
+                        <td>${item.total_carbon_tons.toFixed(2)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+
+        // Populate Energy Breakdown Table
+        breakdownTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Percentage (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${breakdownData.map(item => `
+                    <tr>
+                        <td>${item.month}</td>
+                        <td>${item.location}</td>
+                        <td>${item.category}</td>
+                        <td>${item.percentage}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+
+        // Create CSV content using the same function as viewData.js
+        const energyUsageData = tableToCsv('tempEnergyUsageTable');
+        const carbonFootprintData = tableToCsv('tempCarbonFootprintTable');
+        const energyBreakdownData = tableToCsv('tempEnergyBreakdownTable');
+
+        // Combine data
+        const csvContent = `Energy Usage\n${energyUsageData}\n\nCarbon Footprint\n${carbonFootprintData}\n\nEnergy Breakdown\n${energyBreakdownData}`;
+
+        // Create and trigger download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const downloadLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = `Dashboard_Data_${selectedYear}.csv`;
+        downloadLink.click();
+        URL.revokeObjectURL(url);
+
+        // Clean up temporary elements
+        document.body.removeChild(tempContainer);
+    })
+    .catch(error => {
+        console.error('Error downloading CSV:', error);
+        alert('An error occurred while downloading the CSV file.');
+        // Clean up temporary elements in case of error
+        if (document.body.contains(tempContainer)) {
+            document.body.removeChild(tempContainer);
+        }
+    });
+}
+function tableToCsv(tableId) {
+    const table = document.getElementById(tableId);
+    let csv = '';
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(row => {
+        const cols = row.querySelectorAll('th, td');
+        const rowData = [];
+        cols.forEach(col => {
+            // Escape commas and quotes
+            let data = col.innerText.replace(/"/g, '""');
+            if (data.indexOf(',') > -1 || data.indexOf('"') > -1) {
+                data = `"${data}"`;
+            }
+            rowData.push(data);
+        });
+        csv += rowData.join(',') + '\n';
+    });
+    return csv.trim();
+}
+
+// Add event listener for the CSV download button
+downloadCsvBtn.addEventListener('click', downloadDashboardDataAsCsv);
+
