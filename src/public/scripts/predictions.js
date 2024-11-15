@@ -314,9 +314,13 @@ async function generatePredictions() {
 function downloadPredictionsAsPDF() {
   const predictionsContent = document.getElementById('predictionComponents');
 
+   // Temporarily hide the download button
+   const downloadBtn = document.getElementById('downloadPdfBtn');
+   downloadBtn.style.display = 'none';
+
     // Define PDF options
     const opt = {
-      margin: [0.25, 0.25, 0.25, 0.25], // [top, left, bottom, right] in inches
+      margin: [0.25, 0, 0.25, 0.25], // [top, left, bottom, right] in inches
       filename: 'Predictions.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
@@ -356,7 +360,11 @@ function downloadPredictionsAsPDF() {
             chart.style.height = '500px';
             chart.style.width = '100%';
           });
-          document.body.removeChild(loadingDiv);
+          // Show the download button again
+          downloadBtn.style.display = 'block';
+          if (typeof loadingDiv !== 'undefined' && loadingDiv) {
+              document.body.removeChild(loadingDiv);
+          }
       })
         .catch(error => {
             console.error('PDF generation error:', error);
