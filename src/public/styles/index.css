@@ -5,11 +5,11 @@
     height: 36vw;
 }
 
-.h-dots{
+.h-dots {
     display: inline-block;
     margin-left: calc(10% + 2vw);
-    width: 2.8vw;
-    margin-top: -16.9vw;
+    width: 30vw; /* Increased width */
+    margin-top: -5vw; /* Adjusted margin-top for better positioning */
     object-fit: contain;
 }
 
@@ -17,11 +17,10 @@
     display: inline-block; /*make it same size as text */
     font-size: 2.6vw;
     color: white;
-    
 }
 
 .banner-desc{
-    margin-left: 5.5vw; /*align with the ITMastermindz text in the navbar*/
+    margin-left: 10.5vw; /*align with the ITMastermindz text in the navbar*/
     margin-top: 8.2vw;
     line-height: 110%; /*default line height was too big*/
     height: 100%;
