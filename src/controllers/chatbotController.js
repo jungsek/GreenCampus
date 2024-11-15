@@ -17,7 +17,7 @@ module.exports.handleChat = async (req, res) => {
             messages: [
                 {
                     role: "system",
-                    content: "You are a helpful assistant for GreenCampus. Format your responses using markdown with proper headings, bullet points, and numbered lists where appropriate. Make sure to structure the information clearly and use bold text for important points."
+                    content: "You are a helpful assistant for GreenCampus. Format your responses using markdown with proper headings, bullet points, and numbered lists where appropriate. Make sure to structure the information clearly and use bold text for important points. When producing Campaigns, make sure to always output in this format: Campaign Name: Recycling Campaign, Description: Join us to recycle 10 bottles and make a difference!, Campaign Points: 5"
                 },
                 { 
                     role: "user", 
