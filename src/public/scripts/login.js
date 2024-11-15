@@ -43,7 +43,13 @@ async function login(){
       }
       
     //redirect user to courses
-    window.location.href = "../index.html"
+    if (role == 'student'){
+      window.location.href = "../studentcampaignpage.html"
+    }
+    else {
+      window.location.href = "../dashboard.html"
+    }
+    
     
     
 }
