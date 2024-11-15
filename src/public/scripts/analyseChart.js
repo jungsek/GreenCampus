@@ -1531,7 +1531,7 @@ const monthlyAnalysisCarbon = {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: 1.5,
+                aspectRatio: 1,
                 interaction: {
                     mode: 'index',
                     intersect: false,
