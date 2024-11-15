@@ -1413,3 +1413,18 @@
     align-items: center;  /* Vertically align items to the center */
 }
 
+/* Styles for PDF page breaks */
+.pdf-page {
+    page-break-after: always;
+}
+
+@media print {
+    .pdf-page {
+        page-break-after: always;
+    }
+}
+/* Add to your CSS file */
+.canvas-container {
+    width: 100% !important;
+    height: auto !important;
+}
