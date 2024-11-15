@@ -1,6 +1,6 @@
 // Add this to your existing JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    let role = 'student' // temp
+    let role = sessionStorage.getItem('role')
     let navbar = document.createElement('div')
     if (role == 'student') {
         navbar.classList.add('studentnav-placeholder')
