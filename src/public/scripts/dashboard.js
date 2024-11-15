@@ -416,7 +416,6 @@ async function initImpactCard(placeholderYear) {
     const carbonFootprintChangeElement = document.querySelector(".trend1");
     const energyUsageChangeElement = document.querySelector(".trend2");
 
-
     if (yearElement) {
         yearElement.innerText = `${placeholderYear}'s Impact`;
     }
