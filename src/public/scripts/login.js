@@ -44,7 +44,7 @@ async function login(){
       
     //redirect user to courses
     if (role == 'student'){
-      window.location.href = "../studentcampaignpage.html"
+      window.location.href = "../studentcampaign.html"
     }
     else {
       window.location.href = "../dashboard.html"
