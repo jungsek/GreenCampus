@@ -1,3 +1,9 @@
+guardLoginPage();
+
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 placeholderID = 1; //placeholder until school id can be transferred from login
 placeholderYear = 2024
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; //For labeling of charts
