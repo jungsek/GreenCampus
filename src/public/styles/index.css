@@ -1,0 +1,162 @@
+
+.banner{
+    background-color: #59927D;
+    background-image: url('../assets/home/banner-pattern.png');
+    height: 36vw;
+}
+
+.h-dots {
+    display: inline-block;
+    margin-left: calc(10% + 2vw);
+    width: 30vw; /* Increased width */
+    margin-top: -5vw; /* Adjusted margin-top for better positioning */
+    object-fit: contain;
+}
+
+#heading{
+    display: inline-block; /*make it same size as text */
+    font-size: 2.6vw;
+    color: white;
+}
+
+.banner-desc{
+    margin-left: 10.5vw; /*align with the ITMastermindz text in the navbar*/
+    margin-top: 8.2vw;
+    line-height: 110%; /*default line height was too big*/
+    height: 100%;
+}
+
+#heading-desc{
+    margin-top: 2.5vw;
+    font-size: 1.0vw;
+    color: #E1E1E1;
+    width: 33.5vw;
+}
+
+.join-btn{
+    /*set button style*/
+    border-radius: 30px;
+    /*set text style */
+    font-size: 1.15vw;
+    color: #ffffff;
+    /*set size */
+    padding-right: 2vw;
+    padding-left: 2vw;
+    padding-top: 1.4vw;
+    padding-bottom: 1.4vw;
+    /*set position */
+    margin-top: 2.5vw;
+    /*set drop shadow*/
+    box-shadow: 0px 6px 17px 0px #245D51;
+}
+
+#banner-man{
+    width: 28vw;
+    margin-top: auto; /*align to bottom*/
+    object-fit: contain;
+    margin-left: -6vw; /*move to left*/
+    z-index: 9; /*ensure it says on top of v-dots*/
+}
+
+.v-dots{
+    margin-top: auto; /*align to bottom*/
+    margin-bottom: 1vw; /*slightly above bottom*/
+    width: 9vw;
+    object-fit: contain; /*keep aspect ratio */
+    margin-left: -9vw; /*move to left*/
+}
+
+.why-join-box{
+    border-radius: 16px;
+    box-shadow: 0.91px 4.57px 45.7px 0 #54637A33;
+    width: 30%; /*since there are 3 of these boxes, max width is 33%. Set to 30% to give 10% for spacing*/
+    margin-bottom: 4vw;
+}
+
+.why-join-desc{
+    /*margins*/
+    margin-top: 2vw; 
+    margin-left: 5%; 
+    margin-right: 5%; 
+    margin-bottom: 2vw; 
+    /*text css*/
+    color: #6F6B80; 
+    font-size: 0.85vw; 
+    text-align: center;
+}
+
+.section-title{
+    /*use width 100% and text align center to center text on parent (most likely screen)*/
+    width: 100%; 
+    text-align: center; 
+    font-size: 1.45vw; 
+    margin-top: 4vw; 
+    display: inline-block; /*use in-line so magin top affects the title and not the parent element*/
+}
+
+.icon-circle {
+    width: 22%;
+    padding-top: 22%;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative; /*Set relative position so icon can use absolute to center*/
+}
+
+.start-now{
+    text-decoration: none; /*remove underline*/
+    color: white;
+    border-radius: 30px;
+    border: 0.07vw solid white;
+    padding: 0.6vw 2.5vw;
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle i {
+    color: black;  /* Your green color */
+    font-size: 38px; /* Adjust size as needed */
+    margin-top: -50px;
+}
+
+.start-now {
+    background: white;
+    color: #59927D;
+    padding: 12px 32px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+.start-now:hover {
+    background: transparent;
+    color: white;
+}
+
+
+.join-btn {
+    background: white;
+    color: #59927D;
+    padding: 12px 32px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+.join-btn:hover {
+    background: transparent;
+    color: white;
+}
+
+

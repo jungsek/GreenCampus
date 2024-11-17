@@ -155,7 +155,7 @@ async function insertData(connection) {
   await connection.request().query(`
       -- First insert the lecturers (without school_id since they're principals)
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
-      VALUES ('George', 'Wilson', 'george@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'lecturer', null);
+      VALUES ('George', 'Wilson', 'george@noom.com', '$2b$10$4eIfPXGkq6MI.lQ3DKuVm.GWY3HIQNIlib78kJqloNbrA4pGx5Ljm', 'lecturer', null);
       
       INSERT INTO Users (first_name, last_name, email, password, role, school_id)
       VALUES ('Regina', 'William', 'regina@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'lecturer', null);
@@ -217,7 +217,7 @@ async function insertData(connection) {
 
       -- Finally insert the students with their school_ids
       INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
-      VALUES ('Toby', 'Dean', 'toby@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 1, 0);
+      VALUES ('Toby', 'Dean', 'toby@noom.com', '$2b$10$4eIfPXGkq6MI.lQ3DKuVm.GWY3HIQNIlib78kJqloNbrA4pGx5Ljm', 'student', 1, 0);
       
       INSERT INTO Users (first_name, last_name, email, password, role, school_id, points)
       VALUES ('Sarah', 'Lee', 'sarah@noom.com', '$2a$10$EOx5JueXvEFefFQQm63YC.v2SwPOyZMKqcPcXY9HAW253JijH3/IO', 'student', 2, 6);

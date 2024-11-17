@@ -416,7 +416,6 @@ async function initImpactCard(placeholderYear) {
     const carbonFootprintChangeElement = document.querySelector(".trend1");
     const energyUsageChangeElement = document.querySelector(".trend2");
 
-
     if (yearElement) {
         yearElement.innerText = `${placeholderYear}'s Impact`;
     }
@@ -566,7 +565,7 @@ function updateChart(type, targetGoal, currentValue, unit) {
       goalValue = currentValue * ((100 - targetGoal.metric_value)/100);
     }
   
-    const maxValue = currentValue * (1 + Math.random() * 0.5);
+    const maxValue = currentValue * (0.7 + Math.random() * (0.9-0.5) + 0.9);
     
     // Calculate excess/progress towards goal
     const difference = currentValue - goalValue;

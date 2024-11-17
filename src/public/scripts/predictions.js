@@ -313,10 +313,8 @@ async function generatePredictions() {
 // Function to Download Predictions as a PDF
 function downloadPredictionsAsPDF() {
   const predictionsContent = document.getElementById('predictionComponents');
-
-   // Temporarily hide the download button
-   const downloadBtn = document.getElementById('downloadPdfBtn');
-   downloadBtn.style.display = 'none';
+    const downloadBtn = document.getElementById('downloadPdfBtn'); 
+    downloadBtn.style.display = 'none';
 
     // Define PDF options
     const opt = {
@@ -360,10 +358,9 @@ function downloadPredictionsAsPDF() {
             chart.style.height = '500px';
             chart.style.width = '100%';
           });
-          // Show the download button again
-          downloadBtn.style.display = 'block';
-          if (typeof loadingDiv !== 'undefined' && loadingDiv) {
-              document.body.removeChild(loadingDiv);
+          downloadBtn.style.display = 'block'; 
+          if (typeof loadingDiv !== 'undefined' && loadingDiv) { 
+              document.body.removeChild(loadingDiv); 
           }
       })
         .catch(error => {
