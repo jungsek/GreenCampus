@@ -101,7 +101,7 @@ async function guardLoginPage(){
 
 //opposite of guardLoginPage, redirect user to home (course) page if they are logged in
 async function guardAlreadyLoginPage(){
-  if (await isLoggedIn()) location.href = "courses.html"
+  if (await isLoggedIn()) location.href = "index.html"
 }
 
 //returns the user id stored in local/session storage
