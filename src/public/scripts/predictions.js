@@ -318,7 +318,7 @@ function downloadPredictionsAsPDF() {
 
     // Define PDF options
     const opt = {
-      margin: [0.25, 0.25, 0.25, 0.25], // [top, left, bottom, right] in inches
+      margin: [0.25, 0, 0.25, 0.25], // [top, left, bottom, right] in inches
       filename: 'Predictions.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
