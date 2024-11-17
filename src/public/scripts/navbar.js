@@ -64,7 +64,7 @@ function logout(redirect=true){
     //remove role
     localStorage.removeItem("role")
     sessionStorage.removeItem("role")
-    if (redirect) window.location.href = "../index.html"
+    if (redirect) window.location.href = "../login.html"
 
 }
 

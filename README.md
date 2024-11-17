@@ -32,7 +32,12 @@ run ``npm run seed`` <br />
 You can also rerun this command to reset the database to its seeded form <br />
 The sql to seed the database can be found in src/database/seedScript.js <br />
 
+##Setup .env file
+in the .env file, change the contents to include the keys
+will be provided via PM
+
 ### Starting server
+``npm install``
 ``npm start`` (for nodemon) <br />
 or <br />
 ``node app.js``
