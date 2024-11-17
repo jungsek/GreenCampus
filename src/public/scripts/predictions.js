@@ -1,5 +1,10 @@
 // scripts/predictions.js
+guardLoginPage();
 
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 // Placeholder variable until school ID can be dynamically set
 const placeholderID = 1; // Example school ID
 
@@ -318,7 +323,7 @@ function downloadPredictionsAsPDF() {
 
     // Define PDF options
     const opt = {
-      margin: [0.25, 0.25, 0.25, 0.25], // [top, left, bottom, right] in inches
+      margin: [0.25, 0, 0.25, 0.25], // [top, left, bottom, right] in inches
       filename: 'Predictions.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 

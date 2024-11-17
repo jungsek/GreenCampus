@@ -1,3 +1,10 @@
+
+guardLoginPage();
+
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 document.addEventListener('DOMContentLoaded', () => {
     const yearSelect = document.getElementById('year');
     const fetchDataBtn = document.getElementById('fetchDataBtn');
