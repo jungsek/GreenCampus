@@ -45,8 +45,7 @@ const popupMessages = {
         message: `<strong>Average Operating Hours:</strong> 5 hours daily, primarily during lab activities.<br>
             <strong>Energy Consumption:</strong> Equipment accounts for approximately 10% of total energy use, varying by type and lab schedule.<br>
             <strong>Usage Peaks:</strong> High usage during lab hours, minimal at other times.<br>
-            <strong>Automation Coverage:</strong> Energy-saving automation is applied to reduce idle consumption.<br>
-            <strong>Maintenance Schedule:</strong> Equipment is serviced bimonthly to maintain efficient operation.<br><br>`,
+            <strong>Automation Coverage:</strong> Energy-saving automation is applied to reduce idle consumption.<br>`,
         recommendations: `<strong>AI Recommendations:</strong><br>
             1. Extend the use of energy-saving automation to cover all lab equipment, ensuring idle times are minimized.<br>
             2. Upgrade older equipment to energy-efficient models.<br>
