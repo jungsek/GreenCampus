@@ -1064,27 +1064,109 @@ function hexToRGBA(hex, opacity) {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
-// Popup functions
-function highlightSegment(segment) {
-    const popupTitle = document.getElementById("popupTitle");
-    const popupMessage = document.getElementById("popupMessage");
+// Unified popup functions
+function showPopup(category) {
+    const modal = document.getElementById('popupModal');
+    const title = document.getElementById('popupTitle');
+    const message = document.getElementById('popupMessage');
+    
+    if (popupMessages[category]) {
+        title.textContent = popupMessages[category].title;
 
-    popupTitle.textContent = popupMessages[segment].title;
-    popupMessage.innerHTML = popupMessages[segment].message;
+        const content = `
+            ${popupMessages[category].message}
+            <div class="recommendations-container" id="recommendations-${category}" style="display: none;">
+                <div class="recommendations-content">
+                    <!-- Recommendations will be populated dynamically -->
+                </div>
+            </div>
+            <div class="recommendations-btn-container">
+                <button class="show-recommendations-btn" onclick="toggleRecommendations('${category}')">
+                    <span class="button-text">Generate AI Recommendations</span>
+                </button>
+                <div class="animation-container" style="display: none;">
+                    <dotlottie-player 
+                        src="./assets/general/Animation - 1705413706609.json" 
+                        background="transparent" 
+                        speed="1" 
+                        loop 
+                        autoplay
+                        style="width: 50px; height: 50px;">
+                    </dotlottie-player>
+                </div>
+            </div>
+        `;
 
-    document.getElementById("popupModal").style.display = "flex";
+        message.innerHTML = content;
+        modal.style.display = 'flex';
+    }
 }
+
+async function toggleRecommendations(category) {
+    const recommendationsContainer = document.getElementById(`recommendations-${category}`);
+    const recommendationsContent = recommendationsContainer.querySelector('.recommendations-content');
+    const btnContainer = document.querySelector('.recommendations-btn-container');
+    const button = btnContainer.querySelector('.show-recommendations-btn');
+    const animationContainer = btnContainer.querySelector('.animation-container');
+    
+    // Hide button and show animation
+    button.style.display = 'none';
+    animationContainer.style.display = 'flex';
+    
+    try {
+        // Call the API to get recommendations
+        const response = await fetch(`/api/recommendations/${category}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryData: {
+                    title: popupMessages[category].title,
+                    message: popupMessages[category].message
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch recommendations');
+        }
+
+        const data = await response.json();
+        
+        // Populate recommendations content
+        recommendationsContent.innerHTML = `
+            ${data.recommendations}
+            ${data.keepItUp ? `<div class="keep-it-up">${data.keepItUp}</div>` : ''}
+        `;
+
+        // Show recommendations and hide animation after a short delay
+        setTimeout(() => {
+            recommendationsContainer.style.display = 'block';
+            animationContainer.style.display = 'none';
+        }, 1000);
+
+    } catch (error) {
+        console.error('Error generating recommendations:', error);
+        // Show error message to user
+        animationContainer.style.display = 'none';
+        button.style.display = 'block';
+        button.innerHTML = '<span class="button-text">Error - Try Again</span>';
+    }
+}
+
 
 function closePopup() {
-    document.getElementById("popupModal").style.display = "none";
+    const modal = document.getElementById('popupModal');
+    modal.style.display = 'none';
 }
 
-document.getElementById("popupModal").addEventListener("click", function(event) {
-    const popupContent = document.querySelector(".popup-content");
-    if (!popupContent.contains(event.target)) {
-        closePopup();
-    }
-});
+function highlightSegment(category) {
+    showPopup(category);
+}
+
+
+
 
 initPieChart();
 // ==================== Line Graph ====================
