@@ -1,5 +1,10 @@
 // scripts/analyseChart.js
+guardLoginPage();
 
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 document.addEventListener('DOMContentLoaded', () => {
     // Get query parameters
     const urlParams = new URLSearchParams(window.location.search);

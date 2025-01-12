@@ -1,6 +1,34 @@
 // controllers/energyBreakdownController.js
 const EnergyBreakdown = require("../models/energyBreakdown");
 
+const getRecommendations = async (req, res) => {
+    try {
+        const { category } = req.params;
+        const { categoryData } = req.body;
+
+        if (!categoryData || !categoryData.message) {
+            return res.status(400).json({ error: 'Missing category data' });
+        }
+
+        // Extract data from the message
+        const data = EnergyBreakdown.extractDataFromMessage(categoryData.message);
+        
+        // Generate the prompt
+        const prompt = EnergyBreakdown.generatePrompt(category, data);
+
+        // Get AI recommendations
+        const text = await EnergyBreakdown.generateRecommendations(prompt);
+
+        // Format the response
+        const formattedResponse = EnergyBreakdown.formatResponse(text);
+
+        res.json(formattedResponse);
+    } catch (error) {
+        console.error('Error in energy breakdown controller:', error);
+        res.status(500).json({ error: 'Failed to generate recommendations' });
+    }
+}
+
 // Get all energy breakdowns
 const getAllEnergyBreakdowns = async (req, res) => {
     try {
@@ -106,5 +134,6 @@ module.exports = {
     getEnergyBreakdownPerYearBySchool,
     createEnergyBreakdown,
     getBreakdownByCategory,
-    getPercentageByCategory
+    getPercentageByCategory,
+    getRecommendations
 };

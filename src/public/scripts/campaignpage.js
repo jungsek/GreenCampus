@@ -1,3 +1,9 @@
+guardLoginPage();
+
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 let placeholderID = 1;
 let currentCampaignID;
 let currentCampaigns = [];
