@@ -110,6 +110,15 @@ CREATE TABLE EnergyBreakdown (
     FOREIGN KEY (energyusage_id) REFERENCES EnergyUsage(id) ON DELETE CASCADE
 );
 
+CREATE TABLE CarbonBreakdown(
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    carbonfootprint_id INT NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    timestamp DATETIME NOT NULL,
+    percentage INT CHECK (percentage >= 0 AND percentage <= 100),
+    FOREIGN KEY (carbonfootprint_id) REFERENCES CarbonFootprint(id) ON DELETE CASCADE
+)
+
 -- Create Reports table
 CREATE TABLE Reports (
     id INT PRIMARY KEY IDENTITY,
@@ -1705,6 +1714,91 @@ VALUES
     (2, 0.5, '2021-11-30 12:00:00'),
     (2, 0.6, '2021-12-31 12:00:00');
 
+INSERT INTO CarbonBreakdown (carbonfootprint_id, category, timestamp, percentage)
+VALUES --THIS IS LITERALLY ONLY 2024 FOR SCHOOL 1
+-- January 2024 (0.8 total)
+(1, 'Energy Usage', '2024-01-31 12:00:00', 40),
+(1, 'Food Services', '2024-01-31 12:00:00', 20),
+(1, 'Waste Management', '2024-01-31 12:00:00', 15),
+(1, 'Water Usage', '2024-01-31 12:00:00', 15),
+(1, 'Transportation', '2024-01-31 12:00:00', 10),
+
+-- February 2024 (0.7 total)
+(1, 'Energy Usage', '2024-02-28 12:00:00', 35),
+(1, 'Food Services', '2024-02-28 12:00:00', 25),
+(1, 'Waste Management', '2024-02-28 12:00:00', 10),
+(1, 'Water Usage', '2024-02-28 12:00:00', 15),
+(1, 'Transportation', '2024-02-28 12:00:00', 15),
+
+-- March 2024 (0.9 total)
+(1, 'Energy Usage', '2024-03-31 12:00:00', 45),
+(1, 'Food Services', '2024-03-31 12:00:00', 20),
+(1, 'Waste Management', '2024-03-31 12:00:00', 15),
+(1, 'Water Usage', '2024-03-31 12:00:00', 10),
+(1, 'Transportation', '2024-03-31 12:00:00', 10),
+
+-- April 2024 (0.8 total)
+(1, 'Energy Usage', '2024-04-30 12:00:00', 40),
+(1, 'Food Services', '2024-04-30 12:00:00', 25),
+(1, 'Waste Management', '2024-04-30 12:00:00', 10),
+(1, 'Water Usage', '2024-04-30 12:00:00', 15),
+(1, 'Transportation', '2024-04-30 12:00:00', 10),
+
+-- May 2024 (0.9 total)
+(1, 'Energy Usage', '2024-05-31 12:00:00', 45),
+(1, 'Food Services', '2024-05-31 12:00:00', 20),
+(1, 'Waste Management', '2024-05-31 12:00:00', 10),
+(1, 'Water Usage', '2024-05-31 12:00:00', 15),
+(1, 'Transportation', '2024-05-31 12:00:00', 10),
+
+-- June 2024 (0.8 total)
+(1, 'Energy Usage', '2024-06-30 12:00:00', 35),
+(1, 'Food Services', '2024-06-30 12:00:00', 25),
+(1, 'Waste Management', '2024-06-30 12:00:00', 15),
+(1, 'Water Usage', '2024-06-30 12:00:00', 15),
+(1, 'Transportation', '2024-06-30 12:00:00', 10),
+
+-- July 2024 (1.0 total)
+(1, 'Energy Usage', '2024-07-31 12:00:00', 50),
+(1, 'Food Services', '2024-07-31 12:00:00', 20),
+(1, 'Waste Management', '2024-07-31 12:00:00', 15),
+(1, 'Water Usage', '2024-07-31 12:00:00', 10),
+(1, 'Transportation', '2024-07-31 12:00:00', 5),
+
+-- August 2024 (0.9 total)
+(1, 'Energy Usage', '2024-08-31 12:00:00', 45),
+(1, 'Food Services', '2024-08-31 12:00:00', 25),
+(1, 'Waste Management', '2024-08-31 12:00:00', 10),
+(1, 'Water Usage', '2024-08-31 12:00:00', 10),
+(1, 'Transportation', '2024-08-31 12:00:00', 10),
+
+-- September 2024 (1.0 total)
+(1, 'Energy Usage', '2024-09-30 12:00:00', 50),
+(1, 'Food Services', '2024-09-30 12:00:00', 20),
+(1, 'Waste Management', '2024-09-30 12:00:00', 15),
+(1, 'Water Usage', '2024-09-30 12:00:00', 10),
+(1, 'Transportation', '2024-09-30 12:00:00', 5),
+
+-- October 2024 (0.7 total)
+(1, 'Energy Usage', '2024-10-31 12:00:00', 35),
+(1, 'Food Services', '2024-10-31 12:00:00', 20),
+(1, 'Waste Management', '2024-10-31 12:00:00', 10),
+(1, 'Water Usage', '2024-10-31 12:00:00', 20),
+(1, 'Transportation', '2024-10-31 12:00:00', 15),
+
+-- November 2024 (0.8 total)
+(1, 'Energy Usage', '2024-11-30 12:00:00', 40),
+(1, 'Food Services', '2024-11-30 12:00:00', 25),
+(1, 'Waste Management', '2024-11-30 12:00:00', 10),
+(1, 'Water Usage', '2024-11-30 12:00:00', 15),
+(1, 'Transportation', '2024-11-30 12:00:00', 10),
+
+-- December 2024 (1.0 total)
+(1, 'Energy Usage', '2024-12-31 12:00:00', 50),
+(1, 'Food Services', '2024-12-31 12:00:00', 20),
+(1, 'Waste Management', '2024-12-31 12:00:00', 15),
+(1, 'Water Usage', '2024-12-31 12:00:00', 10),
+(1, 'Transportation', '2024-12-31 12:00:00', 5);
 
   `);
 }
