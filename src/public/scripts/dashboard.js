@@ -1137,7 +1137,6 @@ async function toggleRecommendations(category) {
         // Populate recommendations content
         recommendationsContent.innerHTML = `
             ${data.recommendations}
-            ${data.keepItUp ? `<div class="keep-it-up">${data.keepItUp}</div>` : ''}
         `;
 
         // Show recommendations and hide animation after a short delay
