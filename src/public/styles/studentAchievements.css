@@ -1,0 +1,18 @@
+.container {
+    padding-top: 100px;
+    background-color: #e6f7f1; /* Light green background */
+}
+
+.achievement-category {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.category-title {
+    color: #1B3C34;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
