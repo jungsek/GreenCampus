@@ -1,0 +1,27 @@
+.banner{
+    background-color: #32CB94;
+    background-image: url('../assets/home/banner-pattern.png');
+    height: 36vw;
+}
+
+.h-dots{
+    display: inline-block;
+    margin-left: calc(10% + 2vw);
+    width: 2.8vw;
+    margin-top: -16.9vw;
+    object-fit: contain;
+}
+
+#heading{
+    display: inline-block; /*make it same size as text */
+    font-size: 2.6vw;
+    color: #E1E1E1;
+    
+}
+
+#heading-desc{
+    margin-top: 2.5vw;
+    font-size: 0.9vw;
+    color: #E1E1E1;
+    width: 33.5vw;
+}
