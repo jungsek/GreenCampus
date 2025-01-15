@@ -242,28 +242,51 @@
             
             
                 <div class="bottom-graphs-container">
-                    <div class="bottom-graph-name-container">
-                        <div class="graph-name-container2">
-                            <span class="carbonFootprint" style="font-weight: bold; padding-right: 5px;" > Net Carbon Footprint CO₂ </span>
-                            <button class="btn btn-secondary analyse-chart-btn2" data-chart-type="carbon">Analyse Chart</button>
+                    <!-- Line Graph Side -->
+                    <div class="line-graph-side">
+                        <div class="bottom-graph-name-container">
+                            <div style="display: flex; max-width: 50%;">
+                                <span class="carbonFootprint">
+                                    <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i>
+                                    Net Carbon Footprint CO₂
+                                </span>
+                                <button class="btn btn-secondary analyse-chart-btn2" data-chart-type="carbon">Analyse Chart</button>
+                            </div>
+                            
+                            <!-- Adding back the yearMonthSelect filter -->
+                            <div class="yearMonthSelect-filter" style="font-size: 0.9rem;">
+                                <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
+                                <select id="yearMonthSelect">
+                                    <option value="years">Years</option>
+                                    <option value="months" selected>Months</option>
+                                </select>
+                            </div>
                         </div>
-                        
-                        <div class="yearMonthSelect-filter" style="font-size: 0.9rem;">
-                            <i class='bx bx-filter' style="margin-right: 5px; font-weight: bold;"></i>
-                            <select id="yearMonthSelect">
-                                <option value="years">Years</option>
-                                <option value="months" selected>Months</option>
-                            </select>
+                        <div class="line-graph-container">
+                            <canvas id="carbonFootprintGraph"></canvas>
                         </div>
                     </div>
-
-                    <div class="line-graph-container">
-                        <div style="position: relative; display: inline-block; width: 100%;">
-                            <canvas id="carbonFootprintGraph" style="margin-left: 10px; width: 100%; height: auto;"></canvas>
+                
+                    <!-- Pie Chart Side -->
+                    <div class="pie-chart-side">
+                        <div class="graph-name-container2">
+                            <span class="carbonFootprint">
+                                <i class='bx bx-line-chart' style="font-weight: bold; padding-right: 5px;"></i>
+                                Carbon Footprint Breakdown
+                            </span>
+                        </div>
+                        <div class="pieChart-container">
+                            <canvas id="pieChart2" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
+                            <div class="legendButtons" id="legendButtons2">
+                                <button onclick="highlightSegment('Energy Usage')" class="legend-button" data-segment="Energy Usage">Energy Usage</button>
+                                <button onclick="highlightSegment('Food Services')" class="legend-button" data-segment="Food Services">Food Services</button>
+                                <button onclick="highlightSegment('Transportation')" class="legend-button" data-segment="Transportation">Transportation</button>
+                                <button onclick="highlightSegment('Waste Management')" class="legend-button" data-segment="Waste Management">Waste Management</button>
+                                <button onclick="highlightSegment('Water Usage')" class="legend-button" data-segment="Water Usage">Water Usage</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div> 
 
         <!-- The Popup Structure -->
