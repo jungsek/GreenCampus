@@ -297,7 +297,18 @@ async function fetchEnergyBreakdownData() {
     let Edata = await response.json();
     return Edata;
 }
-
+async function fetchCarbonBreakdownData() {
+    let response = await fetch(`/carbon-breakdowns/school/${placeholderID}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        }
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    let Edata = await response.json();
+    return Edata;
+}
 
 // ==================== Impact Card ====================
 document.addEventListener("DOMContentLoaded", () => {
@@ -827,9 +838,11 @@ async function initEnergyTempChart() {
 initEnergyTempChart();
 
 
-let currentChart; // Global variable to hold the current chart instance
+let energyPieChart = null;
+let carbonPieChart = null;
 let uniqueLocations = [];
 let uniqueCategories = []; // Store unique categories for button visibility
+let uniqueCarbonCategories = [];
 let prepended = false;
 const colorMapping = {
     "Lighting": "#3498db",
@@ -841,10 +854,16 @@ const colorMapping = {
     "Food Waste Management": "#FFC0CB",
     "Sound Equipment": "#c5c6c7"
 };
-
+const colorMapCarbon = {
+    "Water Usage": "#1F77B4", // Blue (e.g., Transportation)
+    "Energy Usage": "#FF7F0E", // Orange (e.g., Energy Consumption)
+    "Food Services": "#2CA02C", // Green (e.g., Renewable Energy)
+    "Transportation": "#D62728", // Red (e.g., Industrial Emissions)
+    "Waste Management": "#9467BD"  // Purple (e.g., Waste Management)
+}
 async function initPieChart() {
     const fetchedData = await fetchEnergyBreakdownData();
-
+    const fetchedCarbonData = await fetchCarbonBreakdownData();
     // TO POPULATE DROPDOWN-------------------------
     fetchedData.forEach(data => {
         if (!uniqueLocations.includes(data.location)) {
@@ -852,6 +871,11 @@ async function initPieChart() {
         }
         if (!uniqueCategories.includes(data.category)) {
             uniqueCategories.push(data.category);
+        }
+    });
+    fetchedCarbonData.forEach(data => {
+        if (!uniqueCarbonCategories.includes(data.category)) {
+            uniqueCarbonCategories.push(data.category);
         }
     });
 
@@ -908,7 +932,6 @@ async function initPieChart() {
 
         return previousYearData;
     }
-
     // Function to aggregate data for a specific year
     function aggregateData(filteredData) {
         const aggregated = {};
@@ -925,15 +948,15 @@ async function initPieChart() {
         };
     }
 
+
     // Function to initialize the pie chart
     function initializePieChart(currentData, previousData) {
-        if (currentChart) {
-            currentChart.destroy();
+        if (energyPieChart) {
+            energyPieChart.destroy();
         }
-
-        // Map categories to fixed colors using colorMapping
+    
         const backgroundColors = currentData.Label.map(category => colorMapping[category] || '#c5c6c7');
-
+    
         const chartDataPie = {
             labels: currentData.Label,
             datasets: [{
@@ -941,7 +964,7 @@ async function initPieChart() {
                 backgroundColor: backgroundColors
             }]
         };
-
+    
         const pieChartOptions = {
             responsive: false,
             maintainAspectRatio: true,
@@ -982,29 +1005,18 @@ async function initPieChart() {
                 }
             }
         };
-
-        // Initialize the pie chart with the right-positioned legend
+    
         const pieCtx = document.getElementById('pieChart').getContext('2d');
-        currentChart = new Chart(pieCtx, {
+        energyPieChart = new Chart(pieCtx, {
             type: 'pie',
             data: chartDataPie,
             options: pieChartOptions,
             plugins: [ChartDataLabels]
         });
-
-        // Update legend buttons to match chart colors
-        const legendButtons = document.querySelectorAll('#legendButtons button');
-        legendButtons.forEach((button, index) => {
-            const category = button.getAttribute('data-segment');
-            const color = colorMapping[category] || '#c5c6c7';
-            button.style.backgroundColor = hexToRGBA(color, 0.65);
-            button.style.borderColor = color;
-            button.style.borderWidth = '3px';
-            button.style.borderStyle = 'solid';
-        });
-
+    
         showHideLegendButtons(currentData.Label);
     }
+    
 
     // Function to show/hide legend buttons
     function showHideLegendButtons(currentLabels) {
@@ -1017,38 +1029,129 @@ async function initPieChart() {
         });
     }
 
+    function initializeCarbonPieChart(currentData, previousData) {
+        if (carbonPieChart) {
+            carbonPieChart.destroy();
+        }
+    
+        const backgroundColors = currentData.Label.map(category => colorMapCarbon[category] || '#c5c6c7');
+    
+        const chartDataPie = {
+            labels: currentData.Label,
+            datasets: [{
+                data: currentData.Percentage,
+                backgroundColor: backgroundColors
+            }]
+        };
+    
+        const pieChartOptions = {
+            responsive: false,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'right',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const currentValue = tooltipItem.raw;
+                            const category = currentData.Label[tooltipItem.dataIndex];
+                            const previousValue = previousData.Percentage[previousData.Label.indexOf(category)] || 0;
+                            if (previousValue) {
+                                const change = ((currentValue - previousValue) / previousValue * 100).toFixed(1);
+                                return `${category}: ${currentValue}% (${change >= 0 ? '+' : ''}${change}% from last year)`;
+                            }
+                            return `${category}: ${currentValue}% (last year's data unavailable)`;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: 'white',
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        let percentage = (value * 100 / sum).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    }
+                }
+            }
+        };
+    
+        const pieCtx = document.getElementById('pieChart2').getContext('2d');
+        carbonPieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: chartDataPie,
+            options: pieChartOptions,
+            plugins: [ChartDataLabels]
+        });
+    
+        showHideCarbonLegendButtons(currentData.Label)
+    }
+    
+
+    // Function to show/hide legend buttons
+    function showHideCarbonLegendButtons(currentLabels) {
+        if (!currentLabels) return; // Guard clause to prevent undefined errors
+        
+        const legendButtons = document.querySelectorAll('#legendButtons2 button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            button.style.display = currentLabels.includes(category) ? 'inline-block' : 'none';
+        });
+    }
+
     // Function to update the pie chart
     function updatePieChart() {
         const selectedLocation = locationDropdown.value;
         const selectedYear = placeholderYear;
         
-        let filteredData = filterDataByLocation(fetchedData, selectedLocation);
-        let previousYearData;
 
+        let filteredData = filterDataByLocation(fetchedData, selectedLocation);
+        let filteredCarbonData = filterDataByLocation(fetchedCarbonData, selectedLocation);
+        let previousYearData;
+        let previousCarbonData;
         if (selectedMonth !== null) {
             filteredData = filterDataByMonth(filteredData, selectedYear, selectedMonth);
+            filteredCarbonData = filterDataByMonth(filteredCarbonData, selectedYear, selectedMonth);
             previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, selectedMonth);
+            previousCarbonData = getPreviousYearData(fetchedCarbonData, selectedLocation, selectedYear, selectedMonth);
         } else {
             filteredData = filterDataByYear(filteredData, selectedYear);
             previousYearData = getPreviousYearData(fetchedData, selectedLocation, selectedYear, null);
+            filteredCarbonData = filterDataByYear(filteredCarbonData, selectedYear);
+            previousCarbonData = getPreviousYearData(fetchedCarbonData, selectedLocation, selectedYear, null);
         }
 
+        const aggregatedCurrentCarbonData = aggregateData(filteredCarbonData);
+        const aggregatedPreviousCarbonData = aggregateData(previousCarbonData);
         const aggregatedCurrentData = aggregateData(filteredData);
         const aggregatedPreviousData = aggregateData(previousYearData);
         
         initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
+        initializeCarbonPieChart(aggregatedCurrentCarbonData, aggregatedPreviousCarbonData);
     }
 
     // Initialize with default data
     let allData = filterDataByLocation(fetchedData, "all_locations");
     allData = filterDataByYear(allData, placeholderYear);
     const previousYearData = getPreviousYearData(fetchedData, "all_locations", placeholderYear, null);
-    
+    let allCarbonData = filterDataByYear(fetchedCarbonData, placeholderYear);
+    const previousYearCarbonData = getPreviousYearData(fetchedData, "all_locations", placeholderYear, null);
     const aggregatedCurrentData = aggregateData(allData);
     const aggregatedPreviousData = aggregateData(previousYearData);
-    
+    const aggregatedCurrentCarbonData = aggregateData(allCarbonData);
+    const aggregatedPreviousCarbonData = aggregateData(previousYearCarbonData);
     initializePieChart(aggregatedCurrentData, aggregatedPreviousData);
-
+    initializeCarbonPieChart(aggregatedCurrentCarbonData, aggregatedPreviousCarbonData);
+    
     // Event listeners
     locationDropdown.addEventListener('change', updatePieChart);
     yearDropdown.addEventListener('change', updatePieChart);
@@ -1137,7 +1240,6 @@ async function toggleRecommendations(category) {
         // Populate recommendations content
         recommendationsContent.innerHTML = `
             ${data.recommendations}
-            ${data.keepItUp ? `<div class="keep-it-up">${data.keepItUp}</div>` : ''}
         `;
 
         // Show recommendations and hide animation after a short delay

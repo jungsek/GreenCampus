@@ -121,114 +121,148 @@ class EnergyBreakdown {
     }
 
     static categoryPrompts = {
-        Lighting: `Based on these lighting metrics:
-            - Average Daily Use: 12 hours
-            - After-Hours Use: Hallway and lobby lights remain on 2 hours past school hours.
+        Lighting: `You are an energy efficiency expert. Analyze the following lighting data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Average Daily Use: 10 hours
+            - After-Hours Use: Hallway and lobby lights remain on 2 hours past school hours
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
-
-            RECOMMENDATIONS:
-            1. Consider replacing the remaining 20% of non-LED fixtures with LEDs to further reduce energy consumption.<br>
-            2. Upgrade motion sensors to cover 90% of rooms for improved efficiency.<br>
-            3. Ensure that lights are dimmed during non-peak hours for all rooms, especially in less-used areas.`,
-
-        HVAC: `Based on this HVAC system data:
-            - Daily Operating Hours: 16 hours
-            - Monthly Energy Usage: 1500 kWh
-            - Average Temperature: 23 °C
-            - Peak Demands: Heating demand reaches 65 kW and cooling peaks at 50 kW.
+            Generate 3 specific, actionable recommendations to improve energy efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        HVAC: `You are an energy efficiency expert. Analyze the following HVAC data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Daily Operating Hours: 18 hours
+            - Monthly Energy Usage: 1,500 kWh
+            - Average Temperature: 22°C
+            - Peak Demands: Heating demand reaches 65 kW and cooling peaks at 50 kW
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
-
-            RECOMMENDATIONS:
-            1. Upgrade to more efficient heating and cooling units.<br>
-            2. Install smart thermostats for better temperature control.<br>
-            3. Implement regular maintenance checks to optimize performance.<br>`,
-
-        Refrigeration: `Based on the Refrigeration metrics:
-            - Monthly Energy Usage: 180 kWh
+            Generate 3 specific, actionable recommendations to improve HVAC efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Refrigeration: `You are an energy efficiency expert. Analyze the following refrigeration data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Monthly Energy Use: 180 kWh
             - Temperature Control: 4°C for refrigeration, -18°C for freezing
-            - Usage Patterns: Doors opened 12-30 times per day, increasing cooling demand.
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
-            RECOMMENDATIONS:
-            1. Ensure refrigeration doors are only opened when necessary to avoid energy spikes.<br>
-            2. Replace older units with newer, more efficient models to reduce consumption further.<br>
-            3. Monitor the performance of refrigeration units and adjust settings based on usage patterns to optimize energy use.<br>`,
-        
-        Computers: `Based on these computer usage metrics:
-            - Average Daily Usage: Computers are actively used for 6 hours daily.
-            - Power Consumption: Desktops consume 120W per unit, laptops 50W.
-            - Standby Power Use: Standby modes activate after 15 minutes of inactivity, covering 90% of devices.
-            - Total Lab Consumption: Computer labs consume around 300 kWh monthly.
+            - Usage Patterns: Doors opened 12-30 times per day
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
-
-            RECOMMENDATIONS:
-            1. Encourage users to fully shut down desktops after use, especially for extended periods.<br>
-            2. Consider upgrading to energy-efficient computers or laptops to further reduce consumption.<br>
-            3. Set up automated shutdowns after a certain period of inactivity across all devices.<br>`,
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
     
-        Equipment: `Based on this equipment usage data:
-            - Average Operating Hours: 5 hours daily, primarily during lab activities.
-            - Energy Consumption: Equipment accounts for approximately 10% of total energy use, varying by type and lab schedule.
-            - Usage Peaks: High usage during lab hours, minimal at other times.
-            - Automation Coverage: Energy-saving automation is applied to reduce idle consumption.
-            - Maintenance Schedule: Equipment is serviced bimonthly to maintain efficient operation.
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Computers: `You are an energy efficiency expert. Analyze the following computer usage data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Average Daily Usage: 6 hours
+            - Power Consumption: Desktops consume 120W per unit, laptops 50W
+            - Standby Power Use: 15 minutes inactivity threshold, 90% coverage
+            - Monthly Lab Consumption: 300 kWh
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
     
-            RECOMMENDATIONS:
-            1. Extend the use of energy-saving automation to cover all lab equipment, ensuring idle times are minimized.<br>
-            2. Upgrade older equipment to energy-efficient models.<br>
-            3. Encourage users to shut off equipment when not in use for extended periods to prevent unnecessary consumption.<br>`,
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
     
-        Appliances: `Based on this appliance usage data:
-            - Average Daily Use: Common appliances are used for about 3 hours daily.
-            - Energy Consumption: Energy-efficient models contribute to a 15% reduction in power use.
-            - Total Monthly Usage: Appliances consume around 200 kWh monthly across all units.
+        Equipment: `You are an energy efficiency expert. Analyze the following equipment data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Operating Hours: 5 hours daily
+            - Energy Consumption: 10% of total energy use
+            - Usage Pattern: Peak during lab hours
+            - Maintenance: Bimonthly servicing
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
     
-            RECOMMENDATIONS:
-            1. Continue to replace older appliances with newer, energy-efficient models.<br>
-            2. Set timers for appliances that are frequently used for short periods to limit energy consumption.<br>
-            3. Ensure that all appliances are in power-saving modes when not in use.<br>`,
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
     
-        FoodWasteManagement: `Based on this food waste management data:
-            - Average Waste Generated: About 30kg of food waste per week, with regular disposal and composting.
-            - Daily Disposal Frequency: Waste bins are emptied daily, compost bins weekly.
-            - Energy Use in Waste Management: Minimal direct energy use; disposal and composting are primarily manual processes.
+        Appliances: `You are an energy efficiency expert. Analyze the following appliance data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Daily Usage: 3 hours
+            - Energy Efficiency: 15% reduction from efficient models
+            - Monthly Usage: 200 kWh
             
-            Provide energy efficiency recommendations in exactly this format (include the HTML tags):
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
     
-            RECOMMENDATIONS:
-            1. Encourage waste reduction efforts, such as better portion control, to reduce the overall food waste generated.<br>
-            2. Increase the frequency of compost bin collections during peak waste generation times.<br>
-            3. Explore energy-efficient ways of processing organic waste, such as using solar-powered composting systems.<br>`
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        FoodWasteManagement: `You are an energy efficiency expert. Analyze the following waste management data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Weekly Waste: 30kg
+            - Disposal: Daily bin emptying, weekly composting
+            - Energy Usage: Minimal, mostly manual processes
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`
     };
 
     static async generateRecommendations(prompt) {
         try {
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const result = await model.generateContent(prompt);
+            
+            // Add specific formatting instructions
+            const enhancedPrompt = `${prompt}
+    
+            IMPORTANT FORMATTING RULES:
+            1. Do NOT use markdown formatting
+            2. Do NOT use code blocks or backticks
+            3. Do NOT include the word "html" in your response
+            4. Keep recommendations short and specific
+            5. Use ONLY the HTML tags shown in the example
+            6. Each recommendation must end with <br>
+            7. Start with <strong>AI Recommendations:</strong><br>`;
+            
+            const result = await model.generateContent({
+                contents: [{ 
+                    role: "user", 
+                    parts: [{ text: enhancedPrompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 20,
+                    topP: 0.8,
+                    maxOutputTokens: 500,  // Reduced to encourage conciseness
+                }
+            });
+    
             const response = await result.response;
             return response.text();
         } catch (error) {
             throw new Error(`Failed to generate AI recommendations: ${error.message}`);
         }
-    }
-
-    static generatePrompt(category, data) {
-        let prompt = this.categoryPrompts[category];
-        
-        Object.keys(data).forEach(key => {
-            const placeholder = `{${key}}`;
-            if (prompt.includes(placeholder)) {
-                prompt = prompt.replace(placeholder, data[key]);
-            }
-        });
-        
-        return prompt + "\n\nRemember to format the response exactly as shown above, including the <br> tags after each recommendation.";
     }
 
     static extractDataFromMessage(message) {
@@ -247,26 +281,41 @@ class EnergyBreakdown {
         return data;
     }
 
+    static generatePrompt(category, data) {
+        let prompt = this.categoryPrompts[category];
+        
+        // Replace placeholders with actual data
+        Object.keys(data).forEach(key => {
+            const placeholder = `{${key}}`;
+            if (prompt.includes(placeholder)) {
+                prompt = prompt.replace(placeholder, data[key]);
+            }
+        });
+        
+        return prompt;
+    }
+
     static formatResponse(text) {
         try {
-            // Extract recommendations
-            let recommendations = text.split('RECOMMENDATIONS:')[1]
-                ?.trim() || '';
+            // Remove markdown code blocks, backticks, curly braces, and unwanted characters
+            let cleanText = text
+                .replace(/```[^`]*```/g, '')    
+                .replace(/`/g, '')              
+                .replace(/html/g, '')           
+                .replace(/[{}]/g, '')           // Remove any curly braces in the text
+                .trim();
+            
+            // Ensure proper line breaks and clean any trailing punctuation
+            cleanText = cleanText
+                .replace(/\n/g, '')             
+                .replace(/\.+(<br>)/g, '.<br>') 
+                .replace(/(<br>)\.+/g, '<br>')  
+                .replace(/[.,{}]+$/, '')        
+                .trim()
+                .replace(/}$/, '');             // Explicitly remove any trailing curly brace
                 
-
-            // Clean up recommendations if needed
-            if (!recommendations.includes('<br>')) {
-                recommendations = recommendations
-                    .split('\n')
-                    .filter(line => line.trim().match(/^\d+\./))
-                    .join('<br>');
-            }
-
-            // Format the final response
             return {
-                recommendations: recommendations ? 
-                    `<strong>AI Recommendations:</strong><br>${recommendations}` : '',
-
+                recommendations: cleanText,      // Add trailing comma here
             };
         } catch (error) {
             console.error('Error formatting response:', error);
