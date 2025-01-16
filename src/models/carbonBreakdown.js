@@ -3,9 +3,10 @@ const sql = require("mssql");
 const dbConfig = require("../database/dbConfig");
 
 class CarbonBreakdown {
-    constructor(id, carbonfootprint_id, category, timestamp, percentage) {
+    constructor(id, carbonfootprint_id, location, category, timestamp, percentage) {
         this.id = id;
         this.carbonfootprint_id = carbonfootprint_id;
+        this.location = location;
         this.category = category;
         this.timestamp = timestamp;
         this.percentage = percentage;
@@ -15,6 +16,7 @@ class CarbonBreakdown {
         return new CarbonBreakdown(
             row.id,
             row.carbonfootprint_id,
+            row.location,
             row.category,
             row.timestamp,
             row.percentage

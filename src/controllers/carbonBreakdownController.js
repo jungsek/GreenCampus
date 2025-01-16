@@ -28,7 +28,8 @@ const getCarbonBreakdownByFootprint = async (req, res) => {
 };
 
 // Get energy breakdowns by school
-const getEnergyBreakdownBySchool = async (req, res) => {
+
+const getCarbonBreakdownBySchool = async (req, res) => {
     const schoolId = parseInt(req.params.schoolId);
     try {
         const breakdowns = await CarbonBreakdown.getCarbonBreakdownBySchool(schoolId);
@@ -104,6 +105,6 @@ const getPercentageByCategory = async (req, res) => {
 module.exports = {
     getAllCarbonBreakdowns,
     getCarbonBreakdownByFootprint,
-    getEnergyBreakdownBySchool,
+    getCarbonBreakdownBySchool,
     getCarbonBreakdownPerYearBySchool,
 };
