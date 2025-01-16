@@ -1718,6 +1718,7 @@ VALUES
     (2, 0.5, '2021-11-30 12:00:00'),
     (2, 0.6, '2021-12-31 12:00:00');
 
+
 INSERT INTO CarbonBreakdown (carbonfootprint_id, category, location, timestamp, percentage)
 VALUES 
 -- January 2024 (0.8 total)

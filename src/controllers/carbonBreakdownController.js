@@ -28,6 +28,7 @@ const getCarbonBreakdownByFootprint = async (req, res) => {
 };
 
 // Get energy breakdowns by school
+
 const getCarbonBreakdownBySchool = async (req, res) => {
     const schoolId = parseInt(req.params.schoolId);
     try {
