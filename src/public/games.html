@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="./styles/common.css" rel="stylesheet">
+    <link href="./styles/games.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Games</title>
+    </head>
+<body>
+
+<!-- Navbar (Placeholder) -->
+<div class="studentnav-placeholder"></div>
+
+<div class="particles" id="particles"></div>
+    
+<!-- Games Instruction Modal -->
+<button class="info-btn"><i class="fas fa-info-circle"></i></button>
+<div class="instruction-modal" id="gamesInstructionModal">
+    <div class="instruction-modal-content">
+        <button class="instruction-close-btn">&times;</button>
+        <h2 class="modal-title">Games Instructions</h2><br>
+        
+        <div class="instruction-section">
+            <h3>Greendle</h3>
+            <p>Test your knowledge of environmental words! Try to guess the 5-letter word in as few attempts as possible.</p>
+            
+            <div class="game-rules">
+                <h4>How to Play:</h4>
+                <ul>
+                    <li>Type a 5-letter word and press <b>ENTER</b></li>
+                    <li>The color of the tiles will change to show how close your guess was:</li>
+                </ul>
+                
+                <table class="rules-table">
+                    <tr>
+                        <td><div class="example-tile correct">A</div></td>
+                        <td>Letter is correct and in the right position</td>
+                    </tr>
+                    <tr>
+                        <td><div class="example-tile present">E</div></td>
+                        <td>Letter is in the word but in the wrong position</td>
+                    </tr>
+                    <tr>
+                        <td><div class="example-tile absent">G</div></td>
+                        <td>Letter is not in the word</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="scoring-section">
+                <h4>Scoring:</h4>
+                <p>Reward points are awarded based on how quickly you guess the word:</p>
+                <ul>
+                    <li><b>1st try:</b> 10 reward points</li>
+                    <li><b>2nd try:</b> 7 reward points</li>
+                    <li><b>3rd try:</b> 5 reward points</li>
+                    <li><b>4th try:</b> 3 reward points</li>
+                    <li><b>5th try:</b> 1 reward point</li>
+                    <li><b>Not solved:</b> 0 reward points</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="instruction-section">
+            <h3>Pop Quiz</h3>
+            <p>Test your environmental knowledge with our eco-friendly quiz!</p>
+            
+            <div class="quiz-rules">
+                <h4>How to Play:</h4>
+                <ul>
+                    <li>Answer multiple-choice questions about environmental topics</li>
+                    <li>Each question has a time limit</li>
+                    <li>Select your answer before time runs out</li>
+                    <li>Get immediate feedback on your answers</li>
+                </ul>
+            </div>
+
+            <div class="scoring-section">
+                <h4>Scoring:</h4>
+                <ul>
+                    <li>Correct answer: +10 points</li>
+                    <li>Incorrect answer: 0 points</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="logo-container">
+    <div class="title">ECO MASTER</div>
+    <div class="subtitle">Save the Planet, One Game at a Time</div>
+</div>
+
+<div class="button-container">
+    <button class="game-button greendle" data-bs-toggle="modal" data-bs-target="#greendleModal">
+        <span class="button-icon">🌱</span>
+        Greendle
+    </button>
+    
+    <button class="game-button quiz" onclick="location.href='quiz.html'">
+        <span class="button-icon">❓</span>
+        Pop Quiz
+    </button>
+</div>
+
+<!-- Greendle Modal -->
+<div class="modal fade" id="greendleModal" tabindex="-1" aria-labelledby="greendleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Your Greendle game content will go here -->
+                <div id="greendleGame"></div>
+                <header>
+                    <h1>Greendle</h1>
+                    <p>Guess the environmental word of the day!</p>
+                </header>
+            
+                <div class="game-container" id="gameBoard"></div>
+                <div class="keyboard" id="keyboard"></div>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatbot-placeholder"></div>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="./scripts/games.js"></script>
+<script src="./scripts/common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
