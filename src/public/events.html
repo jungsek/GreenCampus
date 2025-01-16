@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- stylesheets -->
+    <link href="./styles/common.css" rel="stylesheet">
+    <link href="./styles/events.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Events</title>
+  </head>
+<body>
+    
+</body>
+    <!--navbar-->
+    <div class="nav-placeholder"></div>
+
+    <!-- Main Container for the Campaigns -->
+    <div class="header" id="header">
+        <h1 class="header-title" id="headerTitle">Event Management</h1>
+        <button class="create-button" id="createButton" onclick="openCreatePopup()">
+            <i class='bx bx-plus'></i>
+            Create New Event
+        </button>
+    </div>
+
+     <!-- Event Sections -->
+     <div class="container">
+        <!-- Upcoming Events -->
+        <div class="event-section">
+            <h2 id="upcomingEventsHeader">Upcoming Events</h2>
+            <div class="event-grid" id="upcomingEvents">
+                <!-- Future events will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Past Events -->
+        <div class="event-section">
+            <h2 id="pastEventsHeader">Past Events</h2>
+            <div class="event-grid" id="pastEvents">
+                <!-- Past events will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Campaign Popup -->
+    <div class="popup" id="createPopup">
+        <div class="popup-content" id="popupContent">
+            <button class="close-button" id="closeButton" onclick="closeCreatePopup()">
+                <i class='bx bx-x'></i>
+            </button>
+            
+            <h2 class="event-title" id="popupTitle">Create New Event</h2>
+            
+            <form id="createForm">
+                <div class="form-group" id="eventNameGroup">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" class="form-control" id="eventName" required placeholder="Enter event name">
+                </div>
+                
+                <div class="form-group" id="descriptionGroup">
+                    <label for="eventDescription">Description</label>
+                    <textarea class="form-control" id="eventDescription" rows="4" required placeholder="Enter event description"></textarea>
+                </div>
+                
+                <div class="form-group" id="dateGroup">
+                    <label for="eventDate">Date</label>
+                    <input type="date" class="form-control" id="eventDate" required>
+                </div>
+                
+                <div class="form-actions" id="formActions">
+                    <button type="submit" class="submit-button" id="submitNewEventBtn">Create Event</button>
+                    <button type="button" class="cancel-button" onclick="closeCreatePopup()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modify Campaign Popup -->
+    <!-- <div class="popup" id="modifyPopup">
+        <div class="popup-content">
+            <button class="close-button" onclick="closeModifyPopup()">
+                <i class='bx bx-x'></i>
+            </button>
+            
+            <h2 class="campaign-title">Modify Campaign</h2>
+            
+            <form id="modifyForm">
+                <div class="form-group">
+                    <label for="modifyCampaignName">Campaign Name</label>
+                    <input type="text" class="form-control" id="modifyCampaignName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modifyCampaignDescription">Description</label>
+                    <textarea class="form-control" id="modifyCampaignDescription" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modifyCampaignPoints">Points (0-5)</label>
+                    <input type="number" class="form-control" id="modifyCampaignPoints" min="0" max="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modifyCampaignImage">Campaign Image</label>
+                    <div class="image-upload-container">
+                        <input type="file" class="form-control" id="modifyCampaignImage" accept="image/*">
+                        <input type="hidden" id="modifyImageBase64">
+                        <div class="image-preview-wrapper">
+                            <img id="modifyImagePreview" style="display: none; max-width: 100%; margin-top: 10px; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="submit-button" id="submitModifyCampaignBtn">Save Changes</button>
+                    <button type="button" class="cancel-button" onclick="closeModifyPopup()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <!-- Delete Confirmation Popup -->
+    <div class="popup" id="deleteConfirmationPopup">
+        <div class="popup-content">
+            <h2>Delete Event</h2>
+            <p>Are you sure you want to delete this event?</p>
+            <div class="form-actions">
+                <button id="confirmDeleteBtn" class="delete-button">Delete</button>
+                <button onclick="closeDeletePopup()" class="cancel-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="chatbot-placeholder"></div>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="./scripts/common.js"></script>
+    <script src="./scripts/events.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+</html>

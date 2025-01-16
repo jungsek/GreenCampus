@@ -11,6 +11,7 @@ const campaignRoute = require("./campaignRoute.js")
 const analyseChartRoute = require("./analyseChartRoute.js");
 const chatbotRoute = require("./chatbotRoute.js");
 const carbonBreakdownRoute = require("./carbonBreakdownRoute.js");
+const eventRoute = require("./eventRoute.js");
 
 const route = (app, upload, getPool) => {
     userRoute(app, upload, getPool);
@@ -26,6 +27,7 @@ const route = (app, upload, getPool) => {
     analyseChartRoute(app, upload, getPool);
     chatbotRoute(app, upload, getPool);
     carbonBreakdownRoute(app, upload, getPool);
+    eventRoute(app, upload, getPool);
 };
 
 module.exports = route;
