@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- stylesheets -->
+    <link href="./styles/common.css" rel="stylesheet">
+    <link href="./styles/studentAchievements.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Achievements for Students</title>
+  </head>
+<body>
+    
+</body>
+    <!--navbar-->
+    <div class="studentnav-placeholder"></div>
+
+    <!-- Main Container for the Achievements -->
+    <div class="a-container">
+      <!-- Title -->
+      <h1>Campaigns for Students</h1>
+      <!-- Achievement Cards -->
+        <div class="tab-content">
+          <!-- Habits Achievements -->
+          <div class="achievement-category">
+            <h3 class="category-title">Eco-Friendly Habits</h3>
+            <div class="row g-4">
+              <!-- Recycler -->
+              <div class="col-md-4">
+                <div class="card achievement-card h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-calendar-check achievement-icon'></i>
+                    <h5 class="card-title">Recycler</h5>
+                    <p class="card-text">Recycle 10 bottles in a week</p>
+                    <div class="progress mb-3">
+                      <div class="progress-bar" style="width: 80%"></div>
+                    </div>
+                    <small class="text-muted">Progress: 80%</small>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Knowledgable -->
+              <div class="col-md-4">
+                <div class="card achievement-card achievement-locked h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-medal achievement-icon'></i>
+                    <h5 class="card-title">Knowledgable</h5>
+                    <p class="card-text">Attempt 5 GreenCampus Quizzes</p>
+                    <div class="progress mb-3">
+                      <div class="progress-bar" style="width: 60%"></div>
+                    </div>
+                    <small class="text-muted">Progress: 60%</small>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Perfect Score -->
+              <div class="col-md-4">
+                <div class="card achievement-card h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-task achievement-icon'></i>
+                    <h5 class="card-title">Perfect Score</h5>
+                    <p class="card-text">Get 100% on any GreenCampus Quiz</p>
+                    <span class="badge bg-success">Achieved!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community Achievements -->
+          <div class="achievement-category">
+            <h3 class="category-title">Community Contributions</h3>
+            <div class="row g-4">
+              <!-- Clean Campus Crusader -->
+              <div class="col-md-4">
+                <div class="card achievement-card h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-group achievement-icon'></i>
+                    <h5 class="card-title">Clean Campus Crusader</h5>
+                    <p class="card-text">Participate in 3 campus clean-up campaigns</p>
+                    <div class="progress mb-3">
+                      <div class="progress-bar" style="width: 66%"></div>
+                    </div>
+                    <small class="text-muted">Progress: 2/3 completed</small>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Campaign Master -->
+              <div class="col-md-4">
+                <div class="card achievement-card h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-chat achievement-icon'></i>
+                    <h5 class="card-title">Campaign Master</h5>
+                    <p class="card-text">Sign up and complete any GreenCampus sustainability campaign.</p>
+                    <span class="badge bg-success">Achieved!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Efficiency Achievements -->
+          <div class="achievement-category">
+            <h3 class="category-title">Energy & Resource Efficiency</h3>
+            <div class="row g-4">
+              <!-- Light it Right -->
+              <div class="col-md-4">
+                <div class="card achievement-card achievement-locked h-100">
+                  <div class="card-body text-center">
+                    <i class='bx bx-time-five achievement-icon'></i>
+                    <h5 class="card-title">Light It Right</h5>
+                    <p class="card-text">Turn off lights in unused rooms 10 times in a week.</p>
+                    <div class="progress mb-3">
+                      <div class="progress-bar" style="width: 10%"></div>
+                    </div>
+                    <small class="text-muted">Progress: 1/10 completed</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="chatbot-placeholder"></div>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="./scripts/common.js"></script>
+    <script src="./scripts/studentAchievements.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+</html>
