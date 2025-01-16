@@ -485,6 +485,7 @@
         cursor: pointer;
         position: relative; /* Positioning for custom arrow */
         transition: background-color 0.3s ease;
+        
     }
 
     /* Hover effect for the dropdown */
@@ -617,7 +618,7 @@
         height: 100%;
     }
 
-    #pieChart {
+    #pieChart, #pieChart2 {
         margin-top: 40px;
         margin-left: -50px;
         margin-right: 50px;
@@ -637,20 +638,21 @@
         display: flex;
         transition: background-color 0.3s, color 0.3s;
         position: relative; 
+        overflow: visible;
     }
 
-    #legendButtons {
+    #legendButtons, #legendButtons2 {  /* Change this back to using IDs */
         display: grid;
         position: absolute;
         margin-left: 230px;
         margin-top: 25px;
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 7px; 
-        height: 50%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+        height:50%; 
         justify-items: center;
     }
 
-    #legendButtons button {
+    .legendButtons button {
         background-color: #eee;
         border: 1px solid #ccc;
         cursor: pointer;
@@ -672,7 +674,7 @@
     }
 
     /* Hover effect for buttons */
-    #legendButtons button:hover {
+    .legendButtons button:hover {
         background-color: #ddd;
     }
 
@@ -770,57 +772,125 @@
         text-align: center;
     }
 
-    
-
     /* ================== Line Graph ================== */
-    .bottom-graph-name-container {
-        font-size: 1.3rem;
-        font-weight: bold;
-        padding: 5px 10px;
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; /* Vertically center the elements */
-        width: 100%; /* Full width of container */
-        max-width: 100%; 
-    }
+    /* Bottom Graphs Container Layout - Matching Middle Container Style */
+.bottom-graphs-container {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+}
 
+/* Line Graph Side */
+.line-graph-side {
+    width: 70%;
+    height: 100%;
+}
 
-    .line-graph-container {
-        display: flex;
-        flex-grow: 1;
-        padding: 3px; 
-        height: 215px; 
-        width: 100%; 
-        border-radius: 8px; /* Slightly smaller border radius */
-        box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
-        text-align: left;
-        border: 1px solid #ddd;
-        background-color: white;
-        transition: background-color 0.3s, color 0.3s;
-        justify-content: space-between;
-    }
+.line-graph-container {
+    width: 100%;
+    height: 100%;
+    height: 271px;
+    border-radius: 8px;
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4);
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 15px;
+}
 
-    button.analyse-chart-btn2 {
-        background-color: #c8e6deba; /* Light green background */
-        color: black;
-        border: none;
-        padding: 5px 20px;
-        border-radius: 5px;
-        font-size: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-left: 10px;
-    }
-    
-    button.analyse-chart-btn2:hover {
-        background-color: #b2d6cb; /* Darken background on hover */
-    }
-    
-    button.analyse-chart-btn2:active {
-        background-color: #a0cfc0; /* Darker shade on click */
-    }
+/* Pie Chart Side */
+.pie-chart-side {
+    width: 30%;
+    height: 100%;
+}
 
+.pieChart-container {
+    height: 100%;
+    width: 100%;
+    min-height: 270px;
+    border-radius: 8px;
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4);
+    border: 1px solid #ddd;
+    background-color: white;
+    display: flex;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+    padding: 15px;
+}
+
+/* Graph Name Containers */
+.bottom-graph-name-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.graph-name-container2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Analysis Button */
+button.analyse-chart-btn2 {
+    background-color: #c8e6deba;
+    color: black;
+    border: none;
+    padding: 5px 20px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+button.analyse-chart-btn2:hover {
+    background-color: #b2d6cb;
+}
+
+button.analyse-chart-btn2:active {
+    background-color: #a0cfc0;
+}
+
+.carbonFootprint{
+    white-space: nowrap;
+  
+}
+/* Canvas Sizing */
+#carbonFootprintGraph {
+    width: 100%;
+    height: auto;
+    margin-left: 10px;
+}
+
+#pieChart2 {
+    margin-top: 40px;
+    margin-left: -50px;
+    margin-right: 50px;
+    height: 80px;
+    width: auto;
+    position: relative;
+}
     
 
     @media (min-width: 1444px) and (max-width: 1540px) {
@@ -844,13 +914,13 @@
         }
 
 
-        #legendButtons button {
+        .legendButtons button {
             width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
-        #pieChart {
+        #pieChart, #pieChart2 {
             flex: 0 0 250px; /* Fixed width, won't shrink */
             height: 170px;
             margin-left: -40px;
@@ -886,14 +956,14 @@
         }
 
 
-        #legendButtons button {
+        .legendButtons button {
             width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
 
-        #pieChart {
+        #pieChart, #pieChart2 {
             flex: 0 0 250px; /* Fixed width, won't shrink */
             height: 170px;
             margin-left: -50px;
@@ -1062,18 +1132,18 @@
             align-items: flex-start; /* Align to the left */
         }
 
-        #legendButtons {
+        .legendButtons {
             margin-top: 25px;
             height: auto;
         }
 
-        #legendButtons button {
+        .legendButtons button {
             width: 80%;
             height: 40px;
             font-size: 14px; 
         }
 
-        #pieChart {
+        #pieChart, #pieChart2 {
             margin-top: 40px;
             margin-left: -50px;
             margin-right: 50px;
@@ -1303,7 +1373,7 @@
     }
     
 
-    #pieChart {
+    #pieChart, #pieChart2 {
         height: 120px;
     }
 
@@ -1313,12 +1383,12 @@
         align-items: flex-start; /* Align to the left */
     }
 
-    #legendButtons {
+    .legendButtons {
         margin-top: 25px;
         height: auto;
     }
 
-    #legendButtons button {
+    .legendButtons button {
         width: 89%;
         height: 40px;
         font-size: 10px; 
