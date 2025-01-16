@@ -1,7 +1,14 @@
-.container {
-    padding-top: 100px;
+.a-container {
+    padding-top: 50px;
     background-color: #e6f7f1; /* Light green background */
 }
+
+.a-container h1 {
+    color: #1B3C34;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
 
 .achievement-category {
     background-color: white;
