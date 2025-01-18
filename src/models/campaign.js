@@ -3,10 +3,11 @@ const sql = require("mssql")
 const dbConfig = require("../database/dbConfig")
 
 class Campaign{
-    constructor(id, school_id, name, description, image, points) {
+    constructor(id, school_id, name, start_date, description, image, points) {
         this.id = id;
         this.school_id = school_id;
         this.name = name;
+        this.start_date = start_date;
         this.description = description;
         this.image = image;
         this.points = points;
@@ -17,6 +18,7 @@ class Campaign{
             row.id, 
             row.school_id, 
             row.name,
+            row.start_date,
             row.description,
             row.image,
             row.points
@@ -93,16 +95,23 @@ class Campaign{
     }
 
     static async createCampaign(newCampaignData) {
+        const formatDate = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
         const params = {
             "school_id": newCampaignData.school_id,
             "name": newCampaignData.name,
+            "start_date": formatDate(new Date()),
             "description": newCampaignData.description,
             "image": newCampaignData.image,
             "points": newCampaignData.points,
         }
         const result = await this.query(`
-            INSERT INTO Campaigns (school_id, name, description, image, points)
-            VALUES (@school_id, @name, @description, @image, @points);
+            INSERT INTO Campaigns (school_id, name, description, start_date, image, points)
+            VALUES (@school_id, @name, @description, @start_date, @image, @points);
             SELECT SCOPE_IDENTITY() AS id;
         `, params)
         const newId = result.recordset[0].id
@@ -114,6 +123,7 @@ class Campaign{
             "id": newCampaignData.id,
             "school_id": newCampaignData.school_id,
             "name": newCampaignData.name,
+            "start_date": newCampaignData.start_date,
             "description": newCampaignData.description,
             "image": newCampaignData.image,
             "points": newCampaignData.points,

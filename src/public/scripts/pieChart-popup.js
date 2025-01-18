@@ -70,5 +70,58 @@ const popupMessages = {
             1. Encourage waste reduction efforts, such as better portion control, to reduce the overall food waste generated.<br>
             2. Increase the frequency of compost bin collections during peak waste generation times.<br>
             3. Explore energy-efficient ways of processing organic waste, such as using solar-powered composting systems.<br>`
+    },
+
+    EnergyUsage: {
+        title: "Energy Usage",
+        message: `<strong>Energy Consumption:</strong> 6,000 kWh of energy per month across all buildings.<br>
+            <strong>Carbon Emissions:</strong> Estimated carbon emissions from energy use are 3,500 kg CO2 per month.<br>
+            <strong>Major Energy Consumers:</strong> Classroom lighting, computer labs, and HVAC systems.`,
+        recommendations: `<strong>AI Recommendations:</strong><br>
+            1. Install energy-efficient lighting systems, such as LEDs, in classrooms and hallways.<br>
+            2. Optimize HVAC settings to operate during peak hours and turn off when rooms are unoccupied.<br>
+            3. Incorporate renewable energy sources, such as solar panels, to offset energy consumption and reduce carbon emissions.<br>`
+    },
+    
+    FoodServices: {
+        title: "Cafeteria",
+        message: `<strong>Food Waste:</strong> Approximately 300 kg of food is wasted monthly in the school cafeteria.<br>
+            <strong>Food Production and Transportation:</strong> The carbon footprint from food production and transportation is approximately 800 kg CO2 per month.<br>
+            <strong>Waste Sources:</strong> Leftovers from student meals and kitchen overproduction.`,
+        recommendations: `<strong>AI Recommendations:</strong><br>
+            1. Reduce food waste by implementing pre-order systems to better match meal production with student preferences.<br>
+            2. Partner with local farms to source fresh ingredients and reduce transportation-related emissions.<br>
+            3. Introduce educational programs to encourage students to take only what they can eat and reduce leftovers.<br>`
+    },
+    
+    Transportation: {
+        title: "Transportation",
+        message: `<strong>Student and Staff Commuting:</strong> Total commuting distance for students and staff is approximately 1,200 km daily.<br>
+            <strong>School Bus Fleet:</strong> Diesel-powered buses contribute 1,000 kg CO2 emissions per month.<br>`,
+        recommendations: `<strong>AI Recommendations:</strong><br>
+            1. Expand bike parking facilities and encourage cycling by creating safe bike routes to school.<br>
+            2. Transition the school bus fleet to electric or hybrid vehicles to significantly reduce emissions.<br>
+            3. Launch a carpool program for staff and students to minimize individual car usage.<br>`
+    },
+    
+    WasteManagement: {
+        title: "Waste Management",
+        message: `<strong>Waste Generation:</strong> Generates 500 kg of waste monthly, with 150 kg being recycled.<br>
+            <strong>Major Waste Sources:</strong> Paper, food packaging, and single-use plastics.`,
+        recommendations: `<strong>AI Recommendations:</strong><br>
+            1. Increase recycling rates by placing clearly labeled bins in classrooms and common areas.<br>
+            2. Implement a composting program for food and organic waste from the cafeteria.<br>
+            3. Transition to reusable or biodegradable materials for food packaging and classroom supplies.<br>`
+    },
+    
+    WaterUsage: {
+        title: "Water Usage",
+        message: `<strong>Average Monthly Water Usage:</strong> 40,000 liters of water are used monthly.<br>
+            <strong>Water Heating:</strong> Water heating contributes to 15% of the school’s total energy consumption.<br>
+            <strong>Major Usage Areas:</strong> Restrooms, cafeteria, and sports facilities.`,
+        recommendations: `<strong>AI Recommendations:</strong><br>
+            1. Install low-flow faucets and toilets to reduce water consumption in restrooms.<br>
+            2. Use solar-powered water heaters to minimize the carbon footprint of water heating.<br>
+            3. Launch a water conservation campaign to educate students and staff about responsible water usage.<br>`
     }
 };

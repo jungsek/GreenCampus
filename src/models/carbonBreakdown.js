@@ -1,6 +1,8 @@
 
 const sql = require("mssql");
 const dbConfig = require("../database/dbConfig");
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 class CarbonBreakdown {
     constructor(id, carbonfootprint_id, location, category, timestamp, percentage) {
@@ -81,6 +83,184 @@ class CarbonBreakdown {
             month: row.month
         }));
     }
+
+    static categoryPrompts = {
+        EnergyUsage: `You are an energy efficiency expert. Analyze the following school energy usage data and generate NEW, unique recommendations:
+    
+                Current Metrics:
+                - Monthly Energy Consumption: 6,000 kWh
+                - Peak Energy Demand: 30 kW during school hours
+                - Carbon Emissions: 3,500 kg CO2 per month
+                - Major Energy Consumers: Classroom lighting, computer labs, and HVAC systems
+    
+                Generate 3 specific, actionable recommendations for improving energy efficiency in the school.
+                Format your response exactly like this:
+    
+                <strong>AI Recommendations:</strong><br>
+                1. [First unique recommendation]<br>
+                2. [Second unique recommendation]<br>
+                3. [Third unique recommendation]<br>`,
+    
+        FoodServices: `You are a food waste reduction specialist. Analyze the following school cafeteria data and generate NEW, unique recommendations:
+    
+                Current Metrics:
+                - Monthly Food Waste: 300 kg
+                - Carbon Footprint from Food Production: 800 kg CO2 per month
+                - Average Serving Size: Excess portions observed during lunch hours
+                - Waste Sources: Leftovers from student meals and kitchen overproduction
+    
+                Generate 3 specific, actionable recommendations to reduce food waste in the school cafeteria.
+                Format your response exactly like this:
+    
+                <strong>AI Recommendations:</strong><br>
+                1. [First unique recommendation]<br>
+                2. [Second unique recommendation]<br>
+                3. [Third unique recommendation]<br>`,
+    
+        Transportation: `You are a transportation and sustainability expert. Analyze the following school transportation data and generate NEW, unique recommendations:
+    
+                Current Metrics:
+                - Daily Commuting Distance: 1,200 km (students and staff combined)
+                - School Bus Fleet Emissions: 1,000 kg CO2 per month
+                - Fleet Type: Combination of diesel-powered buses and staff vehicles
+                - Alternative Transport Options: Limited bike racks and walk-to-school programs
+    
+                Generate 3 specific, actionable recommendations to improve transportation efficiency and reduce emissions.
+                Format your response exactly like this:
+    
+                <strong>AI Recommendations:</strong><br>
+                1. [First unique recommendation]<br>
+                2. [Second unique recommendation]<br>
+                3. [Third unique recommendation]<br>`,
+    
+        WasteManagement: `You are a waste management and recycling expert. Analyze the following school waste management data and generate NEW, unique recommendations:
+    
+                Current Metrics:
+                - Monthly Waste Generation: 500 kg
+                - Recycling Rate: 40% of total waste
+                - Major Waste Sources: Paper, plastic bottles, and food packaging
+                - Landfill Emissions: Moderate methane emissions due to waste disposal
+    
+                Generate 3 specific, actionable recommendations to improve waste management and recycling in the school.
+                Format your response exactly like this:
+    
+                <strong>AI Recommendations:</strong><br>
+                1. [First unique recommendation]<br>
+                2. [Second unique recommendation]<br>
+                3. [Third unique recommendation]<br>`,
+    
+        WaterUsage: `You are a water conservation expert. Analyze the following school water usage data and generate NEW, unique recommendations:
+    
+                Current Metrics:
+                - Monthly Water Usage: 40,000 liters
+                - Water Heating Contribution to Energy: 15% of total energy consumption
+                - Average Flow Rate: High flow rates observed in sinks and showers
+                - Major Usage Areas: Restrooms, science labs, and outdoor sports fields
+    
+                Generate 3 specific, actionable recommendations to improve water usage efficiency in the school.
+                Format your response exactly like this:
+    
+                <strong>AI Recommendations:</strong><br>
+                1. [First unique recommendation]<br>
+                2. [Second unique recommendation]<br>
+                3. [Third unique recommendation]<br>`
+    }
+    
+
+    static async generateRecommendations(prompt) {
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            // Add specific formatting instructions
+            const enhancedPrompt = `${prompt}
+    
+            IMPORTANT FORMATTING RULES:
+            1. Do NOT use markdown formatting
+            2. Do NOT use code blocks or backticks
+            3. Do NOT include the word "html" in your response
+            4. Keep recommendations short and specific
+            5. Use ONLY the HTML tags shown in the example
+            6. Each recommendation must end with <br>
+            7. Start with <strong>AI Recommendations:</strong><br>`;
+            
+            const result = await model.generateContent({
+                contents: [{ 
+                    role: "user", 
+                    parts: [{ text: enhancedPrompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 20,
+                    topP: 0.8,
+                    maxOutputTokens: 500,  // Reduced to encourage conciseness
+                }
+            });
+    
+            const response = await result.response;
+            return response.text();
+        } catch (error) {
+            throw new Error(`Failed to generate AI recommendations: ${error.message}`);
+        }
+    }
+
+    static extractDataFromMessage(message) {
+        const data = {};
+        const lines = message.split('<br>');
+        
+        lines.forEach(line => {
+            const matches = line.match(/<strong>(.*?):<\/strong>(.*)/);
+            if (matches) {
+                const key = matches[1].trim().toLowerCase().replace(/\s+/g, '');
+                const value = matches[2].trim();
+                data[key] = value;
+            }
+        });
+        
+        return data;
+    }
+
+    static generatePrompt(category, data) {
+        let prompt = this.categoryPrompts[category];
+        
+        // Replace placeholders with actual data
+        Object.keys(data).forEach(key => {
+            const placeholder = `{${key}}`;
+            if (prompt.includes(placeholder)) {
+                prompt = prompt.replace(placeholder, data[key]);
+            }
+        });
+        
+        return prompt;
+    }
+
+    static formatResponse(text) {
+        try {
+            // Remove markdown code blocks, backticks, curly braces, and unwanted characters
+            let cleanText = text
+                .replace(/```[^`]*```/g, '')    
+                .replace(/`/g, '')              
+                .replace(/html/g, '')           
+                .replace(/[{}]/g, '')           // Remove any curly braces in the text
+                .trim();
+            
+            // Ensure proper line breaks and clean any trailing punctuation
+            cleanText = cleanText
+                .replace(/\n/g, '')             
+                .replace(/\.+(<br>)/g, '.<br>') 
+                .replace(/(<br>)\.+/g, '<br>')  
+                .replace(/[.,{}]+$/, '')        
+                .trim()
+                .replace(/}$/, '');             // Explicitly remove any trailing curly brace
+                
+            return {
+                recommendations: cleanText,      // Add trailing comma here
+            };
+        } catch (error) {
+            console.error('Error formatting response:', error);
+            throw new Error('Failed to format recommendations');
+        }
+    }
+
     /*
     static async createCarbonBreakdown(data) {
         const params = {

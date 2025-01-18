@@ -47,14 +47,19 @@ body {
     padding: 1rem;
 }
 
-.campaign-grid {
+#upcomingEventsHeader, #pastEventsHeader {
+    display: none;
+}
+
+.event-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     padding: 1rem;
 }
 
-.campaign-card {
+/* Event Cards */
+.event-card {
     background: white;
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -62,47 +67,76 @@ body {
     transition: transform 0.3s ease;
 }
 
-.campaign-card:hover {
+.event-card:hover {
     transform: translateY(-4px);
 }
 
-.campaign-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.campaign-content {
+.event-content {
     padding: 1.5rem;
 }
 
-.campaign-title {
+.event-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1f2937;
     margin-bottom: 0.5rem;
 }
 
-.campaign-description {
+.event-description {
     color: #4b5563;
     margin-bottom: 1rem;
     line-height: 1.5;
 }
 
-.campaign-points {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: #059669;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.campaign-actions {
+.event-actions {
     display: flex;
     gap: 0.75rem;
 }
 
+.event-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.event-header h1 {
+    font-size: 2rem;
+    color: #059669;
+}
+
+.event-date {
+    font-size: 1.2rem;
+    color: #4b5563;
+}
+
+#legendButtons, #legendButtons2 {
+    display: grid;
+    position: absolute;
+    right: 20px; /* Changed from margin-left to right positioning */
+    margin-top: 25px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+    height: 50%;
+    justify-items: center;
+}
+
+.legendButtons button {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+    width: 100px; 
+    height: 45px; 
+}
+
+#carbonBreakdownChart, #energyBreakdownChart {
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 0; /* Remove the right margin */
+    position: relative;
+}
 .action-button {
     flex: 1;
     padding: 0.5rem 1rem;
@@ -126,6 +160,15 @@ body {
     background-color: #d1fae5;
 }
 
+.view-button {
+    background-color: #036e23;
+    color: #ecfdf5;
+}
+
+.view-button:hover {
+    background-color: #059669;
+}
+
 .image-upload-container {
     margin-top: 5px;
 }
@@ -135,7 +178,7 @@ body {
     min-height: 50px;
 }
 
-#modifyCampaignImage {
+#modifyEventImage {
     margin-top: 5px;
 }
 
@@ -185,6 +228,112 @@ body {
     animation: fadeIn 0.3s ease-in-out; /* Optional fade animation */
 }
 
+#viewPopupContent {
+    max-width: none;
+    width: 70%;
+    
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.summary-card {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 200px;
+}
+
+.summary-card h3 {
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.summary-card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #059669;
+}
+
+/* Chart Section */
+.chart-section {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+.chart-wrapper{
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 400px;
+}
+.chart-container {
+    width: 100%;
+    position: relative; /* Added position relative */
+    display: flex; /* Added flex display */
+    justify-content:flex-start; /* Added space between items */
+}
+
+.chart-title{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#locationSelect {
+    padding: 5px 16px 5px 16px; 
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    background-color: #c8e6deba;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative; /* Positioning for custom arrow */
+    transition: background-color 0.3s ease;
+}
+
+#locationSelect option {
+    background-color: #f0efefe7; 
+}
+
+#locationSelect:hover {
+    background-color: #c3e7deea;
+}
+
+/* Insights */
+.insights {
+    background: #ecfdf5;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.insights h2 {
+    color: #059669;
+    margin-bottom: 10px;
+}
+
+.insights ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.insights li {
+    margin-bottom: 8px;
+}
 /* Fade-in Animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
@@ -234,32 +383,6 @@ body {
     outline: none;
 }
 
-/* Image Upload Styling */
-.image-upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 0.5rem;
-}
-
-.image-preview-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-height: 200px;
-    overflow: hidden;
-    margin-top: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#modifyImagePreview {
-    display: none;
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-}
-
 /* Form Action Buttons */
 .form-actions {
     display: flex;
@@ -294,30 +417,13 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-.impact-summary {
-    background: #f3f4f6;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-.positive-impact {
-    color: #059669;
-    font-weight: bold;
-}
-
-.negative-impact {
-    color: #dc2626;
-    font-weight: bold;
-}
 
 .cancel-button:hover {
     background-color: #e5e7eb;
 }
 
 @media (max-width: 768px) {
-    .campaign-grid {
+    .event-grid {
         grid-template-columns: 1fr;
     }
 }
