@@ -1,6 +1,6 @@
 .a-container {
-    padding-top: 50px;
-    background-color: #e6f7f1; /* Light green background */
+    padding: 60px;
+    background-color: #e6f7f1;
 }
 
 .a-container h1 {
@@ -8,7 +8,6 @@
     margin-bottom: 2rem;
     font-size: 2.5rem;
 }
-
 
 .achievement-category {
     background-color: white;
@@ -23,3 +22,65 @@
     margin-bottom: 1.5rem;
     font-weight: 600;
 }
+
+/* Add these new styles */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -12px; /* Negative margin to counteract card padding */
+}
+
+.col-md-4 {
+    flex: 0 0 calc(33.333% - 24px); /* Subtracting the total horizontal padding */
+    padding: 12px;
+    min-width: 300px; /* Minimum width for cards */
+}
+
+.achievement-card {
+    height: 100%;
+    transition: transform 0.2s;
+}
+
+.achievement-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .col-md-4 {
+        flex: 0 0 calc(50% - 24px);
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 100%;
+    }
+    
+    .a-container {
+        padding: 30px;
+    }
+}
+
+/* Optional: Style improvements for cards */
+.achievement-card .card-body {
+    padding: 1.5rem;
+}
+
+.achievement-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1B3C34;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: #28a745;
+    transition: width 0.3s ease;
+}   
