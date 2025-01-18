@@ -51,6 +51,11 @@ IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
   ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_CampaignID;
 IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
   ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_StudentID;
+  IF OBJECT_ID('FK_StudentAchievements_StudentID', 'F') IS NOT NULL
+  ALTER TABLE StudentAchievements DROP CONSTRAINT FK_StudentAchievements_StudentID;
+  IF OBJECT_ID('FK_StudentAchievements_AchievementID', 'F') IS NOT NULL
+  ALTER TABLE StudentAchievements DROP CONSTRAINT FK_StudentAchievements_AchievementID;
+
 
 -- Drop all tables if they exist
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
@@ -71,6 +76,10 @@ IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
 IF OBJECT_ID('dbo.CarbonBreakdown', 'U') IS NOT NULL DROP TABLE dbo.CarbonBreakdown;
 IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
+IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
+IF OBJECT_ID('dbo.CampaignStudents', 'U') IS NOT NULL DROP TABLE dbo.CampaignStudents;
+IF OBJECT_ID('dbo.StudentAchievements', 'U') IS NOT NULL DROP TABLE dbo.StudentAchievements;
+IF OBJECT_ID('dbo.Achievements', 'U') IS NOT NULL DROP TABLE dbo.Achievements;
 IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 
 
@@ -197,6 +206,26 @@ CREATE TABLE CampaignStudents (
   FOREIGN KEY (student_id) REFERENCES Users(id) ON DELETE CASCADE,
   FOREIGN KEY (campaign_id) REFERENCES Campaigns(id) ON DELETE CASCADE
 )
+
+CREATE TABLE Achievements (
+    achievement_id INT PRIMARY KEY IDENTITY(1,1),
+    name VARCHAR(255) NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT NOT NULL,
+    target_value INT NOT NULL, -- The value students need to reach to complete the achievement
+    points INT NOT NULL, -- Points awarded upon completion
+);
+
+CREATE TABLE StudentAchievements (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    student_id INT NOT NULL, -- Foreign key to Users table
+    achievement_id INT NOT NULL, -- Foreign key to Achievements table
+    progress INT DEFAULT 0, -- Tracks progress toward the achievement
+    completed BIT, -- Marks if the achievement is completed
+    FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
 `;
 
 async function insertData(connection) {
@@ -2324,6 +2353,24 @@ VALUES
 (132, 'Waste Management', 'Cafeteria', '2023-12-31 12:00:00', 5),
 (132, 'Water Usage', 'Classroom', '2023-12-31 12:00:00', 5),
 (132, 'Transportation', 'Gym', '2023-12-31 12:00:00', 5);
+
+INSERT INTO Achievements (name, category, description, target_value, points)
+VALUES
+('Recycler', 'Eco-Friendly Habits', 'Recycle 10 bottles in a week', 10, 20),
+('Knowledgable', 'Eco-Friendly Habits', 'Attempt 5 GreenCampus Quizzes', 5, 20),
+('Perfect Score', 'Eco-Friendly Habits', 'Get 100% on any GreenCampus Quiz', 1, 20),
+('Clean Campus Crusader', 'Community Contributions', 'Participate in 3 campus clean-up campaigns', 3, 20),
+('Campaign Master', 'Community Contributions', 'Sign up and complete any GreenCampus sustainability campaign', 1, 20),
+('Light It Right', 'Energy & Resource Efficiency', 'Turn off lights in unused rooms 10 times in a week', 10, 20);
+
+INSERT INTO StudentAchievements (student_id, achievement_id, progress, completed)
+VALUES
+(11, 1, 7, 0),
+(11, 2, 2, 0),
+(11, 3, 1, 1),
+(11, 4, 2, 0),
+(11, 5, 1, 1),
+(11, 6, 5, 0);
 
 INSERT INTO Events (school_id, name, description, date, carbonfootprint_id, energyusage_id) 
 VALUES 
