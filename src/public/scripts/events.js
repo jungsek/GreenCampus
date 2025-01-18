@@ -29,6 +29,316 @@ async function loadEvents() {
     }
 }
 
+// Open Create Popup
+async function viewEvent(id) {
+    let response = await fetch(`/events/${id}`)
+    if (!response.ok){
+        const errorMsg = document.createElement('h2');
+            errorMsg.innerText = "Error retrieving event!";
+            document.getElementById('viewPopupContent').appendChild(errorMsg);
+            return;
+    }
+    let currentevent = await response.json();
+    let carbonfootprintresponse = await fetch(`/carbon-footprints/${currentevent.carbonfootprint_id}`)
+    if (!carbonfootprintresponse.ok){
+        const errorMsg = document.createElement('h2');
+            errorMsg.innerText = "Error retrieving event's carbon footprint!";
+            document.getElementById('viewPopupContent').appendChild(errorMsg);
+            return;
+    }
+    let eventcf = await carbonfootprintresponse.json();
+    let energyusageresponse = await fetch(`/energy-usage/${currentevent.energyusage_id}`)
+    if (!energyusageresponse.ok){
+        const errorMsg = document.createElement('h2');
+            errorMsg.innerText = "Error retrieving event's energy usage!";
+            document.getElementById('viewPopupContent').appendChild(errorMsg);
+            return;
+    }
+    let eventeu = await energyusageresponse.json();
+    let carbonbreakdownresponse = await fetch(`/carbon-breakdowns/footprint/${currentevent.carbonfootprint_id}`)
+    if (!carbonbreakdownresponse.ok){
+        const errorMsg = document.createElement('h2');
+            errorMsg.innerText = "Error retrieving event's carbon breakdown!";
+            document.getElementById('viewPopupContent').appendChild(errorMsg);
+            return;
+    }
+    let eventcb = await carbonbreakdownresponse.json();
+    let energybreakdownresponse = await fetch(`/energy-breakdowns/usage/${currentevent.energyusage_id}`)
+    if (!energybreakdownresponse.ok){
+        const errorMsg = document.createElement('h2');
+            errorMsg.innerText = "Error retrieving event's energy breakdown!";
+            document.getElementById('viewPopupContent').appendChild(errorMsg);
+            return;
+    }
+    let eventeb = await energybreakdownresponse.json();
+    document.getElementById("eventTitle").innerText = currentevent.name;
+    document.getElementById("eventDate").innerText = new Date(currentevent.date).toDateString();
+    document.getElementById("totalEnergyNum").innerText = eventeu.energy_kwh;
+    document.getElementById("totalCarbonNum").innerText = eventcf.total_carbon_tons;
+    initPieChart(eventeb, eventcb);
+
+    document.getElementById("viewPopup").classList.add("active");
+}
+
+
+
+
+//PIECHARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+let energyPieChart = null;
+let carbonPieChart = null;
+let uniqueLocations = [];
+let uniqueCategories = []; // Store unique categories for button visibility
+let uniqueCarbonCategories = [];
+let prepended = false;
+const colorMapping = {
+    "Lighting": "#3498db",
+    "Computers": "#5bc7a0",
+    "HVAC": "#9b59b6",
+    "Equipment": "#f1c40f",
+    "Refrigeration": "#ff7f50",
+    "Appliances": "#e74c3c",
+    "Food Waste Management": "#FFC0CB",
+    "Sound Equipment": "#c5c6c7"
+};
+const colorMapCarbon = {
+    "Water Usage": "#1F77B4", // Blue (e.g., Transportation)
+    "Energy Usage": "#FF7F0E", // Orange (e.g., Energy Consumption)
+    "Food Services": "#2CA02C", // Green (e.g., Renewable Energy)
+    "Transportation": "#D62728", // Red (e.g., Industrial Emissions)
+    "Waste Management": "#9467BD"  // Purple (e.g., Waste Management)
+}
+function initPieChart(fetchedData, fetchedCarbonData) {
+    // TO POPULATE DROPDOWN-------------------------
+    
+    fetchedData.forEach(data => {
+        if (!uniqueLocations.includes(data.location)) {
+            uniqueLocations.push(data.location);
+        }
+        if (!uniqueCategories.includes(data.category)) {
+            uniqueCategories.push(data.category);
+        }
+    });
+    fetchedCarbonData.forEach(data => {
+        if (!uniqueCarbonCategories.includes(data.category)) {
+            uniqueCarbonCategories.push(data.category);
+        }
+    });
+
+    // Adding "All Locations" to the dropdown
+    if (!prepended) {
+        uniqueLocations.unshift("all_locations"); // Prepend "all_locations" option
+        prepended = true;
+    }
+
+    const locationDropdown = document.getElementById('locationSelect');
+
+    locationDropdown.innerHTML = '';
+    uniqueLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location; // Set the value to the location
+        option.textContent = location === "all_locations" ? "All Locations" : location; // Set display text
+        locationDropdown.appendChild(option);
+    });
+
+    // Function to filter data by location
+    function filterDataByLocation(fetchedData, selectedLocation) {
+        if (selectedLocation === "all_locations") {
+            return fetchedData;
+        }
+        return fetchedData.filter(item => item.location === selectedLocation);
+    }
+
+
+    // Function to aggregate data for a specific year
+    function aggregateData(filteredData) {
+        const aggregated = {};
+        
+        filteredData.forEach(item => {
+            if (!aggregated[item.category]) {
+                aggregated[item.category] = item.percentage;
+            }
+        });
+
+        return {
+            Label: Object.keys(aggregated),
+            Percentage: Object.values(aggregated)
+        };
+    }
+
+
+    // Function to initialize the pie chart
+    function initializePieChart(currentData) {
+        if (energyPieChart) {
+            energyPieChart.destroy();
+        }
+        const backgroundColors = currentData.Label.map(category => colorMapping[category] || '#c5c6c7');
+    
+        const chartDataPie = {
+            labels: currentData.Label,
+            datasets: [{
+                data: currentData.Percentage,
+                backgroundColor: backgroundColors
+            }]
+        };
+    
+        const pieChartOptions = {
+            responsive: false,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'right',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const currentValue = tooltipItem.raw;
+                            const category = currentData.Label[tooltipItem.dataIndex];
+                        }
+                    }
+                },
+                datalabels: {
+                    color: 'white',
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        let percentage = (value * 100 / sum).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    }
+                }
+            }
+        };
+    
+        const pieCtx = document.getElementById('energyBreakdownChart').getContext('2d');
+        energyPieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: chartDataPie,
+            options: pieChartOptions,
+            plugins: [ChartDataLabels]
+        });
+    
+        showHideLegendButtons(currentData.Label);
+    }
+    
+
+    // Function to show/hide legend buttons
+    function showHideLegendButtons(currentLabels) {
+        if (!currentLabels) return; // Guard clause to prevent undefined errors
+        const legendButtons = document.querySelectorAll('#legendButtons button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            button.style.display = currentLabels.includes(category) ? 'inline-block' : 'none';
+        });
+    }
+
+    function initializeCarbonPieChart(currentData) {
+        if (carbonPieChart) {
+            carbonPieChart.destroy();
+        }
+    
+        const backgroundColors = currentData.Label.map(category => colorMapCarbon[category] || '#c5c6c7');
+    
+        const chartDataPie = {
+            labels: currentData.Label,
+            datasets: [{
+                data: currentData.Percentage,
+                backgroundColor: backgroundColors
+            }]
+        };
+    
+        const pieChartOptions = {
+            responsive: false,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'right',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const currentValue = tooltipItem.raw;
+                            const category = currentData.Label[tooltipItem.dataIndex];
+                        }
+                    }
+                },
+                datalabels: {
+                    color: 'white',
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        let percentage = (value * 100 / sum).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    }
+                }
+            }
+        };
+    
+        const pieCtx = document.getElementById('carbonBreakdownChart').getContext('2d');
+        carbonPieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: chartDataPie,
+            options: pieChartOptions,
+            plugins: [ChartDataLabels]
+        });
+    
+        showHideCarbonLegendButtons(currentData.Label)
+    }
+    
+
+    // Function to show/hide legend buttons
+    function showHideCarbonLegendButtons(currentLabels) {
+        if (!currentLabels) return; // Guard clause to prevent undefined errors
+        
+        const legendButtons = document.querySelectorAll('#legendButtons2 button');
+        legendButtons.forEach(button => {
+            const category = button.getAttribute('data-segment');
+            button.style.display = currentLabels.includes(category) ? 'inline-block' : 'none';
+        });
+    }
+
+    // Function to update the pie chart
+    function updatePieChart() {
+        const selectedLocation = locationDropdown.value;
+        let filteredData = filterDataByLocation(fetchedData, selectedLocation);
+        let filteredCarbonData = filterDataByLocation(fetchedCarbonData, selectedLocation);
+
+        const aggregatedCurrentCarbonData = aggregateData(filteredCarbonData);
+        const aggregatedCurrentData = aggregateData(filteredData);
+        initializePieChart(aggregatedCurrentData);
+        initializeCarbonPieChart(aggregatedCurrentCarbonData);
+    }
+
+    // Initialize with default data
+    let allData = filterDataByLocation(fetchedData, "all_locations");
+    let allCarbonData = filterDataByLocation(fetchedCarbonData, "all_locations");
+    const aggregatedCurrentData = aggregateData(allData);
+    const aggregatedCurrentCarbonData = aggregateData(allCarbonData);
+    initializePieChart(aggregatedCurrentData);
+    initializeCarbonPieChart(aggregatedCurrentCarbonData);
+    
+    // Event listeners
+    locationDropdown.addEventListener('change', updatePieChart);
+}
+// Close Create Popup
+function closeViewPopup() {
+    document.getElementById("viewPopup").classList.remove("active");
+}
+
 // Render campaigns to the DOM
 async function renderEvents() {
     let parentContainer;
@@ -36,14 +346,17 @@ async function renderEvents() {
     document.getElementById('pastEvents').innerHTML = ""; // Clear previous cards
     
     currentEvents.forEach(async (event) => {
-        // Convert event date and today's date to timestamps
-        if (new Date(event.date).getTime() <= new Date().getTime()) {
+        const eventDate = new Date(event.date).setHours(0, 0, 0, 0);
+        const todayDate = new Date().setHours(0, 0, 0, 0);
+
+        if (eventDate <= todayDate) {  // Past events (including today)
             document.getElementById('pastEventsHeader').style.display = 'inline-block';
             parentContainer = document.getElementById('pastEvents');
-        } else {
+        } else {  // Future events
             document.getElementById('upcomingEventsHeader').style.display = 'inline-block';
             parentContainer = document.getElementById('upcomingEvents');
         }
+
 
         const card = document.createElement("div");
         card.classList.add("event-card");
@@ -81,6 +394,7 @@ function closeCreatePopup() {
     document.getElementById("createPopup").classList.remove("active");
     document.getElementById("createForm").reset();
 }
+
 
 // Handle create campaign form submission
 document.getElementById('createForm').addEventListener('submit', async function(event) {
