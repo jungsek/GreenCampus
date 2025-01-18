@@ -1172,7 +1172,7 @@ function showPopup(category) {
     const modal = document.getElementById('popupModal');
     const title = document.getElementById('popupTitle');
     const message = document.getElementById('popupMessage');
-    
+
     if (popupMessages[category]) {
         title.textContent = popupMessages[category].title;
 
@@ -1184,7 +1184,10 @@ function showPopup(category) {
                 </div>
             </div>
             <div class="recommendations-btn-container">
-                <button class="show-recommendations-btn" onclick="toggleRecommendations('${category}')">
+                <button 
+                    class="show-recommendations-btn" 
+                    onclick="toggleRecommendations('${category}')"
+                >
                     <span class="button-text">Generate AI Recommendations</span>
                 </button>
                 <div class="animation-container" style="display: none;">
@@ -1202,41 +1205,46 @@ function showPopup(category) {
 
         message.innerHTML = content;
         modal.style.display = 'flex';
+    } else {
+        console.error(`No popup message found for category: ${category}`);
     }
 }
 
 async function toggleRecommendations(category) {
     const recommendationsContainer = document.getElementById(`recommendations-${category}`);
     const recommendationsContent = recommendationsContainer.querySelector('.recommendations-content');
-    const btnContainer = document.querySelector('.recommendations-btn-container');
+    const btnContainer = recommendationsContainer.nextElementSibling; // Use a sibling selector
     const button = btnContainer.querySelector('.show-recommendations-btn');
     const animationContainer = btnContainer.querySelector('.animation-container');
-    
+
     // Hide button and show animation
     button.style.display = 'none';
     animationContainer.style.display = 'flex';
-    
+
     try {
-        // Call the API to get recommendations
-        const response = await fetch(`/api/recommendations/${category}`, {
+        // Determine the correct API endpoint
+        const apiUrl = ['EnergyUsage', 'FoodServices', 'Transportation', 'WasteManagement', 'WaterUsage'].includes(category)
+            ? `/api/CFrecommendations/${category}` // Carbon footprint
+            : `/api/EBrecommendations/${category}`; // Energy breakdown
+
+        // Fetch recommendations from the API
+        const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 categoryData: {
-                    title: popupMessages[category].title,
-                    message: popupMessages[category].message
+                    title: popupMessages[category]?.title || 'Unknown Category',
+                    message: popupMessages[category]?.message || 'No message available',
                 }
             })
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch recommendations');
+            throw new Error(`Failed to fetch recommendations for category: ${category}`);
         }
 
         const data = await response.json();
-        
+
         // Populate recommendations content
         recommendationsContent.innerHTML = `
             ${data.recommendations}
@@ -1250,12 +1258,14 @@ async function toggleRecommendations(category) {
 
     } catch (error) {
         console.error('Error generating recommendations:', error);
-        // Show error message to user
+
+        // Handle errors gracefully
         animationContainer.style.display = 'none';
         button.style.display = 'block';
         button.innerHTML = '<span class="button-text">Error - Try Again</span>';
     }
 }
+
 
 
 function closePopup() {
