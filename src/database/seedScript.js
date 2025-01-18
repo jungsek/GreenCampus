@@ -15,7 +15,6 @@ declare @sql nvarchar(max) = (
 );
 exec sp_executesql @sql;
 
--- Drop foreign key constraints
 IF OBJECT_ID('FK_EnergyBreakdown_EnergyUsageID', 'F') IS NOT NULL
   ALTER TABLE EnergyBreakdown DROP CONSTRAINT FK_EnergyBreakdown_EnergyUsageID;
 IF OBJECT_ID('FK_CarbonFootprint_SchoolID', 'F') IS NOT NULL
@@ -32,26 +31,32 @@ IF OBJECT_ID('FK_Reports_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Reports DROP CONSTRAINT FK_Reports_SchoolID;
 IF OBJECT_ID('FK_Goals_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Goals DROP CONSTRAINT FK_Goals_SchoolID;
-  IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
+IF OBJECT_ID('FK_Events_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_SchoolID;
+IF OBJECT_ID('FK_Events_CarbonFootprintID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_CarbonFootprintID;
+IF OBJECT_ID('FK_Events_EnergyUsageID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_EnergyUsageID;
+IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Campaigns DROP CONSTRAINT FK_Campaigns_SchoolID;
-    IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
+IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
   ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_CampaignID;
-    IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
+IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
   ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_StudentID;
 
 -- Drop all tables if they exist
-IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
-IF OBJECT_ID('dbo.CarbonFootprint', 'U') IS NOT NULL DROP TABLE dbo.CarbonFootprint;
-IF OBJECT_ID('dbo.EnergyUsage', 'U') IS NOT NULL DROP TABLE dbo.EnergyUsage;
-IF OBJECT_ID('dbo.CarbonBreakdown', 'U') IS NOT NULL DROP TABLE dbo.CarbonBreakdown;
-IF OBJECT_ID('dbo.Schools', 'U') IS NOT NULL DROP TABLE dbo.Schools;
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
-IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
-IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
+IF OBJECT_ID('dbo.Schools', 'U') IS NOT NULL DROP TABLE dbo.Schools;
+IF OBJECT_ID('dbo.EnergyUsage', 'U') IS NOT NULL DROP TABLE dbo.EnergyUsage;
+IF OBJECT_ID('dbo.CarbonFootprint', 'U') IS NOT NULL DROP TABLE dbo.CarbonFootprint;
+IF OBJECT_ID('dbo.Events', 'U') IS NOT NULL DROP TABLE dbo.Events;
 IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
 IF OBJECT_ID('dbo.CampaignStudents', 'U') IS NOT NULL DROP TABLE dbo.CampaignStudents;
+IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
+IF OBJECT_ID('dbo.CarbonBreakdown', 'U') IS NOT NULL DROP TABLE dbo.CarbonBreakdown;
+IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
+IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 
--- Create the tables here...
 
 -- Create Users table
 CREATE TABLE Users (
@@ -143,6 +148,19 @@ CREATE TABLE Goals (
 	metric NVARCHAR(100) NOT NULL, 
 	metric_value FLOAT NOT NULL,
 	FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE
+)
+
+CREATE TABLE Events(
+    id INT PRIMARY KEY IDENTITY(1,1),
+    school_id INT NOT NULL,
+    name NVARCHAR(100) NULL,
+    description NVARCHAR(255) NULL,
+    date DATETIME NOT NULL,
+    carbonfootprint_id int NULL,
+    energyusage_id int NULL,
+    FOREIGN KEY (school_id) REFERENCES Schools(id) ON DELETE CASCADE,
+    FOREIGN KEY (carbonfootprint_id) REFERENCES CarbonFootprint(id) ON DELETE NO ACTION,
+    FOREIGN KEY (energyusage_id) REFERENCES EnergyUsage(id) ON DELETE NO ACTION
 )
 
 CREATE TABLE Campaigns (
@@ -306,18 +324,18 @@ VALUES
     (1, 'December', 750, 20.0, '2023-12-15 10:00:00'),
 
     -- 2024 (Fluctuating Trend)
-    (1, 'January', 1300, 26.0, '2024-01-15 10:00:00'),
-    (1, 'February', 1200, 25.5, '2024-02-15 10:00:00'),
-    (1, 'March', 1400, 28.0, '2024-03-15 10:00:00'),
-    (1, 'April', 1100, 27.0, '2024-04-15 10:00:00'),
-    (1, 'May', 1150, 26.0, '2024-05-15 10:00:00'),
-    (1, 'June', 1250, 29.0, '2024-06-15 10:00:00'),
-    (1, 'July', 1500, 30.0, '2024-07-15 10:00:00'),
-    (1, 'August', 1400, 29.5, '2024-08-15 10:00:00'),
-    (1, 'September', 1300, 26.5, '2024-09-15 10:00:00'),
-    (1, 'October', 1200, 24.5, '2024-10-15 10:00:00'),
-    (1, 'November', 1250, 23.5, '2024-11-15 10:00:00'),
-    (1, 'December', 1350, 22.5, '2024-12-15 10:00:00'),
+   (1, 'January', 1300, 26.0, '2024-01-31 12:00:00'),
+    (1, 'February', 1200, 25.5, '2024-02-28 12:00:00'),
+    (1, 'March', 1400, 28.0, '2024-03-31 12:00:00'),
+    (1, 'April', 1100, 27.0, '2024-04-30 12:00:00'),
+    (1, 'May', 1150, 26.0, '2024-05-31 12:00:00'),
+    (1, 'June', 1250, 29.0, '2024-06-30 12:00:00'),
+    (1, 'July', 1500, 30.0, '2024-07-31 12:00:00'),
+    (1, 'August', 1400, 29.5, '2024-08-31 12:00:00'),
+    (1, 'September', 1300, 26.5, '2024-09-30 12:00:00'),
+    (1, 'October', 1200, 24.5, '2024-10-31 12:00:00'),
+    (1, 'November', 1250, 23.5, '2024-11-30 12:00:00'),
+    (1, 'December', 1350, 22.5, '2024-12-31 12:00:00'),
 
     -- 2025 
     (1, 'January', 1350, 26.5, '2025-01-15 10:00:00'),
@@ -1999,7 +2017,6 @@ VALUES
     (2, 0.5, '2021-11-30 12:00:00'),
     (2, 0.6, '2021-12-31 12:00:00');
 
-
 INSERT INTO CarbonBreakdown (carbonfootprint_id, category, location, timestamp, percentage)
 VALUES 
 -- January 2024 (0.8 total)
@@ -2013,6 +2030,7 @@ VALUES
 (1, 'Waste Management', 'Cafeteria', '2024-01-31 12:00:00', 5),
 (1, 'Water Usage', 'Hallway', '2024-01-31 12:00:00', 5),
 (1, 'Transportation', 'Gym', '2024-01-31 12:00:00', 5),
+
 
 -- February 2024 (0.7 total)
 (2, 'Energy Usage', 'Laboratory', '2024-02-28 12:00:00', 35),
@@ -2289,6 +2307,12 @@ VALUES
 (132, 'Waste Management', 'Cafeteria', '2023-12-31 12:00:00', 5),
 (132, 'Water Usage', 'Classroom', '2023-12-31 12:00:00', 5),
 (132, 'Transportation', 'Gym', '2023-12-31 12:00:00', 5);
+
+INSERT INTO Events (school_id, name, description, date, carbonfootprint_id, energyusage_id) 
+VALUES 
+(1, 'Graduation Day 2024', 'Annual graduation ceremony for the class of 2024', '2024-11-30 12:00:00', 11, 47),
+(1, 'Freshman Orientation 2024', 'Welcome orientation for new students', '2024-01-31 12:00:00', 1, 37),
+(1, 'Sports Carnival 2024', 'Annual school sports carnival and field day', '2024-08-31 12:00:00', 8, 44);
   `);
 }
 
