@@ -38,7 +38,15 @@ IF OBJECT_ID('FK_Events_CarbonFootprintID', 'F') IS NOT NULL
 IF OBJECT_ID('FK_Events_EnergyUsageID', 'F') IS NOT NULL
   ALTER TABLE Events DROP CONSTRAINT FK_Events_EnergyUsageID;
 IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
+IF OBJECT_ID('FK_Events_SchoolID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_SchoolID;
+IF OBJECT_ID('FK_Events_CarbonFootprintID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_CarbonFootprintID;
+IF OBJECT_ID('FK_Events_EnergyUsageID', 'F') IS NOT NULL
+  ALTER TABLE Events DROP CONSTRAINT FK_Events_EnergyUsageID;
+IF OBJECT_ID('FK_Campaigns_SchoolID', 'F') IS NOT NULL
   ALTER TABLE Campaigns DROP CONSTRAINT FK_Campaigns_SchoolID;
+IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
 IF OBJECT_ID('FK_CampaignStudents_CampaignID', 'F') IS NOT NULL
   ALTER TABLE CampaignStudents DROP CONSTRAINT FK_CampaignStudents_CampaignID;
 IF OBJECT_ID('FK_CampaignStudents_StudentID', 'F') IS NOT NULL
@@ -50,8 +58,16 @@ IF OBJECT_ID('dbo.Schools', 'U') IS NOT NULL DROP TABLE dbo.Schools;
 IF OBJECT_ID('dbo.EnergyUsage', 'U') IS NOT NULL DROP TABLE dbo.EnergyUsage;
 IF OBJECT_ID('dbo.CarbonFootprint', 'U') IS NOT NULL DROP TABLE dbo.CarbonFootprint;
 IF OBJECT_ID('dbo.Events', 'U') IS NOT NULL DROP TABLE dbo.Events;
+IF OBJECT_ID('dbo.Schools', 'U') IS NOT NULL DROP TABLE dbo.Schools;
+IF OBJECT_ID('dbo.EnergyUsage', 'U') IS NOT NULL DROP TABLE dbo.EnergyUsage;
+IF OBJECT_ID('dbo.CarbonFootprint', 'U') IS NOT NULL DROP TABLE dbo.CarbonFootprint;
+IF OBJECT_ID('dbo.Events', 'U') IS NOT NULL DROP TABLE dbo.Events;
 IF OBJECT_ID('dbo.Campaigns', 'U') IS NOT NULL DROP TABLE dbo.Campaigns;
 IF OBJECT_ID('dbo.CampaignStudents', 'U') IS NOT NULL DROP TABLE dbo.CampaignStudents;
+IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
+IF OBJECT_ID('dbo.CarbonBreakdown', 'U') IS NOT NULL DROP TABLE dbo.CarbonBreakdown;
+IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;
+IF OBJECT_ID('dbo.Reports', 'U') IS NOT NULL DROP TABLE dbo.Reports;
 IF OBJECT_ID('dbo.EnergyBreakdown', 'U') IS NOT NULL DROP TABLE dbo.EnergyBreakdown;
 IF OBJECT_ID('dbo.CarbonBreakdown', 'U') IS NOT NULL DROP TABLE dbo.CarbonBreakdown;
 IF OBJECT_ID('dbo.Goals', 'U') IS NOT NULL DROP TABLE dbo.Goals;

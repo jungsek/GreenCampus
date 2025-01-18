@@ -1213,7 +1213,7 @@ function showPopup(category) {
 async function toggleRecommendations(category) {
     const recommendationsContainer = document.getElementById(`recommendations-${category}`);
     const recommendationsContent = recommendationsContainer.querySelector('.recommendations-content');
-    const btnContainer = recommendationsContainer.nextElementSibling; // Use a sibling selector
+    const btnContainer = document.querySelector('.recommendations-btn-container');
     const button = btnContainer.querySelector('.show-recommendations-btn');
     const animationContainer = btnContainer.querySelector('.animation-container');
 
@@ -1222,10 +1222,14 @@ async function toggleRecommendations(category) {
     animationContainer.style.display = 'flex';
 
     try {
-        // Determine the correct API endpoint
-        const apiUrl = ['EnergyUsage', 'FoodServices', 'Transportation', 'WasteManagement', 'WaterUsage'].includes(category)
-            ? `/api/CFrecommendations/${category}` // Carbon footprint
-            : `/api/EBrecommendations/${category}`; // Energy breakdown
+        let apiUrl;
+
+        // Determine the correct API endpoint based on the category
+        if (['EnergyUsage', 'FoodServices', 'Transportation', 'WasteManagement', 'WaterUsage'].includes(category)) {
+            apiUrl = `/api/CFrecommendations/${category}`; // Carbon footprint
+        } else {
+            apiUrl = `/api/EBrecommendations/${category}`; // Energy breakdown
+        }
 
         // Fetch recommendations from the API
         const response = await fetch(apiUrl, {
