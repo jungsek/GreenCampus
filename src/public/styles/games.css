@@ -16,6 +16,34 @@ body {
     z-index: 100;
 }
 
+/* ============= Background ============= */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.277);
+    border-radius: 50%;
+    animation: float-up 15s linear infinite;
+}
+
+@keyframes float-up {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+
+/* Modal customization */
+.modal-header .btn-close {
+    background-color: white;
+    margin-right: 100px;
+}
+
 /* ============= Games Instruction ============= */
 .info-btn {
     color: #245D51;
@@ -231,6 +259,43 @@ body {
     padding-left: 50px;
 }
 
+
+.game-button.completed::after {
+    content: "Come back tomorrow for a new word!";
+    position: absolute;
+    bottom: calc(100% + 10px);  /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    z-index: 1000;
+}
+
+
+/* Show tooltip and triangle on hover */
+.game-button.completed:hover::after,
+.game-button.completed:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+.game-button.completed {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
+.game-button:not(.completed):hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+
 .button-icon {
     position: absolute;
     left: 15px;
@@ -239,33 +304,6 @@ body {
     font-size: 24px;
 }
 
-/* ============= Background ============= */
-.particles {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.particle {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.277);
-    border-radius: 50%;
-    animation: float-up 15s linear infinite;
-}
-
-@keyframes float-up {
-    0% { transform: translateY(100vh) scale(0); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translateY(-100px) scale(1); opacity: 0; }
-}
-
-/* Modal customization */
-.modal-header .btn-close {
-    background-color: white;
-    margin-right: 100px;
-}
 
 /* ============== Greendle ============== */
 :root {
@@ -353,10 +391,10 @@ header {
 
 .message {
     position: fixed;
-    top: 10%;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: white;
+    background-color: rgba(157, 204, 220, 0.614);
     color: black;
     padding: 20px;
     border-radius: 5px;
@@ -386,4 +424,44 @@ header {
     .game-button {
         font-size: 20px;
     }
+}
+
+.fun-fact-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    max-width: 400px;
+    text-align: left;
+    z-index: 10000;
+}
+
+.fun-fact-toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.fun-fact-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.fun-fact-header i {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.fun-fact-content {
+    font-size: 0.95em;
+    line-height: 1.4;
 }
