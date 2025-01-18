@@ -72,6 +72,23 @@ class CarbonFootprint {
         return result.length ? result.map((x) => this.toCarbonFootprintObj(x)) : null
     }
 
+    // Add this new method to the CarbonFootprint class
+    static async getMonthlyCarbonFootprint(school_id, year, month) {
+        const params = {
+            "school_id": school_id,
+            "year": year,
+            "month": month
+        }
+        const result = (await this.query(`
+            SELECT SUM(total_carbon_tons) as total
+            FROM CarbonFootprint
+            WHERE school_id = @school_id 
+            AND YEAR(timestamp) = @year
+            AND MONTH(timestamp) = @month
+        `, params)).recordset[0]
+        return result ? result.total || 0 : 0
+    }
+
     static async getYearlyCarbonFootprint(school_id, year) {
         const params = {
             "school_id": school_id,

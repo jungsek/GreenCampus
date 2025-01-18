@@ -98,6 +98,21 @@ const deleteCarbonFootprint = async (req, res) => {
     }
 }
 
+const getMonthlyCarbonFootprint = async (req, res) => {
+    const school_id = parseInt(req.params.schoolId);
+    const year = parseInt(req.params.year);
+    const month = parseInt(req.params.month);
+    
+    try {
+        const total = await CarbonFootprint.getMonthlyCarbonFootprint(school_id, year, month)
+        res.json({ total });
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Error retrieving monthly carbon footprint")
+    }
+}
+
+
 module.exports = {
     getAllCarbonFootprints,
     getCarbonFootprintById,
@@ -105,5 +120,6 @@ module.exports = {
     getYearlyCarbonFootprint,
     createCarbonFootprint,
     updateCarbonFootprint,
-    deleteCarbonFootprint
+    deleteCarbonFootprint,
+    getMonthlyCarbonFootprint
 }
