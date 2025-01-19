@@ -204,7 +204,7 @@
                             <canvas id="pieChart" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
 
                             <div class="legendButtons" id="legendButtons">
-                                <button onclick="highlightSegment('Lighting')" class="legend-button" data-segment="Lighting">Lighting</button>
+                                <button onclick="showPopup('Lighting')" class="legend-button" data-segment="Lighting">Lighting</button>
                                 <button onclick="highlightSegment('Computers')" class="legend-button" data-segment="Computers">Computers</button>
                                 <button onclick="highlightSegment('HVAC')" class="legend-button" data-segment="HVAC">HVAC</button>
                                 <button onclick="highlightSegment('Equipment')" class="legend-button" data-segment="Equipment">Equipment</button>
@@ -278,11 +278,34 @@
                         <div class="pieChart-container">
                             <canvas id="pieChart2" style="margin-top: 40px; height: 180px; width: auto; position: relative;"></canvas>
                             <div class="legendButtons" id="legendButtons2">
-                                <button onclick="highlightSegment('Energy Usage')" class="legend-button" data-segment="Energy Usage">Energy Usage</button>
-                                <button onclick="highlightSegment('Food Services')" class="legend-button" data-segment="Food Services">Food Services</button>
-                                <button onclick="highlightSegment('Transportation')" class="legend-button" data-segment="Transportation">Transportation</button>
-                                <button onclick="highlightSegment('Waste Management')" class="legend-button" data-segment="Waste Management">Waste Management</button>
-                                <button onclick="highlightSegment('Water Usage')" class="legend-button" data-segment="Water Usage">Water Usage</button>
+                                <button onclick="showPopup('EnergyUsage')" class="legend-button" data-segment="Energy Usage">Energy Usage</button>
+                                <button onclick="showPopup('FoodServices')" class="legend-button" data-segment="Food Services">Food Services</button>
+                                <button onclick="showPopup('Transportation')" class="legend-button" data-segment="Transportation">Transportation</button>
+                                <button onclick="showPopup('WasteManagement')" class="legend-button" data-segment="Waste Management">Waste Management</button>
+                                <button onclick="showPopup('WaterUsage')" class="legend-button" data-segment="Water Usage">Water Usage</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ Modal Popup ============ -->
+                    <div id="popupModal" class="popup-modal" style="display:none;">
+                        <div class="popup-content">
+                            <span class="close-btn" onclick="closePopup()">&times;</span>
+                            <h2 style="text-align: center;"><span id="popupTitle"></span></h2>
+                            <br><p id="popupMessage"></p>
+
+                            <!-- Loading Indicator -->
+                            <div id="loading-screen" style="display: none;">
+                                <dotlottie-player 
+                                    src="./assets/general/Animation - 1705413706609.json" class="loading-animation" background="transparent" speed="1" loop autoplay style="width: 200px; height: 200px; margin: 0 auto;">
+                                </dotlottie-player>
+                                <h2 style="text-align: center; margin-top: 20px;">Generating analysis... Please wait.</h2>
+                            </div>
+
+                            <!-- Recommendations Section -->
+                            <div id="recommendationsSection" style="display:none;">
+                                <strong>AI Recommendations:</strong>
+                                <ul id="recommendationsList"></ul>
                             </div>
                         </div>
                     </div>

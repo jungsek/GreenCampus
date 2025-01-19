@@ -38,6 +38,7 @@ const upload = multer({
 // Serve static files
 app.use(express.static("public"));
 
+
 // Use session middleware
 app.use(session({
     secret: 'secret-key', // Replace with a secure key
@@ -47,8 +48,8 @@ app.use(session({
 }));
 
 // Parse JSON and URL-encoded data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 
 // Error handling middleware for Multer errors
 app.use((err, req, res, next) => {

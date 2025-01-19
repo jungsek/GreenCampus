@@ -24,6 +24,20 @@ const getEnergyUsageBySchool = async (req, res) => {
     }
 };
 
+const getEnergyUsageById = async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const energyUsage = await EnergyUsage.getEnergyUsageById(id);
+        if (!energyUsage) {
+            return res.status(404).send("No energy usage data found for this ID");
+        }
+        res.json(energyUsage);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving energy usage data");
+    }
+};
+
 const createEnergyUsage = async (req, res) => {
     try {
         const id = await EnergyUsage.createEnergyUsage(req.body);
@@ -64,6 +78,7 @@ const getAvailableYears = async (req, res) => {
 module.exports = {
     getAllEnergyUsage,
     getEnergyUsageBySchool,
+    getEnergyUsageById,
     createEnergyUsage,
     getMonthlyEnergyUsage,
     getAvailableYears
