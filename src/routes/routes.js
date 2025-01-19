@@ -13,6 +13,7 @@ const chatbotRoute = require("./chatbotRoute.js");
 const carbonBreakdownRoute = require("./carbonBreakdownRoute.js");
 const eventRoute = require("./eventRoute.js");
 const funFactsRoute = require("./funFactRoute.js");
+const quizRoute = require("./quizRoute.js");
 
 const route = (app, upload, getPool) => {
     userRoute(app, upload, getPool);
@@ -30,6 +31,7 @@ const route = (app, upload, getPool) => {
     carbonBreakdownRoute(app, upload, getPool);
     eventRoute(app, upload, getPool);
     funFactsRoute(app, upload, getPool);
+    quizRoute(app, upload, getPool);
 };
 
 module.exports = route;
