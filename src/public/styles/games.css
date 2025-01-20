@@ -261,9 +261,9 @@ body {
 
 
 .game-button.completed::after {
-    content: "Come back tomorrow for a new word!";
+    content: attr(data-tooltip);  /* Use data-tooltip attribute instead */
     position: absolute;
-    bottom: calc(100% + 10px);  /* Position above the button */
+    bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.8);
@@ -464,4 +464,46 @@ header {
 .fun-fact-content {
     font-size: 0.95em;
     line-height: 1.4;
+}
+
+/* ============== Quiz ============== */
+.quiz-option {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #e0e0e0;
+    margin-bottom: 0.5rem;
+}
+
+.quiz-option:hover {
+    transform: translateX(8px);
+    border-color: #198754;
+    background-color: #f8f9fa;
+}
+
+.correct-answer {
+    background: #198754 !important;
+    color: white !important;
+    border-color: #198754 !important;
+}
+
+.wrong-answer {
+    background: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+}
+
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 0.25rem solid #f3f3f3;
+    border-top: 0.25rem solid #198754;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

@@ -15,6 +15,7 @@ const achievementRoute = require("./achievementRoute.js");
 const studentAchievementRoute = require("./studentAchievementRoute.js");
 const eventRoute = require("./eventRoute.js");
 const funFactsRoute = require("./funFactRoute.js");
+const quizRoute = require("./quizRoute.js");
 
 
 const route = (app, upload, getPool) => {
@@ -35,6 +36,7 @@ const route = (app, upload, getPool) => {
     studentAchievementRoute(app, upload, getPool);
     eventRoute(app, upload, getPool);
     funFactsRoute(app, upload, getPool);
+    quizRoute(app, upload, getPool);
 };
 
 module.exports = route;
