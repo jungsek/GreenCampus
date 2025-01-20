@@ -13,6 +13,7 @@ function getMonthFromTimestamp(timestamp) {
     return date.getMonth() + 1; // Adding 1 because JavaScript months are zero-indexed (0 = January, 11 = December)
 }
 
+
 // ==================== Goal Setting ====================
 // DOM Elements
 const setgoalbtn = document.querySelector('#setGoalButton');
@@ -33,6 +34,331 @@ const yesConfirmButton = document.getElementById('yesconfirmButton');
 const noConfirmButton = document.getElementById('noconfirmButton');
 const downloadCsvBtn = document.querySelector('.rightbar-container button[title="Download to CSV"]');
 const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+const heatmapSelect = document.getElementById('heatmapType');
+const modal = document.getElementById('buildingModal');
+const closeBtn = modal.querySelector('.close');
+
+// Close modal when clicking the close button
+closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+// Close modal when clicking outside of it
+window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+let buildingData = {};
+let energyScale;
+let carbonScale;
+const mockBuildingData = {
+    'classroom': {
+        name: 'Classroom',
+        energyConsumption: 297484,
+        carbonEmission: 3.015,
+        energyDetails: {
+            'HVAC': {
+                percentage: 45,
+                value: 133867.8
+            },
+            'Lighting': {
+                percentage: 30,
+                value: 89245.2
+            },
+            'Computers': {
+                percentage: 25,
+                value: 74371
+            }
+        },
+        carbonDetails: {
+            'Energy Usage': {
+                percentage: 60,
+                value: 1.808
+            },
+            'Food Services': {
+                percentage: 20,
+                value: 0.603
+            },
+            'Waste Management': {
+                percentage: 15,
+                value: 0.452
+            },
+            'Water Usage': {
+                percentage: 5,
+                value: 0.151
+            }
+        }
+    },
+    'laboratory': {
+        name: 'Laboratory',
+        energyConsumption: 270378,
+        carbonEmission: 2.240,
+        energyDetails: {
+            'HVAC': {
+                percentage: 40,
+                value: 108151.2
+            },
+            'Laboratory Equipment': {
+                percentage: 35,
+                value: 94632.3
+            },
+            'Lighting': {
+                percentage: 15,
+                value: 40556.7
+            },
+            'Computers': {
+                percentage: 10,
+                value: 27037.8
+            }
+        },
+        carbonDetails: {
+            'Energy Usage': {
+                percentage: 50,
+                value: 1.120
+            },
+            'Waste Management': {
+                percentage: 25,
+                value: 0.560
+            },
+            'Food Services': {
+                percentage: 15,
+                value: 0.336
+            },
+            'Transportation': {
+                percentage: 10,
+                value: 0.224
+            }
+        }
+    },
+    'cafeteria': {
+        name: 'Cafeteria',
+        energyConsumption: 182442,
+        carbonEmission: 2.260,
+        energyDetails: {
+            'Kitchen Equipment': {
+                percentage: 45,
+                value: 82098.9
+            },
+            'Refrigeration': {
+                percentage: 30,
+                value: 54732.6
+            },
+            'HVAC': {
+                percentage: 15,
+                value: 27366.3
+            },
+            'Lighting': {
+                percentage: 10,
+                value: 18244.2
+            }
+        },
+        carbonDetails: {
+            'Food Services': {
+                percentage: 50,
+                value: 1.130
+            },
+            'Energy Usage': {
+                percentage: 25,
+                value: 0.565
+            },
+            'Waste Management': {
+                percentage: 15,
+                value: 0.339
+            },
+            'Water Usage': {
+                percentage: 10,
+                value: 0.226
+            }
+        }
+    },
+    'gym': {
+        name: 'Gym',
+        energyConsumption: 150855,
+        carbonEmission: 0.982,
+        energyDetails: {
+            'HVAC': {
+                percentage: 40,
+                value: 60342
+            },
+            'Equipment': {
+                percentage: 35,
+                value: 52799.25
+            },
+            'Lighting': {
+                percentage: 25,
+                value: 37713.75
+            }
+        },
+        carbonDetails: {
+            'Water Usage': {
+                percentage: 40,
+                value: 0.393
+            },
+            'Energy Usage': {
+                percentage: 30,
+                value: 0.295
+            },
+            'Transportation': {
+                percentage: 20,
+                value: 0.196
+            },
+            'Food Services': {
+                percentage: 10,
+                value: 0.098
+            }
+        }
+    },
+    'office': {
+        name: 'Office',
+        energyConsumption: 79268,
+        carbonEmission: 0.702,
+        energyDetails: {
+            'Computers': {
+                percentage: 45,
+                value: 35670.6
+            },
+            'HVAC': {
+                percentage: 30,
+                value: 23780.4
+            },
+            'Lighting': {
+                percentage: 25,
+                value: 19817
+            }
+        },
+        carbonDetails: {
+            'Energy Usage': {
+                percentage: 50,
+                value: 0.351
+            },
+            'Transportation': {
+                percentage: 25,
+                value: 0.175
+            },
+            'Water Usage': {
+                percentage: 15,
+                value: 0.105
+            },
+            'Waste Management': {
+                percentage: 10,
+                value: 0.070
+            }
+        }
+    },
+    'library': {
+        name: 'Library',
+        energyConsumption: 139254,
+        carbonEmission: 0.477,
+        energyDetails: {
+            'HVAC': {
+                percentage: 35,
+                value: 48738.9
+            },
+            'Lighting': {
+                percentage: 40,
+                value: 55701.6
+            },
+            'Computers': {
+                percentage: 25,
+                value: 34813.5
+            }
+        },
+        carbonDetails: {
+            'Energy Usage': {
+                percentage: 50,
+                value: 0.239
+            },
+            'Water Usage': {
+                percentage: 25,
+                value: 0.119
+            },
+            'Waste Management': {
+                percentage: 15,
+                value: 0.072
+            },
+            'Transportation': {
+                percentage: 10,
+                value: 0.048
+            }
+        }
+    },
+    'staffroom': {
+        name: 'Staff Room',
+        energyConsumption: 51401,
+        carbonEmission: 0.356,
+        energyDetails: {
+            'HVAC': {
+                percentage: 40,
+                value: 20560.4
+            },
+            'Kitchen Equipment': {
+                percentage: 35,
+                value: 17990.35
+            },
+            'Lighting': {
+                percentage: 25,
+                value: 12850.25
+            }
+        },
+        carbonDetails: {
+            'Food Services': {
+                percentage: 50,
+                value: 0.178
+            },
+            'Energy Usage': {
+                percentage: 25,
+                value: 0.089
+            },
+            'Water Usage': {
+                percentage: 15,
+                value: 0.053
+            },
+            'Waste Management': {
+                percentage: 10,
+                value: 0.036
+            }
+        }
+    },
+    'auditorium': {
+        name: 'Auditorium',
+        energyConsumption: 37275,
+        carbonEmission: 0.268,
+        energyDetails: {
+            'HVAC': {
+                percentage: 45,
+                value: 16773.75
+            },
+            'Lighting': {
+                percentage: 40,
+                value: 14910
+            },
+            'Audio Equipment': {
+                percentage: 15,
+                value: 5591.25
+            }
+        },
+        carbonDetails: {
+            'Energy Usage': {
+                percentage: 50,
+                value: 0.134
+            },
+            'Water Usage': {
+                percentage: 25,
+                value: 0.067
+            },
+            'Transportation': {
+                percentage: 15,
+                value: 0.040
+            },
+            'Waste Management': {
+                percentage: 10,
+                value: 0.027
+            }
+        }
+    }
+};
 
 downloadPdfBtn.addEventListener('click', () => {
     window.location.href = 'generateReport.html';
@@ -242,7 +568,6 @@ window.addEventListener('click', (e) => {
 updateInputVisibility();
 
 
-
 async function fetchEnergyUsageData() {
     let response = await fetch(`/energy-usage/school/${placeholderID}`, {
         method: 'GET',
@@ -310,10 +635,417 @@ async function fetchCarbonBreakdownData() {
     return Edata;
 }
 
+
 // ==================== Impact Card ====================
 document.addEventListener("DOMContentLoaded", () => {
     const defaultYear = 2024;
     initImpactCard(defaultYear);
+    initializeHeatmapDropdown();
+    initializeHeatmap();
+});
+
+// Add event listener for dropdown change
+heatmapSelect.addEventListener('change', function() {
+    const selectedView = this.value;
+    console.log('Selected view:', selectedView);
+
+    
+    if (selectedView === 'regular') {
+        // Remove all filters and return buildings to original appearance
+        const buildings = document.querySelectorAll('.hover-building');
+        buildings.forEach(building => {
+            building.removeAttribute('filter');
+            // Reset any other style changes that might have been applied
+            building.style.fill = ''; // Reset fill color if any
+            building.style.opacity = ''; // Reset opacity if any
+        });
+        
+        // Hide or reset legend for regular view
+        const legendContainer = document.querySelector('.legend');
+        if (legendContainer) {
+            legendContainer.style.display = 'none';
+        }
+    } else {
+        // Show legend for heatmap views
+        const legendContainer = document.querySelector('.legend');
+        if (legendContainer) {
+            legendContainer.style.display = 'block';
+        }
+        // Update heatmap for energy or carbon view
+        updateHeatmap(selectedView);
+    }
+});
+
+function initializeHeatmapDropdown() {
+    const heatmapSelect = document.getElementById('heatmapType');
+    if (!heatmapSelect) {
+        console.error('Heatmap select element not found');
+        return;
+    }
+
+    // Clear existing options
+    heatmapSelect.innerHTML = '';
+
+    // Add options
+    const options = [
+        { value: 'regular', text: 'Regular View' },
+        { value: 'energy', text: 'Energy Consumption' },
+        { value: 'carbon', text: 'Carbon Footprint' }
+    ];
+
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.text;
+        heatmapSelect.appendChild(optionElement);
+    });
+
+    // Set default value
+    heatmapSelect.value = 'regular';
+}
+
+function addBuildingLabel(building, data) {
+    const bbox = building.getBBox();
+    const computedStyle = window.getComputedStyle(building);
+    const transform = computedStyle.transform;
+    
+    let translateX = 0, translateY = 0;
+    if (transform && transform !== 'none') {
+        const matrix = new DOMMatrix(transform);
+        translateX = matrix.e;
+        translateY = matrix.f;
+    }
+    
+    const labelGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    labelGroup.setAttribute('class', 'building-label-group');
+    labelGroup.setAttribute('transform', `translate(${translateX}, ${translateY})`);
+    
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', bbox.x + bbox.width/2);
+    text.setAttribute('y', bbox.y + bbox.height/2);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('fill', '#ffffff');
+    text.setAttribute('font-size', '14px');
+    text.setAttribute('pointer-events', 'none');
+    text.setAttribute('class', 'building-label');
+    text.textContent = data.name;
+    
+    const background = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    const padding = 10;
+    const textWidth = text.textContent.length * 8;
+    background.setAttribute('x', bbox.x + bbox.width/2 - textWidth/2 - padding);
+    background.setAttribute('y', bbox.y + bbox.height/2 - 10);
+    background.setAttribute('width', textWidth + padding * 2);
+    background.setAttribute('height', '20');
+    background.setAttribute('fill', '#000000');
+    background.setAttribute('fill-opacity', '0.7');
+    background.setAttribute('rx', '3');
+    background.setAttribute('ry', '3');
+    background.setAttribute('pointer-events', 'none');
+    
+    labelGroup.appendChild(background);
+    labelGroup.appendChild(text);
+    document.querySelector('svg').appendChild(labelGroup);
+}
+
+// Add heatmap functions
+function initializeHeatmap() {
+    try {
+        buildingData = mockBuildingData;
+        
+        // Create SVG filters
+        const svg = document.querySelector('svg');
+        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        svg.insertBefore(defs, svg.firstChild);
+
+        // Create filters for all buildings
+        Object.keys(buildingData).forEach(buildingId => {
+            const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+            filter.setAttribute('id', `colorize-${buildingId}`);
+            
+            const colorMatrix = document.createElementNS("http://www.w3.org/2000/svg", "feColorMatrix");
+            colorMatrix.setAttribute('type', 'matrix');
+            colorMatrix.setAttribute('values', '1 0 0 0 0   0 1 0 0 0   0 0 1 0 0  0 0 0 1 0');
+            
+            filter.appendChild(colorMatrix);
+            defs.appendChild(filter);
+        });
+
+        // Process buildings
+        const buildings = document.querySelectorAll('.hover-building');
+        buildings.forEach(building => {
+            const buildingId = building.id.toLowerCase();
+            const data = buildingData[buildingId];
+            
+            if (data) {
+                // Update click event listener to use showBuildingDetails
+                building.onclick = () => showBuildingDetails(buildingId);
+                // Add label
+                addBuildingLabel(building, data);
+            }
+        });
+
+        // Start with regular view
+        const heatmapSelect = document.getElementById('heatmapType');
+        if (heatmapSelect) {
+            heatmapSelect.value = 'regular';
+        }
+        
+        // Hide legend initially
+        const legendContainer = document.querySelector('.legend');
+        if (legendContainer) {
+            legendContainer.style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('Error initializing heatmap:', error);
+    }
+}
+
+function updateHeatmap(type) {
+    if (!type || type === 'regular') {
+        // Remove all filters and reset buildings to original state
+        const buildings = document.querySelectorAll('.hover-building');
+        buildings.forEach(building => {
+            building.removeAttribute('filter');
+            building.style.fill = ''; // Reset fill color
+            building.style.opacity = ''; // Reset opacity
+        });
+        return;
+    }
+
+    // Rest of your existing updateHeatmap code...
+    const energyColorScale = d3.scaleLinear()
+        .domain([0, d3.max(Object.values(buildingData), d => d.energyConsumption)])
+        .range(['#00ff00', '#ff0000']);
+
+    const carbonColorScale = d3.scaleLinear()
+        .domain([0, d3.max(Object.values(buildingData), d => d.carbonEmission)])
+        .range(['#00ff00', '#ff0000']);
+
+    Object.entries(buildingData).forEach(([buildingId, data]) => {
+        const building = document.getElementById(buildingId);
+        if (!building) return;
+
+        const filter = document.querySelector(`#colorize-${buildingId} feColorMatrix`);
+        if (!filter) return;
+
+        let color;
+        if (type === 'energy') {
+            color = energyColorScale(data.energyConsumption);
+        } else if (type === 'carbon') {
+            color = carbonColorScale(data.carbonEmission);
+        }
+
+        if (color) {
+            const rgb = d3.color(color);
+            filter.setAttribute('values', `
+                ${rgb.r/255} 0 0 0 0
+                0 ${rgb.g/255} 0 0 0
+                0 0 ${rgb.b/255} 0 0
+                0 0 0 1 0
+            `);
+            building.setAttribute('filter', `url(#colorize-${buildingId})`);
+        }
+    });
+
+    updateLegend(type);
+}
+
+
+const legendStyles = `
+    .legend {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 20px;
+    }
+
+    .legend-gradient {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .legend-labels {
+        display: flex;
+        justify-content: space-between;
+        width: 150px;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .legend-labels span {
+        text-align: center;
+    }
+`;
+
+// Add styles to document
+if (!document.querySelector('#legend-styles')) {
+    const styleElement = document.createElement('style');
+    styleElement.id = 'legend-styles';
+    styleElement.textContent = legendStyles;
+    document.head.appendChild(styleElement);
+}
+
+
+function showBuildingDetails(buildingId) {
+    const modal = document.getElementById('buildingModal');
+    const data = buildingData[buildingId];
+    const selectedView = document.getElementById('heatmapType').value;
+    
+    if (!data) return;
+
+    // Set modal title
+    document.getElementById('modalTitle').textContent = data.name;
+
+    // Get the content containers
+    const energyDetails = document.getElementById('energyDetails');
+    const carbonDetails = document.getElementById('carbonDetails');
+    
+    // Show/hide sections based on selected view
+    switch(selectedView) {
+        case 'energy':
+            energyDetails.style.display = 'block';
+            carbonDetails.style.display = 'none';
+            break;
+        case 'carbon':
+            energyDetails.style.display = 'none';
+            carbonDetails.style.display = 'block';
+            break;
+        default: // regular view
+            energyDetails.style.display = 'block';
+            carbonDetails.style.display = 'block';
+    }
+
+    // Update energy consumption details
+    document.getElementById('totalEnergy').textContent = data.energyConsumption.toLocaleString();
+    const energyBreakdown = document.getElementById('energyBreakdown');
+    energyBreakdown.innerHTML = Object.entries(data.energyDetails)
+        .map(([category, info]) => `
+            <div class="breakdown-item">
+                <span>${category}</span>
+                <span>
+                    <span class="percentage">${info.percentage}%</span>
+                    <span class="value">(${info.value.toLocaleString()} kWh)</span>
+                </span>
+            </div>
+        `).join('');
+
+    // Update carbon footprint details
+    document.getElementById('totalCarbon').textContent = data.carbonEmission.toLocaleString();
+    const carbonBreakdown = document.getElementById('carbonBreakdown');
+    carbonBreakdown.innerHTML = Object.entries(data.carbonDetails)
+        .map(([category, info]) => `
+            <div class="breakdown-item">
+                <span>${category}</span>
+                <span>
+                    <span class="percentage">${info.percentage}%</span>
+                    <span class="value">(${info.value.toLocaleString()} tons)</span>
+                </span>
+            </div>
+        `).join('');
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+// Add event listeners for closing the modal
+document.querySelector('.close').addEventListener('click', () => {
+    document.getElementById('buildingModal').style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('buildingModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+
+function updateLegend(type) {
+    const legendContainer = document.querySelector('.legend');
+    if (!legendContainer) return;
+
+    legendContainer.style.display = type === 'regular' ? 'none' : 'flex';
+    
+    if (type === 'regular') return;
+
+    let legendSvg = legendContainer.querySelector('.legend-gradient');
+    if (!legendSvg) {
+        legendSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        legendSvg.setAttribute('class', 'legend-gradient');
+        legendSvg.setAttribute('width', '150');
+        legendSvg.setAttribute('height', '20');
+        legendContainer.insertBefore(legendSvg, legendContainer.firstChild);
+    }
+
+    legendSvg.innerHTML = '';
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+    linearGradient.setAttribute('id', 'legend-gradient');
+    linearGradient.setAttribute('x1', '0%');
+    linearGradient.setAttribute('x2', '100%');
+    linearGradient.setAttribute('y1', '0%');
+    linearGradient.setAttribute('y2', '0%');
+
+    // Adjusted gradient stops
+    const stops = type === 'energy' ? [
+        { offset: '0%', color: '#00ff00' },
+        { offset: '33%', color: '#ffff00' },
+        { offset: '66%', color: '#ffa500' },
+        { offset: '100%', color: '#ff0000' }
+    ] : [
+        { offset: '0%', color: '#00ff00' },    // 0-1.0 tonnes
+        { offset: '33%', color: '#ffa500' },    // 1.0-2.0 tonnes
+        { offset: '66%', color: '#ff0000' },    // 2.0-3.0 tonnes
+        { offset: '100%', color: '#8b0000' }    // 3.0+ tonnes
+    ];
+
+    stops.forEach(stop => {
+        const stopEl = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        stopEl.setAttribute('offset', stop.offset);
+        stopEl.setAttribute('stop-color', stop.color);
+        linearGradient.appendChild(stopEl);
+    });
+
+    defs.appendChild(linearGradient);
+    legendSvg.appendChild(defs);
+
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute('x', '0');
+    rect.setAttribute('y', '0');
+    rect.setAttribute('width', '150');
+    rect.setAttribute('height', '20');
+    rect.setAttribute('fill', 'url(#legend-gradient)');
+    legendSvg.appendChild(rect);
+
+    // Update labels with new ranges
+    const labels = legendContainer.querySelectorAll('.legend-labels span');
+    if (labels.length === 3) {
+        if (type === 'energy') {
+            labels[0].textContent = '0 kWh';
+            labels[1].textContent = '150,000 kWh';
+            labels[2].textContent = '300,000 kWh';
+        } else if (type === 'carbon') {
+            labels[0].textContent = '0 tonnes';
+            labels[1].textContent = '1.0 tonnes';
+            labels[2].textContent = '2.0 tonnes';
+        }
+    }
+}
+
+// Function to toggle dropdown visibility
+function toggleDropdown() {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+}
+
+// Add event listener for year change to update heatmap
+yearSelect.addEventListener('change', () => {
+    initializeHeatmap();
 });
 
 function getTotalCarbonFootprint(data, selectedYear) {
@@ -1509,12 +2241,6 @@ async function initCarbonFootprintChart() {
 // Call the function to initialize everything
 initCarbonFootprintChart();
 
-
-// Function to toggle dropdown visibility
-function toggleDropdown() {
-    const dropdownMenu = document.getElementById("dropdownMenu");
-    dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
-}
 
 yearSelect.addEventListener('change', function() {
     placeholderYear = parseInt(this.value);
