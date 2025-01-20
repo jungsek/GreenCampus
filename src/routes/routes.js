@@ -11,8 +11,12 @@ const campaignRoute = require("./campaignRoute.js")
 const analyseChartRoute = require("./analyseChartRoute.js");
 const chatbotRoute = require("./chatbotRoute.js");
 const carbonBreakdownRoute = require("./carbonBreakdownRoute.js");
+const achievementRoute = require("./achievementRoute.js");
+const studentAchievementRoute = require("./studentAchievementRoute.js");
 const eventRoute = require("./eventRoute.js");
 const funFactsRoute = require("./funFactRoute.js");
+const quizRoute = require("./quizRoute.js");
+
 
 const route = (app, upload, getPool) => {
     userRoute(app, upload, getPool);
@@ -28,8 +32,11 @@ const route = (app, upload, getPool) => {
     analyseChartRoute(app, upload, getPool);
     chatbotRoute(app, upload, getPool);
     carbonBreakdownRoute(app, upload, getPool);
+    achievementRoute(app, upload, getPool);
+    studentAchievementRoute(app, upload, getPool);
     eventRoute(app, upload, getPool);
     funFactsRoute(app, upload, getPool);
+    quizRoute(app, upload, getPool);
 };
 
 module.exports = route;

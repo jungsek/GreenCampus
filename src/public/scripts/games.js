@@ -18,9 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDictionary();  // Load the dictionary
     initializeBoard(); // Initialize the game board
     initializeKeyboard(); // Initialize the keyboard
+    initializeQuiz(); // Initialize the quiz
     document.addEventListener('keyup', handleKeyPress); // Attach key press listener
 
     checkGreendleStatus();  // comment this line out to enable multiple tries per day
+    checkQuizStatus();  // comment this line out to enable multiple tries per day
 
     // Open modal when info button is clicked
     infoBtn.addEventListener('click', function() {
@@ -30,6 +32,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close modal when close button is clicked
     instructionCloseBtn.addEventListener('click', function() {
         modal.style.display = 'none';
+    });
+
+    // Handle modal inert attributes
+    const greendleModal = document.getElementById('greendleModal');
+    const quizModal = document.getElementById('quizModal');
+
+    // For Greendle Modal
+    greendleModal.addEventListener('show.bs.modal', function () {
+        this.removeAttribute('inert');
+    });
+
+    greendleModal.addEventListener('hide.bs.modal', function () {
+        this.setAttribute('inert', '');
+    });
+
+    // For Quiz Modal
+    quizModal.addEventListener('show.bs.modal', function () {
+        this.removeAttribute('inert');
+    });
+
+    quizModal.addEventListener('hide.bs.modal', function () {
+        this.setAttribute('inert', '');
     });
 });
 
@@ -267,11 +291,19 @@ function getStorageKey() {
 
 function disableGreendleButton() {
     greendleBtn.classList.add('completed');
-    greendleBtn.disabled = true;  // Actually disable the button
+    greendleBtn.disabled = true;
     const today = new Date().toDateString();
     const storageKey = getStorageKey();
     localStorage.setItem(storageKey, today);
-    greendleBtn.setAttribute('data-tooltip', 'Come back tomorrow for a new word!');
+    
+    // Override the tooltip content with custom CSS
+    const customTooltipStyle = document.createElement('style');
+    customTooltipStyle.textContent = `
+        .game-button.greendle.completed::after {
+            content: "Come back tomorrow for a new word!";
+        }
+    `;
+    document.head.appendChild(customTooltipStyle);
 }
 
 function checkGreendleStatus() {
@@ -281,7 +313,7 @@ function checkGreendleStatus() {
     
     if (greendleCompleted === today) {
         greendleBtn.classList.add('completed');
-        greendleBtn.disabled = true;  // Make sure button is disabled on page load too
+        greendleBtn.disabled = true;  
         greendleBtn.setAttribute('data-tooltip', 'Come back tomorrow for a new word!');
     }
 }
@@ -402,6 +434,303 @@ async function showFunFact() {
         }, 300);
     }, 8000);
 }
+
+
+// ================= Quiz =================
+let quiz = {
+    currentQuestion: 0,
+    score: 0,
+    questions: [],
+    isAnswered: false,
+    isActive: false,
+    isFirstQuiz: true  
+};
+
+function initializeQuiz() {
+    // Add event listeners for quiz elements
+    document.getElementById('nextButton').addEventListener('click', handleNextQuestion);
+}
+
+function checkQuizStatus() {
+    const quizBtn = document.querySelector('.game-button.quiz');
+    const today = new Date().toDateString();
+    const storageKey = `quizCompleted_user_${studentID}`;
+    const quizCompleted = localStorage.getItem(storageKey);
+    
+    if (quizCompleted === today) {
+        quizBtn.classList.add('completed');
+        quizBtn.disabled = true;
+        quizBtn.setAttribute('data-tooltip', 'Come back tomorrow for new questions!');
+    }
+}
+
+function toggleTopicSelector(show) {
+    const topicSelector = document.querySelector('.topic-selector');
+    if (show) {
+        topicSelector.classList.remove('d-none');
+    } else {
+        topicSelector.classList.add('d-none');
+    }
+}
+
+async function startNewQuiz() {
+    const topic = document.getElementById('topic-select').value;
+    quiz.isActive = true;
+    showLoading(true);
+    
+    // Check if this is a subsequent quiz
+    if (!quiz.isFirstQuiz) {
+        // Show disclaimer for subsequent quizzes
+        const disclaimerAlert = document.createElement('div');
+        disclaimerAlert.className = 'alert alert-info mb-3';
+        disclaimerAlert.innerHTML = `
+            <i class="fas fa-info-circle me-2"></i>
+            Note: You've already completed today's rewarded quiz. You can continue playing for fun, but no additional points will be awarded.
+        `;
+        document.getElementById('quiz-content').prepend(disclaimerAlert);
+    }
+    
+    // Hide topic selector when quiz starts
+    toggleTopicSelector(false);
+
+    // Reset and hide the results container
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.classList.add('d-none');
+    const questionContainer = document.getElementById('questionContainer');
+    questionContainer.style.display = 'block';
+    
+    try {
+        const response = await fetch('/api/quizQns', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ topic })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (!Array.isArray(data) || data.length === 0) {
+            throw new Error('Invalid question data received');
+        }
+
+        quiz.questions = data;
+        quiz.currentQuestion = 0;
+        quiz.score = 0;
+        quiz.isAnswered = false;
+        
+        displayQuestion();
+    } catch (error) {
+        console.error('Error starting quiz:', error);
+        const message = document.createElement('div');
+        message.className = 'alert alert-danger';
+        message.textContent = 'Failed to load quiz questions. Please try again.';
+        document.getElementById('quiz-content').prepend(message);
+    } finally {
+        showLoading(false);
+    }
+}
+
+function displayQuestion() {
+    const question = quiz.questions[quiz.currentQuestion];
+    if (!question) return;
+
+    // Update question text
+    const questionText = document.getElementById('questionText');
+    questionText.textContent = `Question ${quiz.currentQuestion + 1} of ${quiz.questions.length}`;
+    
+    const questionElement = document.createElement('p');
+    questionElement.className = 'mt-2 text-lg';
+    questionElement.textContent = question.question;
+    questionText.appendChild(questionElement);
+
+    // Create options
+    const optionsContainer = document.getElementById('options');
+    optionsContainer.innerHTML = '';
+    
+    question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'quiz-option';
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', () => checkAnswer(index));
+        optionsContainer.appendChild(optionElement);
+    });
+
+    // Reset state
+    document.getElementById('nextButton').classList.add('d-none');
+    document.getElementById('explanation').classList.add('d-none');
+    document.getElementById('questionContainer').style.display = 'block';
+}
+
+async function checkAnswer(selectedIndex) {
+    if (quiz.isAnswered || !quiz.isActive) return;
+    
+    const question = quiz.questions[quiz.currentQuestion];
+    const options = document.getElementById('options').children;
+    quiz.isAnswered = true;
+
+    // Show correct answer
+    options[question.correctIndex].classList.add('correct-answer');
+    
+    if (selectedIndex === question.correctIndex) {
+        quiz.score += 10;  // Keep this for display purposes
+        
+        // Calculate correct answers count
+        const correctAnswers = Math.floor(quiz.score / 10);  // Convert score to number of correct answers
+        
+        // Only award points if it's the first quiz
+        if (quiz.isFirstQuiz) {
+            // Show incremental points message
+            showMessage(`Correct! (${correctAnswers}/5 correct)`);
+            
+            // If this is the last question, award points based on total correct answers
+            if (quiz.currentQuestion === quiz.questions.length - 1) {
+                const pointsEarned = POINTS_SYSTEM[correctAnswers];
+                await earnRewardPoints(pointsEarned);
+                setTimeout(() => {
+                    showMessage(`Quiz Complete! You earned ${pointsEarned} points!`);
+                }, 1500);
+            }
+        } else {
+            showMessage("Correct!");
+        }
+    } else {
+        options[selectedIndex].classList.add('wrong-answer');
+        showMessage("Incorrect!");
+    }
+
+    // Show explanation
+    const explanationElement = document.getElementById('explanation');
+    explanationElement.textContent = question.explanation;
+    explanationElement.classList.remove('d-none');
+
+    // Show next button or results
+    if (quiz.currentQuestion < quiz.questions.length - 1) {
+        document.getElementById('nextButton').classList.remove('d-none');
+    } else {
+        setTimeout(showQuizResults, 6500);
+    }
+}
+
+function handleNextQuestion() {
+    if (quiz.currentQuestion < quiz.questions.length - 1) {
+        quiz.currentQuestion++;
+        quiz.isAnswered = false;
+        displayQuestion();
+    }
+}
+
+function showQuizResults() {
+    const questionContainer = document.getElementById('questionContainer');
+    const resultContainer = document.getElementById('resultContainer');
+    
+    // Hide question container and show results
+    questionContainer.style.display = 'none';
+    resultContainer.classList.remove('d-none');
+
+    // Calculate score percentage
+    const scorePercentage = (quiz.score / (quiz.questions.length * 10)) * 100;
+    
+    const correctAnswers = Math.floor(quiz.score / 10);
+    const pointsEarned = quiz.isFirstQuiz ? POINTS_SYSTEM[correctAnswers] : 0;
+
+    const pointsMessage = quiz.isFirstQuiz 
+        ? `<div class="points-breakdown mb-4">
+             <p class="h5 mb-2">Score: ${correctAnswers}/5</p>
+             <p class="text-success fw-bold">Points Earned: ${pointsEarned}</p>
+           </div>`
+        : `<p class="h5 mb-4">${correctAnswers}/5 correct</p>`;
+
+        const resultContent = resultContainer.querySelector('.bg-light');
+        resultContent.innerHTML = `
+            <h3 class="h4 mb-3">Quiz Complete! 🎉</h3>
+            ${pointsMessage}
+            ${getFeedbackMessage(scorePercentage)}
+            <div class="mt-4">
+                <p class="mb-3">Want to learn more? Choose another topic!</p>
+                <select id="next-topic-select" class="form-select mb-3" aria-label="Select next quiz topic">
+                    <option value="climate change">🌡️ Climate Change</option>
+                    <option value="renewable energy">⚡ Renewable Energy</option>
+                    <option value="biodiversity">🦋 Biodiversity</option>
+                    <option value="sustainable living">🌱 Sustainable Living</option>
+                    <option value="ocean conservation">🌊 Ocean Conservation</option>
+                    <option value="waste management">♻️ Waste Management</option>
+                </select>
+                <button onclick="startNewTopic()" class="btn btn-success">
+                    <i class="fas fa-play me-2"></i>
+                    Start New Topic
+                </button>
+            </div>
+        `;
+
+    // Only update completion status and disable button if it's the first quiz
+    if (quiz.isFirstQuiz) {
+        const quizBtn = document.querySelector('.game-button.quiz');
+        quizBtn.classList.add('completed');
+        quizBtn.disabled = true;
+        quizBtn.setAttribute('data-tooltip', 'Come back tomorrow for new questions!');
+
+        // Save completion status
+        const today = new Date().toDateString();
+        localStorage.setItem(`quizCompleted_user_${studentID}`, today);
+        
+        // Set first quiz flag to false
+        quiz.isFirstQuiz = false;
+    }
+
+    // Set game as inactive
+    quiz.isActive = false;
+}
+
+// Helper function to get feedback message based on score
+function getFeedbackMessage(scorePercentage) {
+    if (scorePercentage === 100) {
+        return `
+            <div class="alert alert-success">
+                <h4 class="alert-heading">Perfect Score! 🌟</h4>
+                <p>You're an environmental expert! Your knowledge can make a real difference in protecting our planet.</p>
+            </div>
+        `;
+    } else if (scorePercentage >= 80) {
+        return `
+            <div class="alert alert-success">
+                <h4 class="alert-heading">Excellent Work! 🌿</h4>
+                <p>You have a strong understanding of environmental issues. Keep learning and sharing your knowledge!</p>
+            </div>
+        `;
+    } else if (scorePercentage >= 60) {
+        return `
+            <div class="alert alert-info">
+                <h4 class="alert-heading">Good Job! 🌱</h4>
+                <p>You're on the right track! Try another topic to expand your environmental knowledge.</p>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="alert alert-info">
+                <h4 class="alert-heading">Keep Learning! 💚</h4>
+                <p>Environmental topics can be challenging. Try another quiz to improve your understanding!</p>
+            </div>
+        `;
+    }
+}
+
+// Function to handle starting a new topic
+function startNewTopic() {
+    const topic = document.getElementById('next-topic-select').value;
+    document.getElementById('topic-select').value = topic;
+    startNewQuiz();
+}
+
+function showLoading(show) {
+    document.getElementById('loading').classList.toggle('d-none', !show);
+    document.getElementById('quiz-content').style.display = show ? 'none' : 'block';
+}
+
 
 
 // ================= Reward Points system =================
