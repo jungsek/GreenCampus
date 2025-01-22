@@ -8,6 +8,7 @@
     <link href="./styles/common.css" rel="stylesheet">
     <link href="./styles/events.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -25,35 +26,36 @@
                 <h1 id="eventTitle"></h1>
                 <p class="event-date" id="eventDate"></p>
             </div>
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <h4>Total Carbon Footprint</h4>
-                    <p id="totalCarbon"><span id="totalCarbonNum"></span> tons of CO₂</p>
+            <div class="summary-cards flex gap-4 w-full">
+                <div id="energyUsageCard" class="bg-white p-6 rounded-lg shadow-md hover-card flex-1 border border-[#ddd] energy-usage-card">
+                    <div class="flex items-center justify-between">
+                        <span class="trend2 text-sm font-medium"></span>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mt-4">Energy Usage</h3>
+                    <p id="totalEnergyNum" class="metric-value2 text-3xl font-semibold text-[#5bc7a0] mt-2">Loading...</p>
                 </div>
-                <div class="summary-card">
-                    <h4>Total Energy Usage</h4>
-                    <p id="totalEnergy"><span id="totalEnergyNum"></span> kWh</p>
-                </div>
-                <div class="summary-card">
-                    <h4>Waste Generated</h4>
-                    <p id="wasteGenerated">300 kg</p>
-                </div>
-                <div class="summary-card">
-                    <h4>Water Usage</h4>
-                    <p id="waterUsage">2000 L</p>
+                
+                <div id="carbonFootprintCard" class="bg-white p-6 rounded-lg shadow-md hover-card flex-1 border border-[#ddd] carbon-footprint-card">
+                    <div class="flex items-center justify-between">
+                        <span class="trend1 text-sm font-medium text-red-600"></span>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mt-4">Carbon Footprint</h3>
+                    <p id="totalCarbonNum" class="metric-value1 text-3xl font-semibold text-[#5bc7a0] mt-2">Loading...</p>
                 </div>
             </div>
+            
 
                         <!-- Charts & Analysis -->
                         <!-- Carbon Footprint Chart -->
-            <div class="chart-title">
-                <h4>Carbon Footprint Breakdown</h4>
-                <select id="locationSelect">
-                    <option value="" class="placeholder" disabled hidden>Locations</option>
-                </select>
-            </div>
+            
+            <select id="locationSelect">
+                <option value="" class="placeholder" disabled hidden>Locations</option>
+            </select>
             <div class="chart-wrapper">
-                <div class="chart-container">
+                <div class="chart-container border border-[#ddd] shadow-md p-6 rounded-lg">
+                    <div class="chart-title">
+                        <h3>Carbon Footprint Breakdown</h3>
+                    </div>
                     <canvas id="carbonBreakdownChart"></canvas>
                     <div class="legendButtons" id="legendButtons2">
                         <button onclick="highlightSegment('Energy Usage')" class="legend-button" data-segment="Energy Usage">Energy Usage</button>
@@ -68,12 +70,10 @@
 
             <!-- Energy Usage Chart -->
              <div class="chart-wrapper">
-
-             
-             <div class="chart-title">
-                <h4>Energy Usage Breakdown</h4>
-             </div>
-                <div class="chart-container">
+                    <div class="chart-container  border border-[#ddd] shadow-md p-6 rounded-lg">
+                    <div class="chart-title">
+                        <h3>Energy Usage Breakdown</h3>
+                     </div>
                     <canvas id="energyBreakdownChart"></canvas>
                     <div class="legendButtons" id="legendButtons">
                         <button onclick="highlightSegment('Lighting')" class="legend-button"  data-segment="Lighting">Lighting</button>
@@ -104,9 +104,7 @@
             <div class="insights">
                 <h2>Actionable Insights</h2>
                 <ul id="insightsList">
-                    <li>Switching to LED lighting could reduce energy consumption by 20%.</li>
-                    <li>Using biodegradable utensils can cut down plastic waste by 50%.</li>
-                    <li>Encourage carpooling to reduce transportation emissions.</li>
+                    <p id="insights"></p>
                 </ul>
             </div>
         </div>
