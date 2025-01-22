@@ -10,6 +10,10 @@ body {
     background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
 }
 
+h3 {
+    font-size: 1.25rem !important; /* Example Bootstrap override */
+}
+
 .header {
     padding: 2rem;
     text-align: center;
@@ -110,13 +114,13 @@ body {
 
 #legendButtons, #legendButtons2 {
     display: grid;
-    position: absolute;
-    right: 20px; /* Changed from margin-left to right positioning */
-    margin-top: 25px;
+    width: 100%;
     grid-template-columns: repeat(2, 1fr);
-    gap: 7px;
-    height: 50%;
-    justify-items: center;
+    gap: 10px;
+    padding: 0 40px;
+    position: relative;
+    right: auto;
+    margin-top: 20px;
 }
 
 .legendButtons button {
@@ -127,8 +131,10 @@ body {
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.3s;
-    width: 100px; 
-    height: 45px; 
+    width: 100%; 
+    margin: 0;
+    height: 45px;
+
 }
 
 #carbonBreakdownChart, #energyBreakdownChart {
@@ -238,7 +244,7 @@ body {
 .summary-cards {
     display: flex;
     gap: 20px;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
     margin-bottom: 40px;
 }
@@ -272,45 +278,47 @@ body {
     flex-wrap: wrap;
     margin-bottom: 40px;
 }
-.chart-wrapper{
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    min-width: 400px;
-}
+
 .chart-container {
     width: 100%;
-    position: relative; /* Added position relative */
-    display: flex; /* Added flex display */
-    justify-content:flex-start; /* Added space between items */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
 }
 
-.chart-title{
+.chart-title {
+    width: 100%;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
+
 
 #locationSelect {
-    padding: 5px 16px 5px 16px; 
-    font-size: 14px;
-    font-weight: bold;
+    display: block;
+    width: 200px;
+    padding: 12px 24px;
+    margin: 30px auto;
+    font-size: 16px;
+    font-weight: 600;
     color: #333;
     background-color: #c8e6deba;
-    border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    position: relative; /* Positioning for custom arrow */
-    transition: background-color 0.3s ease;
-}
-
-#locationSelect option {
-    background-color: #f0efefe7; 
+    transition: all 0.3s ease;
 }
 
 #locationSelect:hover {
     background-color: #c3e7deea;
+    transform: translateY(-1px);
+}
+
+#locationSelect option {
+    background-color: #f0efefe7;
+    padding: 12px;
+    font-size: 14px;
 }
 
 /* Insights */
@@ -417,6 +425,8 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
+
 
 .cancel-button:hover {
     background-color: #e5e7eb;
