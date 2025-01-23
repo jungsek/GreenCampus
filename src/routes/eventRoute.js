@@ -11,6 +11,7 @@ const eventRoute = (app) => {
     app.post("/events", eventController.createEvent); // Create a new event
     app.put("/events/:id", eventController.updateEvent); // Update an event
     app.delete("/events/:id", eventController.deleteEvent); // Delete an event
+    app.post("/events/recommendations/:cftotal/:eutotal/:name", eventController.generateRecommendations); // Generate recommendations
 };
 
 module.exports = eventRoute;
