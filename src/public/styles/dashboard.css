@@ -1619,10 +1619,15 @@ h2 {
 .right-container {
     display: flex;
     flex-direction: column;
+    gap: 25px;
+    width: 60%;
+    padding: 20px;
 }
+
 
 #progressToGoalsCard {
     width: 100%;
+    margin-bottom: 15px;
 }
 
 #energyUsageCard {
@@ -1638,6 +1643,7 @@ h2 {
     display: flex;
     gap: 15px;
     width: 100%;
+    max-height: none;
 }
 
 /* Energy Usage and Carbon Footprint cards */

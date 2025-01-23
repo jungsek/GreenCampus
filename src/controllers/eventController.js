@@ -1,5 +1,8 @@
 const Event = require("../models/event");
-
+require('dotenv').config();
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // Get all events
 const getAllEvents = async (req, res) => {
     try {
@@ -103,6 +106,74 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+const generateRecommendations = async (req, res) => {
+    const name = req.params.name;
+    const cftotal = parseFloat(req.params.cftotal);
+    const eutotal = parseFloat(req.params.eutotal);
+    const { eventeb, eventcb } = req.body;
+
+    try {
+        // Preprocess the breakdown data for clarity
+        const energyBreakdownSummary = eventeb
+            .reduce((acc, item) => {
+                acc[item.category] = (acc[item.category] || 0) + item.percentage;
+                return acc;
+            }, {});
+        const carbonBreakdownSummary = eventcb
+            .reduce((acc, item) => {
+                acc[item.category] = (acc[item.category] || 0) + item.percentage;
+                return acc;
+            }, {});
+
+        // Convert the summaries to strings for the prompt
+        const energyBreakdownStr = Object.entries(energyBreakdownSummary)
+            .map(([category, percentage]) => `${category}: ${percentage}%`)
+            .join(", ");
+        const carbonBreakdownStr = Object.entries(carbonBreakdownSummary)
+            .map(([category, percentage]) => `${category}: ${percentage}%`)
+            .join(", ");
+
+        // Updated and structured prompt
+        const prompt = `You are an expert in sustainability and environmental management. Analyze the following event data to provide concise, point-form insights:
+
+Event Name: ${name}
+Total Energy Usage: ${eutotal} kWh
+Total Carbon Footprint: ${cftotal} tons
+
+Energy Usage Breakdown: ${energyBreakdownStr}
+Carbon Footprint Breakdown: ${carbonBreakdownStr}
+
+Provide insights on:
+- What aspects of the event were environmentally efficient or well-managed.
+- What aspects contributed significantly to emissions or energy usage and require improvement.
+- Actionable suggestions to reduce environmental impact for future events.
+
+Structure your response as follows:
+What was done well:
+- [Insight 1]
+- [Insight 2]
+...
+Areas for improvement:
+- [Insight 1]
+- [Insight 2]
+...
+Recommendations for future events:
+- [Recommendation 1]
+- [Recommendation 2]
+
+Do not use any bold or modified headers, just provide the insights and recommendations in normal sized text.`;
+
+        // Call the AI model with the updated prompt
+        const result = await model.generateContent(prompt);
+
+        // Extract and send the response text
+        res.json({ result: result.response.text() });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error generating recommendations");
+    }
+};
+
 module.exports = {
     getAllEvents,
     getEventById,
@@ -112,4 +183,6 @@ module.exports = {
     createEvent,
     updateEvent,
     deleteEvent,
+    generateRecommendations
 };
+
