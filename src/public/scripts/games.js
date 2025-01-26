@@ -16,10 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     loadDictionary();  // Load the dictionary
-    initializeBoard(); // Initialize the game board
-    initializeKeyboard(); // Initialize the keyboard
-    initializeQuiz(); // Initialize the quiz
-    document.addEventListener('keyup', handleKeyPress); // Attach key press listener
+    initializeBoard(); 
+    initializeKeyboard();
+    initializeQuiz(); 
 
     checkGreendleStatus();  // comment this line out to enable multiple tries per day
     checkQuizStatus();  // comment this line out to enable multiple tries per day
@@ -41,6 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // For Greendle Modal
     greendleModal.addEventListener('show.bs.modal', function () {
         this.removeAttribute('inert');
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+        document.addEventListener('keyup', handleKeyPress);
     });
 
     greendleModal.addEventListener('hide.bs.modal', function () {
@@ -328,8 +334,18 @@ function showMessage(text) {
 }
 
 function handleKeyPress(e) {
+    const modal = document.getElementById('greendleModal');
+    if (!modal.classList.contains('show')) return;
+
     const key = e.key.toUpperCase();
-    if (key === 'ENTER' || key === 'BACKSPACE' || (key.length === 1 && key.match(/[A-Z]/))) {
+    if (key === 'ENTER') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleInput('ENTER');
+        return false;
+    } else if (key === 'BACKSPACE' || (key.length === 1 && key.match(/[A-Z]/))) {
+        e.preventDefault();
+        e.stopPropagation();
         handleInput(key === 'BACKSPACE' ? '⌫' : key);
     }
 }

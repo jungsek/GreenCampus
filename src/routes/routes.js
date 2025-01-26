@@ -17,8 +17,6 @@ const eventRoute = require("./eventRoute.js");
 const funFactsRoute = require("./funFactRoute.js");
 const quizRoute = require("./quizRoute.js");
 
-
-
 const route = (app, upload, getPool) => {
     userRoute(app, upload, getPool);
     energyUsageRoute(app, upload, getPool);
