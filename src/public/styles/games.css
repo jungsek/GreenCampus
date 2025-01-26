@@ -307,9 +307,9 @@ body {
 
 /* ============== Greendle ============== */
 :root {
-    --correct-color: #538d4e;
+    --correct-color: #538d4ee1;
     --present-color: #b59f3b;
-    --absent-color: #3a3a3c;
+    --absent-color: #3a3a3cad;
 }
 
 
