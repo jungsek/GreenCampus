@@ -82,11 +82,28 @@ const deletestudentAchievement = async (req, res) => {
     }
 };
 
+// Update the completion status of an achievement
+const updateComplete = async (req, res) => {
+    const id = parseInt(req.params.id);
+    const newAchievementData = req.body;
+    try {
+        const updatedAchievement = await studentAchievement.updateComplete(id, newAchievementData);
+        if (!updatedAchievement) {
+            return res.status(404).send("Achievement not found");
+        }
+        res.json(updatedAchievement);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error updating achievement completion status");
+    }
+};
+
 module.exports = {
     getAllstudentAchievements,
     getstudentAchievementById,
     getstudentAchievementByAchievementId,
     updateStudentAchievement,
     createstudentAchievement,
-    deletestudentAchievement
+    deletestudentAchievement,
+    updateComplete
 };

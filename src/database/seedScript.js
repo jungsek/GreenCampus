@@ -2359,7 +2359,7 @@ VALUES
 INSERT INTO StudentAchievements (student_id, achievement_id, progress, completed)
 VALUES
 (11, 1, 7, 0),
-(11, 2, 2, 0),
+(11, 2, 4, 0),
 (11, 3, 1, 1),
 (11, 4, 2, 0),
 (11, 5, 1, 1),
