@@ -6,6 +6,7 @@ const achievementController = require("../controllers/studentAchievementsControl
 const studentAchievementRoute = (app) => {
     app.get("/studentAchievements", achievementController.getAllstudentAchievements);
     app.get("/studentAchievements/:id", achievementController.getstudentAchievementById);
+    app.get("/studentAchievements/achievement/:id", achievementController.getstudentAchievementByAchievementId);
     app.post("/studentAchievements", achievementController.createstudentAchievement);
     app.put("/studentAchievements/:id", achievementController.updateStudentAchievement);
     app.delete("/studentAchievements/:id", achievementController.deletestudentAchievement);

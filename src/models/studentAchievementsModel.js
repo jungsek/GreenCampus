@@ -43,9 +43,18 @@ class studentAchievement {
     }
 
     static async getstudentAchievementById(id){
+        const params = {"student_id": id}
+        const result = (await this.query(
+            "SELECT * FROM StudentAchievements WHERE student_id = @student_id", 
+            params
+        )).recordset
+        return result ? this.tostudentAchievementObj(result) : null
+    }
+
+    static async getstudentAchievementByAchievementId(id){
         const params = {"id": id}
         const result = (await this.query(
-            "SELECT * FROM Achievements WHERE student_id = @student_id", 
+            "SELECT * FROM StudentAchievements WHERE achievement_id = @achievement_id",
             params
         )).recordset
         return result ? this.tostudentAchievementObj(result) : null
