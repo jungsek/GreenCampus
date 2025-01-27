@@ -344,3 +344,62 @@
 .score-icon.fa-arrow-down {
     color: #F44336;
 }
+
+
+
+.instruction-section li {
+    display: list-item !important;
+}
+
+
+.claim-btn {
+    display: block;
+    margin-top: 10px;
+    margin-left: -90px;
+    padding: 5px 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+}
+
+.claim-btn:hover {
+    background-color: #45a049;
+}
+
+.claim-btn:disabled,
+.claim-btn.completed {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Base tooltip styles */
+.claim-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black; 
+    color: white;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 100;
+    opacity: 1;
+    visibility: hidden;
+}
+
+/* Show tooltip on hover for disabled button */
+.claim-btn:disabled:hover::after,
+.claim-btn.completed:hover::after {
+    visibility: visible;
+    opacity: 1;
+    white-space: pre;
+    text-align: center;
+}
