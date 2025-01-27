@@ -10,6 +10,7 @@ const studentAchievementRoute = (app) => {
     app.post("/studentAchievements", achievementController.createstudentAchievement);
     app.put("/studentAchievements/:id", achievementController.updateStudentAchievement);
     app.delete("/studentAchievements/:id", achievementController.deletestudentAchievement);
+    app.patch("/studentAchievements/:id/complete", achievementController.updateComplete);
 };
 
 module.exports = studentAchievementRoute;

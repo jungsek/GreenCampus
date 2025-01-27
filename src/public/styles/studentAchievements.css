@@ -82,5 +82,5 @@
 
 .progress-bar {
     background-color: #28a745;
-    transition: width 0.3s ease;
+    transition: width 2s ease-in-out;
 }   
