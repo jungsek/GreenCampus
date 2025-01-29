@@ -1145,7 +1145,6 @@ function percentageChangeEU(energyUsageData, breakdownData, selectedYear) {
 }
 
 
-
 async function initImpactCard(placeholderYear) {
     const carbonFootprintData = await fetchCarbonFootprintData();
     const energyUsageData = await fetchEnergyUsageData();
@@ -1158,67 +1157,82 @@ async function initImpactCard(placeholderYear) {
     const carbonFootprintChange = percentageChangeCF(carbonFootprintData, placeholderYear);
     const energyUsageChange = percentageChangeEU(energyUsageData, topContributorsData, placeholderYear);
 
-    const yearElement = document.querySelector(".impact-card .title");
     const totalCarbonFootprintElement = document.querySelector(".metric-value1");
     const totalEnergyUsageElement = document.querySelector(".metric-value2");
-    const topContributorsElement = document.querySelector(".metric-value3");
+    const carbonComparisonElement = document.querySelector(".carbon-comparison");
+    const energyComparisonElement = document.querySelector(".energy-comparison");
     const carbonFootprintChangeElement = document.querySelector(".trend1");
     const energyUsageChangeElement = document.querySelector(".trend2");
 
-    if (yearElement) {
-        yearElement.innerText = `${placeholderYear}'s Impact`;
-    }
-
+    // Set total carbon footprint
     if (totalCarbonFootprintElement) {
         totalCarbonFootprintElement.innerText = `${totalCarbonFootprint.toFixed(2)} tonnes`;
+
+        // Your updated carbon footprint comparisons
+        let carbonComparison = "";
+        if (totalCarbonFootprint >= 10) {
+            carbonComparison = `or driving a<strong> car for 41,200 km.</strong>`;
+        }
+
+        if (carbonComparisonElement) {
+            carbonComparisonElement.innerHTML = carbonComparison;
+        }
     }
 
+    // Set total energy usage
     if (totalEnergyUsageElement) {
         totalEnergyUsageElement.innerText = `${totalEnergyUsage.toFixed(2)} kWh`;
+
+        // Your updated energy usage comparisons
+        let energyComparison = "";
+        if (totalEnergyUsage >= 15400) {
+            energyComparison = `or <strong>running a 100W bulb for 17.5 years.</strong>`;
+        }
+
+        if (energyComparisonElement) {
+            energyComparisonElement.innerHTML = energyComparison;
+        }
     }
 
-    if (topContributorsElement) {
-        topContributorsElement.innerText = topContributors.join(", "); 
-    }
-
+    // Display carbon footprint change from last year
     if (carbonFootprintChangeElement) {
-        // Check if carbonFootprintChange is "No data" or NaN
         if (isNaN(carbonFootprintChange) || carbonFootprintChange === "No data") {
             carbonFootprintChangeElement.innerHTML = "No data available from last year";
-            carbonFootprintChangeElement.style.color = "grey"; // Default color for no data
+            carbonFootprintChangeElement.style.color = "grey";
         } else if (Math.abs(carbonFootprintChange) == 0.0) {
-            // No change case (near zero)
             carbonFootprintChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
-            carbonFootprintChangeElement.style.color = "black"; // Blue color for no change
+            carbonFootprintChangeElement.style.color = "black";
         } else {
-            // Set up icon and color based on increase or decrease
             const iconClass = carbonFootprintChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
             const color = carbonFootprintChange < 0 ? 'rgb(37 99 235)' : 'rgb(220 38 38)';
             
             carbonFootprintChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(carbonFootprintChange)}% from last year`;
-            carbonFootprintChangeElement.style.color = color; // Apply color based on trend
+            carbonFootprintChangeElement.style.color = color;
         }
     }
-    
+
+    // Display energy usage change from last year
     if (energyUsageChangeElement) {
-        // Check if energyUsageChange is "No data" or NaN
         if (isNaN(energyUsageChange) || energyUsageChange === "No data") {
             energyUsageChangeElement.innerHTML = "No data available from last year";
-            energyUsageChangeElement.style.color = "grey"; // Default color for no data
+            energyUsageChangeElement.style.color = "grey";
         } else if (Math.abs(energyUsageChange) == 0.0) {
-            // No change case (near zero)
             energyUsageChangeElement.innerHTML = `<br><i class='bx bx-minus'></i> No change from last year`;
-            energyUsageChangeElement.style.color = "blue"; // Blue color for no change
+            energyUsageChangeElement.style.color = "blue";
         } else {
-            // Set up icon and color based on increase or decrease
             const iconClass = energyUsageChange < 0 ? 'bx-trending-down' : 'bx-trending-up';
             const color = energyUsageChange < 0 ? 'rgb(37 99 235)' : 'rgb(220 38 38)';
             
             energyUsageChangeElement.innerHTML = `<br><i class='bx ${iconClass}'></i> ${Math.abs(energyUsageChange)}% from last year`;
-            energyUsageChangeElement.style.color = color; // Apply color based on trend
+            energyUsageChangeElement.style.color = color;
         }
     }
 }
+
+
+
+
+
 
 
 // ==================== Goal Progress Chart ====================
