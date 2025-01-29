@@ -1619,7 +1619,7 @@ h2 {
 .right-container {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 10px;
     width: 60%;
     padding: 20px;
 }
@@ -1649,10 +1649,14 @@ h2 {
 /* Energy Usage and Carbon Footprint cards */
 .energy-usage-card,
 .carbon-footprint-card {
-    flex: 1;
-    width: auto !important; /* Override existing width */
-    margin: 0 !important; /* Remove any existing margins */
+    flex: none; /* Prevents auto-expanding */
+    width: 50% !important; /* Forces a fixed width */
+    max-width: 50%; /* Ensures it doesn't grow */
+    overflow-wrap: break-word; /* Ensures words break if necessary */
+    word-wrap: break-word; /* Alternative for better browser support */
+    white-space: normal; /* Allows text wrapping */
 }
+
 
 .legend {
     display: flex;
