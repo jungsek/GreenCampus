@@ -58,6 +58,7 @@ body{
   }
   
   details[open] div {
-    background-color: #05d096;
+    background-color: #72febd;
+    color: #303030;
     padding: .5em 1em;
   }
