@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeKeyboard();
     initializeQuiz(); 
 
-    //checkGreendleStatus();  // comment this line out to enable multiple tries per day
-    //checkQuizStatus();  // comment this line out to enable multiple tries per day
+    checkGreendleStatus();  // comment this line out to enable multiple tries per day
+    checkQuizStatus();  // comment this line out to enable multiple tries per day
 
     // Open modal when info button is clicked
     infoBtn.addEventListener('click', function() {
