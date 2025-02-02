@@ -1,17 +1,13 @@
-// second version (multiple times per month only when page refreshes, keeps claim button disabled for the current session)
-
-// let claimedRewards = new Map();
-let claimedRewards = new Set();
-let studentID = 11;
-let school_id = 1;
-
+// Add this to your existing JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     let role = sessionStorage.getItem('role')
     let navbar = document.createElement('div')
     if (role == 'student') {
         navbar.classList.add('studentnav-placeholder')
     }
-
+    else {
+        navbar.classList.add('nav-placeholder')
+    }
     document.body.insertBefore(navbar, document.body.firstChild);
 
     const modal = document.getElementById('instructionsModal');
@@ -197,27 +193,12 @@ function displayLeaderboard(data) {
     const displayOrder = [topSchools[1], topSchools[0], topSchools[2]];
 
     displayOrder.forEach((school, index) => {
-        console.log('School:', {
-            id: school.school_id,
-            type: typeof school.school_id,
-            name: school.school_name,
-            rank: index === 0 ? 2 : index === 1 ? 1 : 3
-        });
-
         const podiumItem = document.createElement('div');
         podiumItem.classList.add('podium-item', podiumClasses[index]);
 
         const initials = getInitials(school.school_name);
         const currentRank = index === 0 ? 2 : index === 1 ? 1 : 3;
         const rankChange = calculateRankChange(currentRank, school.previous_rank);
-        
-        const rewardPoints = currentRank === 1 ? 50 : currentRank === 2 ? 35 : 20;
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const claimKey = `${school.school_id}-${currentMonth}`;
-        // const isAlreadyClaimed = localStorage.getItem(claimKey) === currentMonth;
-        // const isAlreadyClaimed = false;  // uncomment this line and comment the line above to claim reward points mulitple times
-        
-        const isAlreadyClaimed = claimedRewards.has(claimKey);
 
         const carbonFootprint = school.current_year_carbon_footprint || school.current_month_carbon_footprint || 0;
         const energyUsage = school.current_year_energy_usage || school.current_month_energy_usage || 'N/A';
@@ -236,17 +217,6 @@ function displayLeaderboard(data) {
                         (${rankChange > 0 ? '+' : ''}${rankChange || '-'})
                         <i class="fas fa-arrow-${rankChange > 0 ? 'up arrow-up' : rankChange < 0 ? 'down arrow-down' : ''}"></i>
                     </span>
-                    ${school.school_id === 1 ? 
-                        `<button 
-                            class="claim-btn ${isAlreadyClaimed ? 'completed' : ''}" 
-                            onclick="claimMonthlyReward('${school.school_id}', ${currentRank})"
-                            ${isAlreadyClaimed ? 'disabled' : ''}
-                            data-school="${school.school_id}"
-                            data-tooltip="${isAlreadyClaimed ? 'Reward claimed! \nCome back next month if your school remains on the podium!' : ''}"
-                        >
-                            ${isAlreadyClaimed ? `Claim ${rewardPoints} Reward Points` : `Claim ${rewardPoints} Reward Points`}
-                        </button>`
-                    : ''}
                 </div>
             </div>
             <div class="podium-step">
@@ -257,7 +227,6 @@ function displayLeaderboard(data) {
         leaderboard.appendChild(podiumItem);
     });
 
-    // Rest of the function remains the same
     const listContainer = document.querySelector('.list');
     listContainer.innerHTML = '';
 
@@ -298,7 +267,6 @@ function displayLeaderboard(data) {
         listContainer.appendChild(listItem);
     });
 }
-
 
 // Helper function to calculate rank change
 function calculateRankChange(currentRank, previousRank) {
@@ -356,103 +324,3 @@ function getInitials(schoolName) {
 
 // Fetch default data on page load
 fetchMonthlyData();
-
-// Function to generate storage key for claims
-function getClaimStorageKey(schoolId) {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    return `claim-reward-${schoolId}-${currentMonth}`;
-}
-
-// Function to disable claim button after successful claim
-function disableClaimButton(schoolId, button) {
-    button.classList.add('completed');
-    button.disabled = true;
-    
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const storageKey = getClaimStorageKey(schoolId);
-    localStorage.setItem(storageKey, currentMonth);
-    
-    // Override the tooltip content with custom CSS
-    const customTooltipStyle = document.createElement('style');
-    customTooltipStyle.textContent = `
-        .claim-btn.completed[data-school="${schoolId}"]::after {
-            content: "You have claimed this month's reward! Come back again next month when your school is still on the podium!";
-        }
-    `;
-    document.head.appendChild(customTooltipStyle);
-    
-    // Update button text
-    button.textContent = 'Claimed';
-}
-
-// Function to check claim status
-function checkClaimStatus(schoolId) {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const storageKey = getClaimStorageKey(schoolId);
-    const claimStatus = localStorage.getItem(storageKey);
-    
-    if (claimStatus === currentMonth) {
-        const claimBtn = document.querySelector(`.claim-btn[data-school="${schoolId}"]`);
-        if (claimBtn) {
-            claimBtn.classList.add('completed');
-            claimBtn.disabled = true;
-            claimBtn.textContent = 'Claimed';
-            claimBtn.setAttribute('data-tooltip', 'Reward claimed! \nCome back next month if your school remains on the podium!');
-        }
-        return true;
-    }
-    return false;
-}
-
-// Modified claim reward function
-async function claimMonthlyReward(schoolId, rank) {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const claimKey = `${schoolId}-${currentMonth}`;
-    
-    // if (localStorage.getItem(claimKey) === currentMonth) {
-    //     alert('Reward already claimed for this month!');
-    //     return;
-    // }
-
-    const rewardPoints = {
-        1: 50,
-        2: 35,
-        3: 20
-    };
-
-    try {
-        await earnRewardPoints(rewardPoints[rank]);
-        // localStorage.setItem(claimKey, currentMonth);
-        claimedRewards.add(claimKey); 
-
-        
-        // Update button state
-        const claimBtn = document.querySelector(`.claim-btn[data-school="${schoolId}"]`);
-        if (claimBtn) {
-            claimBtn.classList.add('completed');
-            claimBtn.disabled = true;
-            claimBtn.textContent = `Claimed ${rewardPoints[rank]} reward points`;
-            claimBtn.setAttribute('data-tooltip', 'Reward claimed! \nCome back next month if your school remains on the podium!');
-        }
-        
-        alert(`Claimed ${rewardPoints[rank]} points!`);
-    } catch (error) {
-        console.error('Error claiming reward:', error);
-        alert('Failed to claim reward. Try again later.');
-    }
-}
-
-async function earnRewardPoints(pts) {
-    // Update points
-    const earnPointsResponse = await fetch(`/users/student/points/${studentID}`);
-    if (!earnPointsResponse.ok) throw new Error("Failed to get current points");
-
-    const pointsData = await earnPointsResponse.json();
-        const totalPoints = pointsData.reduce((sum, item) => sum + item.points, 0) + pts;
-
-        const updatepointsresponse = await fetch(`/users/student/points/${studentID}/${totalPoints}`, {
-            method: "PATCH"
-        });
-        
-        if (!updatepointsresponse.ok) throw new Error("Failed to update points");
-}

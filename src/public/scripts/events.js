@@ -1,5 +1,6 @@
 guardLoginPage();
 
+
 const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
 const role = sessionStorage.getItem("role") || localStorage.getItem("role");
 
@@ -29,56 +30,87 @@ async function loadEvents() {
     }
 }
 
-// Open Create Popup
 async function viewEvent(id) {
-    let response = await fetch(`/events/${id}`)
-    if (!response.ok){
+    let response = await fetch(`/events/${id}`);
+    if (!response.ok) {
         const errorMsg = document.createElement('h2');
-            errorMsg.innerText = "Error retrieving event!";
-            document.getElementById('viewPopupContent').appendChild(errorMsg);
-            return;
+        errorMsg.innerText = "Error retrieving event!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
     }
     let currentevent = await response.json();
-    let carbonfootprintresponse = await fetch(`/carbon-footprints/${currentevent.carbonfootprint_id}`)
-    if (!carbonfootprintresponse.ok){
+
+    // Run the first four API calls concurrently
+    const [carbonfootprintresponse, energyusageresponse, carbonbreakdownresponse, energybreakdownresponse] = await Promise.all([
+        fetch(`/carbon-footprints/${currentevent.carbonfootprint_id}`),
+        fetch(`/energy-usage/${currentevent.energyusage_id}`),
+        fetch(`/carbon-breakdowns/footprint/${currentevent.carbonfootprint_id}`),
+        fetch(`/energy-breakdowns/usage/${currentevent.energyusage_id}`)
+    ]);
+
+    // Handle errors for each API call
+    if (!carbonfootprintresponse.ok) {
         const errorMsg = document.createElement('h2');
-            errorMsg.innerText = "Error retrieving event's carbon footprint!";
-            document.getElementById('viewPopupContent').appendChild(errorMsg);
-            return;
+        errorMsg.innerText = "Error retrieving event's carbon footprint!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
     }
-    let eventcf = await carbonfootprintresponse.json();
-    let energyusageresponse = await fetch(`/energy-usage/${currentevent.energyusage_id}`)
-    if (!energyusageresponse.ok){
+    if (!energyusageresponse.ok) {
         const errorMsg = document.createElement('h2');
-            errorMsg.innerText = "Error retrieving event's energy usage!";
-            document.getElementById('viewPopupContent').appendChild(errorMsg);
-            return;
+        errorMsg.innerText = "Error retrieving event's energy usage!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
     }
-    let eventeu = await energyusageresponse.json();
-    let carbonbreakdownresponse = await fetch(`/carbon-breakdowns/footprint/${currentevent.carbonfootprint_id}`)
-    if (!carbonbreakdownresponse.ok){
+    if (!carbonbreakdownresponse.ok) {
         const errorMsg = document.createElement('h2');
-            errorMsg.innerText = "Error retrieving event's carbon breakdown!";
-            document.getElementById('viewPopupContent').appendChild(errorMsg);
-            return;
+        errorMsg.innerText = "Error retrieving event's carbon breakdown!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
     }
-    let eventcb = await carbonbreakdownresponse.json();
-    let energybreakdownresponse = await fetch(`/energy-breakdowns/usage/${currentevent.energyusage_id}`)
-    if (!energybreakdownresponse.ok){
+    if (!energybreakdownresponse.ok) {
         const errorMsg = document.createElement('h2');
-            errorMsg.innerText = "Error retrieving event's energy breakdown!";
-            document.getElementById('viewPopupContent').appendChild(errorMsg);
-            return;
+        errorMsg.innerText = "Error retrieving event's energy breakdown!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
     }
-    let eventeb = await energybreakdownresponse.json();
+
+    // Parse the JSON responses
+    const eventcf = await carbonfootprintresponse.json();
+    const eventeu = await energyusageresponse.json();
+    const eventcb = await carbonbreakdownresponse.json();
+    const eventeb = await energybreakdownresponse.json();
+
     document.getElementById("eventTitle").innerText = currentevent.name;
     document.getElementById("eventDate").innerText = new Date(currentevent.date).toDateString();
-    document.getElementById("totalEnergyNum").innerText = eventeu.energy_kwh;
-    document.getElementById("totalCarbonNum").innerText = eventcf.total_carbon_tons;
+    document.getElementById("totalEnergyNum").innerText = eventeu.energy_kwh + " kWh";
+    document.getElementById("totalCarbonNum").innerText = eventcf.total_carbon_tons + " tons";
+
     initPieChart(eventeb, eventcb);
 
-    document.getElementById("viewPopup").classList.add("active");
+    document.getElementById('viewPopup').classList.add("active");
+    document.getElementById('insights').innerText = "Loading recommendations...";
+
+    // Now call the recommendations API
+    let recommendations = await fetch(`/events/recommendations/${eventcf.total_carbon_tons}/${eventeu.energy_kwh}/${currentevent.name}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ eventcb, eventeb }) // Sending the data in JSON format
+    });
+
+    if (!recommendations.ok) {
+        const errorMsg = document.createElement('h2');
+        errorMsg.innerText = "Error retrieving event's recommendations!";
+        document.getElementById('viewPopupContent').appendChild(errorMsg);
+        return;
+    }
+    let recommendationsdata = await recommendations.json();
+
+    // Update the UI with data
+    document.getElementById('insights').innerText = recommendationsdata.result;
 }
+
 
 
 
@@ -399,14 +431,13 @@ function closeCreatePopup() {
 // Handle create campaign form submission
 document.getElementById('createForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    
     const newEventData = {
         school_id: placeholderID,
         name: document.getElementById('eventName').value,
         description: document.getElementById('eventDescription').value,
         date: document.getElementById('eventDate').value
     };
-
+    
     if (newEventData.date <= (new Date().getDate())) {
         alert("Please enter a date later than today.");
         return;

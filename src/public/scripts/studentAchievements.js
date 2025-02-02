@@ -5,7 +5,6 @@ async function fetchAchievements() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
         }
     });
     if (!response.ok) throw new Error('Network response was not ok');
@@ -18,12 +17,48 @@ async function fetchStudentAchievements() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            //'Authorization': `Bearer ${token}` // Include the token in the Authorization header
         }
     });
     if (!response.ok) throw new Error('Network response was not ok');
     let data = await response.json();
     return data;
+}
+
+async function updateStudentPoints(points, achievementId) {
+    try {
+        // Fetch current points
+        const response = await fetch(`/users/student/points/${placeholderID}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!response.ok) {
+            throw new Error("Network response to fetch current points was not ok");
+        }
+        const currentPoints = (await response.json())[0].points;
+
+        // Calculate new points
+        const newPoints = currentPoints + points;
+
+        // Update points
+        const updateResponse = await fetch(`/users/student/points/${parseInt(placeholderID)}/${parseInt(newPoints)}`, {
+            method: "PATCH"
+        });
+        if (!updateResponse.ok) {
+            throw new Error("Network response to update student points was not ok");
+        }
+
+        // Update completed status in database
+        const completeResponse = await fetch(`/studentAchievements/${achievementId}/complete`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed: 1 })
+        });
+        if (!completeResponse.ok) {
+            throw new Error("Network response to mark achievement as completed was not ok");
+        }
+    } catch (error) {
+        console.error('Error updating student points:', error);
+    }
 }
 
 async function displayAchievements() {
@@ -39,7 +74,7 @@ async function displayAchievements() {
     // Eco-Friendly Achievements
     const ecoContainer = document.querySelector('.achievement-category:nth-of-type(1) .row');
     ecoContainer.innerHTML = '';
-    ecoFriendlyAchievements.forEach(achievement => {
+    for (const achievement of ecoFriendlyAchievements) {
         const studentAchievement = studentAchievements.find(sa => sa.achievement_id === achievement.achievement_id);
         const progress = studentAchievement ? Math.round((studentAchievement.progress / achievement.target_value) * 100) : 0;
         const card = document.createElement('div');
@@ -51,19 +86,29 @@ async function displayAchievements() {
                     <h5 class="card-title">${achievement.name}</h5>
                     <p class="card-text">${achievement.description}</p>
                     <div class="progress mb-3">
-                        <div class="progress-bar" style="width: ${progress}%"></div>
+                        <div class="progress-bar" style="width: 0;"></div>
                     </div>
                     ${progress === 100 ? '<span class="badge bg-success">Achieved!</span>' : `<small class="text-muted">Progress: ${progress}%</small>`}
                 </div>
             </div>
         `;
         ecoContainer.appendChild(card);
-    });
+
+        // Animate the progress bar
+        setTimeout(() => {
+            card.querySelector('.progress-bar').style.width = `${progress}%`;
+        }, 100);
+
+        // Award points if achievement is completed and not previously awarded
+        if (progress === 100 && !studentAchievement.completed) {
+            await updateStudentPoints(achievement.points, achievement.achievement_id);
+        }
+    }
 
     // Community Achievements
     const communityContainer = document.querySelector('.achievement-category:nth-of-type(2) .row');
     communityContainer.innerHTML = '';
-    communityAchievements.forEach(achievement => {
+    for (const achievement of communityAchievements) {
         const studentAchievement = studentAchievements.find(sa => sa.achievement_id === achievement.achievement_id);
         const progress = studentAchievement ? Math.round((studentAchievement.progress / achievement.target_value) * 100) : 0;
         const card = document.createElement('div');
@@ -75,19 +120,29 @@ async function displayAchievements() {
                     <h5 class="card-title">${achievement.name}</h5>
                     <p class="card-text">${achievement.description}</p>
                     <div class="progress mb-3">
-                        <div class="progress-bar" style="width: ${progress}%"></div>
+                        <div class="progress-bar" style="width: 0;"></div>
                     </div>
                     ${progress === 100 ? '<span class="badge bg-success">Achieved!</span>' : `<small class="text-muted">Progress: ${progress}%</small>`}
                 </div>
             </div>
         `;
         communityContainer.appendChild(card);
-    });
+
+        // Animate the progress bar
+        setTimeout(() => {
+            card.querySelector('.progress-bar').style.width = `${progress}%`;
+        }, 100);
+
+        // Award points if achievement is completed and not previously awarded
+        if (progress === 100 && !studentAchievement.completed) {
+            await updateStudentPoints(achievement.points, achievement.achievement_id);
+        }
+    }
 
     // Energy & Resource Efficiency Achievements
     const energyContainer = document.querySelector('.achievement-category:nth-of-type(3) .row');
     energyContainer.innerHTML = '';
-    energyAchievements.forEach(achievement => {
+    for (const achievement of energyAchievements) {
         const studentAchievement = studentAchievements.find(sa => sa.achievement_id === achievement.achievement_id);
         const progress = studentAchievement ? Math.round((studentAchievement.progress / achievement.target_value) * 100) : 0;
         const card = document.createElement('div');
@@ -99,14 +154,24 @@ async function displayAchievements() {
                     <h5 class="card-title">${achievement.name}</h5>
                     <p class="card-text">${achievement.description}</p>
                     <div class="progress mb-3">
-                        <div class="progress-bar" style="width: ${progress}%"></div>
+                        <div class="progress-bar" style="width: 0;"></div>
                     </div>
                     ${progress === 100 ? '<span class="badge bg-success">Achieved!</span>' : `<small class="text-muted">Progress: ${progress}%</small>`}
                 </div>
             </div>
         `;
         energyContainer.appendChild(card);
-    });
+
+        // Animate the progress bar
+        setTimeout(() => {
+            card.querySelector('.progress-bar').style.width = `${progress}%`;
+        }, 100);
+
+        // Award points if achievement is completed and not previously awarded
+        if (progress === 100 && !studentAchievement.completed) {
+            await updateStudentPoints(achievement.points, achievement.achievement_id);
+        }
+    }
 }
 
 displayAchievements();

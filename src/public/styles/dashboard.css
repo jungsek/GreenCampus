@@ -686,15 +686,17 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 35%;
+        max-height: 80vh;
         padding: 20px;
         border-radius: 15px;
-        background-color: whitesmoke;  
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.21);  /* Added shadow */
+        background-color: whitesmoke;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.21);
         display: none;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
         z-index: 800;
-    }
+     }
 
     .popup-content h2 {
         font-size: 20px;
@@ -933,6 +935,60 @@ button.analyse-chart-btn2:active {
         button.analyse-chart-btn2 {
             margin-right: 650px;
         }
+
+        .popup-modal {
+            max-height: 400px !important; /* Fixed height */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; 
+            padding: 20px;
+            box-sizing: border-box; 
+        }
+        
+        .popup-content {
+            min-height: fit-content;
+            height: auto;
+            width: 100%; 
+            overflow: scroll;
+            padding-top: 20px;
+        }
+        
+         
+        .popup-content h2 {
+            margin-top: 10px;
+        }
+
+
+        .popup-modal::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .popup-modal::-webkit-scrollbar-thumb {
+            background: #aeaeae;
+            border-radius: 4px;
+            visibility: visible;
+        }
+
+        .recommendations-container {
+            margin-top: 20px;
+            display: none;
+            width: 100%;
+            height: auto;
+            min-height: fit-content;
+        }
+
+        #recommendationsSection {
+            margin-top: 20px; /* Spacing between content and recommendations */
+        }
+        
+        .recommendations-content {
+            overflow-y: auto; 
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #59c19b69;
+            box-sizing: border-box;
+        }
     }
 
     @media (min-width: 1025px) and (max-width: 1443px) {
@@ -975,6 +1031,58 @@ button.analyse-chart-btn2:active {
 
         button.analyse-chart-btn2 {
             margin-right: 650px;
+        }
+
+        .popup-modal {
+            max-height: 400px !important; /* Fixed height */
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
+    
+        .popup-content {
+            min-height: fit-content;
+            height: auto;
+            width: 100%; 
+            overflow: scroll;
+            padding-top: 20px;
+        }
+    
+        .popup-content h2 {
+            margin-top: 10px;
+        }
+    
+        .popup-modal::-webkit-scrollbar {
+            width: 5px;
+        }
+    
+        .popup-modal::-webkit-scrollbar-thumb {
+            background: #aeaeae;
+            border-radius: 4px;
+            visibility: visible;
+        }
+    
+        .recommendations-container {
+            margin-top: 20px;
+            display: none;
+            width: 100%;
+            height: auto;
+            min-height: fit-content;
+        }
+    
+        #recommendationsSection {
+            margin-top: 20px; /* Spacing between content and recommendations */
+        }
+    
+        .recommendations-content {
+            overflow-y: auto; 
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #59c19b69;
+            box-sizing: border-box;
         }
     }
 
@@ -1619,10 +1727,15 @@ h2 {
 .right-container {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    width: 60%;
+    padding: 20px;
 }
+
 
 #progressToGoalsCard {
     width: 100%;
+    margin-bottom: 15px;
 }
 
 #energyUsageCard {
@@ -1638,15 +1751,21 @@ h2 {
     display: flex;
     gap: 15px;
     width: 100%;
+    max-height: none;
+    max-height: none;
 }
 
 /* Energy Usage and Carbon Footprint cards */
 .energy-usage-card,
 .carbon-footprint-card {
-    flex: 1;
-    width: auto !important; /* Override existing width */
-    margin: 0 !important; /* Remove any existing margins */
+    flex: none; /* Prevents auto-expanding */
+    width: 50% !important; /* Forces a fixed width */
+    max-width: 50%; /* Ensures it doesn't grow */
+    overflow-wrap: break-word; /* Ensures words break if necessary */
+    word-wrap: break-word; /* Alternative for better browser support */
+    white-space: normal; /* Allows text wrapping */
 }
+
 
 .legend {
     display: flex;

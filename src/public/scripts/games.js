@@ -8,6 +8,14 @@ const POINTS_SYSTEM = {
     5: 1   // 5th try: 1 points
 };
 
+const QUIZ_POINTS_SYSTEM = {
+    1: 1, 
+    2: 3, 
+    3: 5,  
+    4: 7,  
+    5: 10   
+};
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('gamesInstructionModal');
@@ -16,13 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     loadDictionary();  // Load the dictionary
-    initializeBoard(); // Initialize the game board
-    initializeKeyboard(); // Initialize the keyboard
-    initializeQuiz(); // Initialize the quiz
-    document.addEventListener('keyup', handleKeyPress); // Attach key press listener
+    initializeBoard(); 
+    initializeKeyboard();
+    initializeQuiz(); 
 
-    checkGreendleStatus();  // comment this line out to enable multiple tries per day
-    checkQuizStatus();  // comment this line out to enable multiple tries per day
+    // checkGreendleStatus();  // comment this line out to enable multiple tries per day
+    // checkQuizStatus();  // comment this line out to enable multiple tries per day
 
     // Open modal when info button is clicked
     infoBtn.addEventListener('click', function() {
@@ -41,6 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // For Greendle Modal
     greendleModal.addEventListener('show.bs.modal', function () {
         this.removeAttribute('inert');
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+        document.addEventListener('keyup', handleKeyPress);
     });
 
     greendleModal.addEventListener('hide.bs.modal', function () {
@@ -110,6 +124,35 @@ const MAX_GUESSES = 5;
 
 // This will store all valid 5-letter words
 let VALID_WORDS = new Set();
+
+//function to update achievements
+async function updateQuizAttemptAchievement() {
+    try {
+        const achievementId = 2; // ID for "Attempt 5 GreenCampus Quizzes"
+        const studentId = studentID; // Use the placeholderID for the logged-in student
+
+        // Get current progress
+        const studentAchievements = await fetch('/studentAchievements').then(res => res.json());
+        const currentProgress = studentAchievements.find(sa => 
+            sa.achievement_id === achievementId && sa.student_id === studentId
+        )?.progress || 0;
+
+        // Update progress
+        const response = await fetch(`/studentAchievements/${achievementId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                student_id: studentId,
+                achievement_id: achievementId,
+                progress: currentProgress + 1,
+                completed: 0
+            })
+        });
+        
+    } catch (error) {
+        console.error('Error updating quiz achievement:', error);
+    }
+}
 
 // Function to load the dictionary
 async function loadDictionary() {
@@ -328,8 +371,18 @@ function showMessage(text) {
 }
 
 function handleKeyPress(e) {
+    const modal = document.getElementById('greendleModal');
+    if (!modal.classList.contains('show')) return;
+
     const key = e.key.toUpperCase();
-    if (key === 'ENTER' || key === 'BACKSPACE' || (key.length === 1 && key.match(/[A-Z]/))) {
+    if (key === 'ENTER') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleInput('ENTER');
+        return false;
+    } else if (key === 'BACKSPACE' || (key.length === 1 && key.match(/[A-Z]/))) {
+        e.preventDefault();
+        e.stopPropagation();
         handleInput(key === 'BACKSPACE' ? '⌫' : key);
     }
 }
@@ -474,6 +527,9 @@ function toggleTopicSelector(show) {
 }
 
 async function startNewQuiz() {
+    // Update quiz attempt achievement
+    await updateQuizAttemptAchievement();
+
     const topic = document.getElementById('topic-select').value;
     quiz.isActive = true;
     showLoading(true);
@@ -589,7 +645,7 @@ async function checkAnswer(selectedIndex) {
             
             // If this is the last question, award points based on total correct answers
             if (quiz.currentQuestion === quiz.questions.length - 1) {
-                const pointsEarned = POINTS_SYSTEM[correctAnswers];
+                const pointsEarned = QUIZ_POINTS_SYSTEM[correctAnswers];
                 await earnRewardPoints(pointsEarned);
                 setTimeout(() => {
                     showMessage(`Quiz Complete! You earned ${pointsEarned} points!`);
@@ -636,7 +692,7 @@ function showQuizResults() {
     const scorePercentage = (quiz.score / (quiz.questions.length * 10)) * 100;
     
     const correctAnswers = Math.floor(quiz.score / 10);
-    const pointsEarned = quiz.isFirstQuiz ? POINTS_SYSTEM[correctAnswers] : 0;
+    const pointsEarned = quiz.isFirstQuiz ? QUIZ_POINTS_SYSTEM[correctAnswers] : 0;
 
     const pointsMessage = quiz.isFirstQuiz 
         ? `<div class="points-breakdown mb-4">
