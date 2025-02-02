@@ -8,6 +8,14 @@ const POINTS_SYSTEM = {
     5: 1   // 5th try: 1 points
 };
 
+const QUIZ_POINTS_SYSTEM = {
+    1: 1, 
+    2: 3, 
+    3: 5,  
+    4: 7,  
+    5: 10   
+};
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('gamesInstructionModal');
@@ -20,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeKeyboard();
     initializeQuiz(); 
 
-    checkGreendleStatus();  // comment this line out to enable multiple tries per day
-    checkQuizStatus();  // comment this line out to enable multiple tries per day
+    // checkGreendleStatus();  // comment this line out to enable multiple tries per day
+    // checkQuizStatus();  // comment this line out to enable multiple tries per day
 
     // Open modal when info button is clicked
     infoBtn.addEventListener('click', function() {
@@ -637,7 +645,7 @@ async function checkAnswer(selectedIndex) {
             
             // If this is the last question, award points based on total correct answers
             if (quiz.currentQuestion === quiz.questions.length - 1) {
-                const pointsEarned = POINTS_SYSTEM[correctAnswers];
+                const pointsEarned = QUIZ_POINTS_SYSTEM[correctAnswers];
                 await earnRewardPoints(pointsEarned);
                 setTimeout(() => {
                     showMessage(`Quiz Complete! You earned ${pointsEarned} points!`);
@@ -684,7 +692,7 @@ function showQuizResults() {
     const scorePercentage = (quiz.score / (quiz.questions.length * 10)) * 100;
     
     const correctAnswers = Math.floor(quiz.score / 10);
-    const pointsEarned = quiz.isFirstQuiz ? POINTS_SYSTEM[correctAnswers] : 0;
+    const pointsEarned = quiz.isFirstQuiz ? QUIZ_POINTS_SYSTEM[correctAnswers] : 0;
 
     const pointsMessage = quiz.isFirstQuiz 
         ? `<div class="points-breakdown mb-4">
