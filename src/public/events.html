@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- stylesheets -->
+    <link href="./styles/common.css" rel="stylesheet">
+    <link href="./styles/events.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Events</title>
+  </head>
+<body>
+    <!-- Create Campaign Popup -->
+    <div class="popup" id="viewPopup">
+        <div class="popup-content" id="viewPopupContent">
+            <button class="close-button" id="closeButton" onclick="closeViewPopup()">
+                <i class='bx bx-x'></i>
+            </button>
+            
+            <div class="event-header">
+                <h1 id="eventTitle"></h1>
+                <p class="event-date"></p>
+            </div>
+            <div class="summary-cards flex gap-4 w-full">
+                <div id="energyUsageCard" class="bg-white p-6 rounded-lg shadow-md hover-card flex-1 border border-[#ddd] energy-usage-card">
+                    <div class="flex items-center justify-between">
+                        <span class="trend2 text-sm font-medium"></span>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mt-4">Energy Usage</h3>
+                    <p id="totalEnergyNum" class="metric-value2 text-3xl font-semibold text-[#5bc7a0] mt-2">Loading...</p>
+                </div>
+                
+                <div id="carbonFootprintCard" class="bg-white p-6 rounded-lg shadow-md hover-card flex-1 border border-[#ddd] carbon-footprint-card">
+                    <div class="flex items-center justify-between">
+                        <span class="trend1 text-sm font-medium text-red-600"></span>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mt-4">Carbon Footprint</h3>
+                    <p id="totalCarbonNum" class="metric-value1 text-3xl font-semibold text-[#5bc7a0] mt-2">Loading...</p>
+                </div>
+            </div>
+            
+
+                        <!-- Charts & Analysis -->
+                        <!-- Carbon Footprint Chart -->
+            
+            <select id="locationSelect">
+                <option value="" class="placeholder" disabled hidden>Locations</option>
+            </select>
+            <div class="chart-wrapper">
+                <div class="chart-container border border-[#ddd] shadow-md p-6 rounded-lg">
+                    <div class="chart-title">
+                        <h3>Carbon Footprint Breakdown</h3>
+                    </div>
+                    <canvas id="carbonBreakdownChart"></canvas>
+                    <div class="legendButtons" id="legendButtons2">
+                        <button onclick="highlightSegment('Energy Usage')" class="legend-button" data-segment="Energy Usage">Energy Usage</button>
+                        <button onclick="highlightSegment('Food Services')" class="legend-button" data-segment="Food Services">Food Services</button>
+                        <button onclick="highlightSegment('Transportation')" class="legend-button" data-segment="Transportation">Transportation</button>
+                        <button onclick="highlightSegment('Waste Management')" class="legend-button" data-segment="Waste Management">Waste Management</button>
+                        <button onclick="highlightSegment('Water Usage')" class="legend-button" data-segment="Water Usage">Water Usage</button>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Energy Usage Chart -->
+             <div class="chart-wrapper">
+                    <div class="chart-container  border border-[#ddd] shadow-md p-6 rounded-lg">
+                    <div class="chart-title">
+                        <h3>Energy Usage Breakdown</h3>
+                     </div>
+                    <canvas id="energyBreakdownChart"></canvas>
+                    <div class="legendButtons" id="legendButtons">
+                        <button onclick="highlightSegment('Lighting')" class="legend-button"  data-segment="Lighting">Lighting</button>
+                        <button onclick="highlightSegment('Computers')" class="legend-button"  data-segment="Computers">Computers</button>
+                        <button onclick="highlightSegment('HVAC')" class="legend-button"  data-segment="HVAC">HVAC</button>
+                        <button onclick="highlightSegment('Equipment')" class="legend-button"  data-segment="Equipment">Equipment</button>
+                        <button onclick="highlightSegment('Refrigeration')" class="legend-button"  data-segment="Refrigeration">Refrigeration</button>
+                        <button onclick="highlightSegment('Appliances')" class="legend-button"  data-segment="Appliances">Appliances</button>
+                        <button onclick="highlightSegment('Food Waste Management')" class="legend-button"  data-segment="Food Waste Management">Food Waste Management</button>
+                        <button onclick="highlightSegment('Sound Equipment')" class="legend-button"  data-segment="Sound Equipment">Sound Equipment</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="chart-section">
+                <div class="chart-container">
+                    <h4>Waste & Recycling</h4>
+                    <canvas id="wasteChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Water Usage</h4>
+                    <canvas id="waterChart"></canvas>
+                </div>
+            </div> -->
+
+            <!-- Actionable Insights -->
+            <div class="insights">
+                <h2>Actionable Insights</h2>
+                <ul id="insightsList">
+                    <p id="insights"></p>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+    <!--navbar-->
+    <div class="nav-placeholder"></div>
+
+    <!-- Main Container for the Campaigns -->
+    <div class="header" id="header">
+        <h1 class="header-title" id="headerTitle">Event Management</h1>
+        <button class="create-button" id="createButton" onclick="openCreatePopup()">
+            <i class='bx bx-plus'></i>
+            Create New Event
+        </button>
+    </div>
+
+     <!-- Event Sections -->
+     <div class="container">
+        <!-- Upcoming Events -->
+        <div class="event-section">
+            <h2 id="upcomingEventsHeader">Upcoming Events</h2>
+            <div class="event-grid" id="upcomingEvents">
+                <!-- Future events will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Past Events -->
+        <div class="event-section">
+            <h2 id="pastEventsHeader">Past Events</h2>
+            <div class="event-grid" id="pastEvents">
+                <!-- Past events will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Campaign Popup -->
+    <div class="popup" id="createPopup">
+        <div class="popup-content" id="popupContent">
+            <button class="close-button" id="closeButton" onclick="closeCreatePopup()">
+                <i class='bx bx-x'></i>
+            </button>
+            
+            <h2 class="event-title" id="popupTitle">Create New Event</h2>
+            
+            <form id="createForm">
+                <div class="form-group" id="eventNameGroup">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" class="form-control" id="eventName" required placeholder="Enter event name">
+                </div>
+                
+                <div class="form-group" id="descriptionGroup">
+                    <label for="eventDescription">Description</label>
+                    <textarea class="form-control" id="eventDescription" rows="4" required placeholder="Enter event description"></textarea>
+                </div>
+                
+                <div class="form-group" id="dateGroup">
+                    <label for="eventDate">Date</label>
+                    <input type="date" id="eventDate" class="event-date" required>
+                </div>
+                
+                <div class="form-actions" id="formActions">
+                    <button type="submit" class="submit-button" id="submitNewEventBtn">Create Event</button>
+                    <button type="button" class="cancel-button" onclick="closeCreatePopup()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modify Campaign Popup -->
+    <!-- <div class="popup" id="modifyPopup">
+        <div class="popup-content">
+            <button class="close-button" onclick="closeModifyPopup()">
+                <i class='bx bx-x'></i>
+            </button>
+            
+            <h2 class="campaign-title">Modify Campaign</h2>
+            
+            <form id="modifyForm">
+                <div class="form-group">
+                    <label for="modifyCampaignName">Campaign Name</label>
+                    <input type="text" class="form-control" id="modifyCampaignName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modifyCampaignDescription">Description</label>
+                    <textarea class="form-control" id="modifyCampaignDescription" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modifyCampaignPoints">Points (0-5)</label>
+                    <input type="number" class="form-control" id="modifyCampaignPoints" min="0" max="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modifyCampaignImage">Campaign Image</label>
+                    <div class="image-upload-container">
+                        <input type="file" class="form-control" id="modifyCampaignImage" accept="image/*">
+                        <input type="hidden" id="modifyImageBase64">
+                        <div class="image-preview-wrapper">
+                            <img id="modifyImagePreview" style="display: none; max-width: 100%; margin-top: 10px; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="submit-button" id="submitModifyCampaignBtn">Save Changes</button>
+                    <button type="button" class="cancel-button" onclick="closeModifyPopup()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <!-- Delete Confirmation Popup -->
+    <div class="popup" id="deleteConfirmationPopup">
+        <div class="popup-content">
+            <h2>Delete Event</h2>
+            <p>Are you sure you want to delete this event?</p>
+            <div class="form-actions">
+                <button id="confirmDeleteBtn" class="delete-button">Delete</button>
+                <button onclick="closeDeletePopup()" class="cancel-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="chatbot-placeholder"></div>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="./scripts/common.js"></script>
+    <script src="./scripts/events.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="../scripts/pieChart-popup.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</html>

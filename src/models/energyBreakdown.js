@@ -1,6 +1,8 @@
 // models/energyBreakdown.js
 const sql = require("mssql");
 const dbConfig = require("../database/dbConfig");
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 class EnergyBreakdown {
     constructor(id, energyusage_id, location, category, timestamp, percentage) {
@@ -118,7 +120,207 @@ class EnergyBreakdown {
         return result.length ? result : null;
     }
 
+    static categoryPrompts = {
+        Lighting: `You are an energy efficiency expert. Analyze the following lighting data and generate NEW, unique recommendations:
     
-}
+            Current Metrics:
+            - Average Daily Use: 10 hours
+            - After-Hours Use: Hallway and lobby lights remain on 2 hours past school hours
+            
+            Generate 3 specific, actionable recommendations to improve energy efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        HVAC: `You are an energy efficiency expert. Analyze the following HVAC data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Daily Operating Hours: 18 hours
+            - Monthly Energy Usage: 1,500 kWh
+            - Average Temperature: 22°C
+            - Peak Demands: Heating demand reaches 65 kW and cooling peaks at 50 kW
+            
+            Generate 3 specific, actionable recommendations to improve HVAC efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Refrigeration: `You are an energy efficiency expert. Analyze the following refrigeration data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Monthly Energy Use: 180 kWh
+            - Temperature Control: 4°C for refrigeration, -18°C for freezing
+            - Usage Patterns: Doors opened 12-30 times per day
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Computers: `You are an energy efficiency expert. Analyze the following computer usage data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Average Daily Usage: 6 hours
+            - Power Consumption: Desktops consume 120W per unit, laptops 50W
+            - Standby Power Use: 15 minutes inactivity threshold, 90% coverage
+            - Monthly Lab Consumption: 300 kWh
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Equipment: `You are an energy efficiency expert. Analyze the following equipment data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Operating Hours: 5 hours daily
+            - Energy Consumption: 10% of total energy use
+            - Usage Pattern: Peak during lab hours
+            - Maintenance: Bimonthly servicing
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        Appliances: `You are an energy efficiency expert. Analyze the following appliance data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Daily Usage: 3 hours
+            - Energy Efficiency: 15% reduction from efficient models
+            - Monthly Usage: 200 kWh
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`,
+    
+        FoodWasteManagement: `You are an energy efficiency expert. Analyze the following waste management data and generate NEW, unique recommendations:
+    
+            Current Metrics:
+            - Weekly Waste: 30kg
+            - Disposal: Daily bin emptying, weekly composting
+            - Energy Usage: Minimal, mostly manual processes
+            
+            Generate 3 specific, actionable recommendations to improve efficiency.
+            Format your response exactly like this:
+    
+            <strong>AI Recommendations:</strong><br>
+            1. [First unique recommendation]<br>
+            2. [Second unique recommendation]<br>
+            3. [Third unique recommendation]<br>`
+    };
 
+    static async generateRecommendations(prompt) {
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            // Add specific formatting instructions
+            const enhancedPrompt = `${prompt}
+    
+            IMPORTANT FORMATTING RULES:
+            1. Do NOT use markdown formatting
+            2. Do NOT use code blocks or backticks
+            3. Do NOT include the word "html" in your response
+            4. Keep recommendations short and specific
+            5. Use ONLY the HTML tags shown in the example
+            6. Each recommendation must end with <br>
+            7. Start with <strong>AI Recommendations:</strong><br>`;
+            
+            const result = await model.generateContent({
+                contents: [{ 
+                    role: "user", 
+                    parts: [{ text: enhancedPrompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 20,
+                    topP: 0.8,
+                    maxOutputTokens: 500,  // Reduced to encourage conciseness
+                }
+            });
+    
+            const response = await result.response;
+            return response.text();
+        } catch (error) {
+            throw new Error(`Failed to generate AI recommendations: ${error.message}`);
+        }
+    }
+
+    static extractDataFromMessage(message) {
+        const data = {};
+        const lines = message.split('<br>');
+        
+        lines.forEach(line => {
+            const matches = line.match(/<strong>(.*?):<\/strong>(.*)/);
+            if (matches) {
+                const key = matches[1].trim().toLowerCase().replace(/\s+/g, '');
+                const value = matches[2].trim();
+                data[key] = value;
+            }
+        });
+        
+        return data;
+    }
+
+    static generatePrompt(category, data) {
+        let prompt = this.categoryPrompts[category];
+        
+        // Replace placeholders with actual data
+        Object.keys(data).forEach(key => {
+            const placeholder = `{${key}}`;
+            if (prompt.includes(placeholder)) {
+                prompt = prompt.replace(placeholder, data[key]);
+            }
+        });
+        
+        return prompt;
+    }
+
+    static formatResponse(text) {
+        try {
+            // Remove markdown code blocks, backticks, curly braces, and unwanted characters
+            let cleanText = text
+                .replace(/```[^`]*```/g, '')    
+                .replace(/`/g, '')              
+                .replace(/html/g, '')           
+                .replace(/[{}]/g, '')           // Remove any curly braces in the text
+                .trim();
+            
+            // Ensure proper line breaks and clean any trailing punctuation
+            cleanText = cleanText
+                .replace(/\n/g, '')             
+                .replace(/\.+(<br>)/g, '.<br>') 
+                .replace(/(<br>)\.+/g, '<br>')  
+                .replace(/[.,{}]+$/, '')        
+                .trim()
+                .replace(/}$/, '');             // Explicitly remove any trailing curly brace
+                
+            return {
+                recommendations: cleanText,      // Add trailing comma here
+            };
+        } catch (error) {
+            console.error('Error formatting response:', error);
+            throw new Error('Failed to format recommendations');
+        }
+    }
+}
 module.exports = EnergyBreakdown;

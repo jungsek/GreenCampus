@@ -1,3 +1,9 @@
+guardLoginPage();
+
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 document.addEventListener('DOMContentLoaded', () => {
     const reportsTableBody = document.getElementById('reportsTable').querySelector('tbody');
     const errorOutput = document.getElementById('errorOutput');

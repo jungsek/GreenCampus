@@ -446,7 +446,7 @@
 
     /* ========= Filter by Locations  ========= */
     #locationSelect {
-        padding: 8px 16px 8px 16px; 
+        padding: 5px 16px 5px 16px; 
         font-size: 14px;
         font-weight: bold;
         color: #333;
@@ -485,6 +485,7 @@
         cursor: pointer;
         position: relative; /* Positioning for custom arrow */
         transition: background-color 0.3s ease;
+        
     }
 
     /* Hover effect for the dropdown */
@@ -617,7 +618,7 @@
         height: 100%;
     }
 
-    #pieChart {
+    #pieChart, #pieChart2 {
         margin-top: 40px;
         margin-left: -50px;
         margin-right: 50px;
@@ -637,20 +638,21 @@
         display: flex;
         transition: background-color 0.3s, color 0.3s;
         position: relative; 
+        overflow: visible;
     }
 
-    #legendButtons {
+    #legendButtons, #legendButtons2 {  /* Change this back to using IDs */
         display: grid;
         position: absolute;
         margin-left: 230px;
         margin-top: 25px;
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 7px; 
-        height: 50%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+        height:50%; 
         justify-items: center;
     }
 
-    #legendButtons button {
+    .legendButtons button {
         background-color: #eee;
         border: 1px solid #ccc;
         cursor: pointer;
@@ -672,7 +674,7 @@
     }
 
     /* Hover effect for buttons */
-    #legendButtons button:hover {
+    .legendButtons button:hover {
         background-color: #ddd;
     }
 
@@ -684,101 +686,213 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 35%;
-        padding: 30px;
+        max-height: 80vh;
+        padding: 20px;
         border-radius: 15px;
-        background-color: rgba(125, 137, 132, 0.4);
+        background-color: whitesmoke;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.21);
         display: none;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
         z-index: 800;
-      }
-      
-      .popup-content {
-        background-color: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: start;
-        width: 100%;
-        height: 100%;
-      }
-      
-      .popup-content h2 {
+     }
+
+    .popup-content h2 {
         font-size: 20px;
         margin-bottom: 16px;
-      }
-      
-      .popup-content p {
+    }
+
+    .popup-content p {
         font-size: 14px;
         line-height: 1.5;
         margin-bottom: 16px;
-      }
-      
-      .close-btn {
+    }
+
+    .close-btn {
         font-size: 18px;
         cursor: pointer;
         position: absolute;
         top: 15px;
         right: 15px;
         color: #333;
-        background-color: 0.3s;
-      }
-      
-      .close-btn:hover {
+        transition: color 0.3s;  /* Fixed transition property */
+    }
+
+    .close-btn:hover {
         color: #c0392b;
-      }
+    }
+
+    .recommendations-btn-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .recommendations-container {
+        margin-top: 20px;
+        display: none;
+    }
+
+    .recommendations-content {
+        margin-top: 15px;
+        padding: 15px;
+        border-left: 3px solid #59c19b69;
+        background-color: #f9f9f9;
+    }
 
 
+    .show-recommendations-btn {
+        background-color: #59c19b69;
+        color: black;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background-color 0.3s;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .show-recommendations-btn:hover {
+        background-color: #c8e6deba;
+    }
+
+    .animation-container {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .button-text {
+        text-align: center;
+    }
 
     /* ================== Line Graph ================== */
-    .bottom-graph-name-container {
-        font-size: 1.3rem;
-        font-weight: bold;
-        padding: 5px 10px;
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; /* Vertically center the elements */
-        width: 100%; /* Full width of container */
-        max-width: 100%; 
-    }
+    /* Bottom Graphs Container Layout - Matching Middle Container Style */
+.bottom-graphs-container {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+}
 
+/* Line Graph Side */
+.line-graph-side {
+    width: 70%;
+    height: 100%;
+}
 
-    .line-graph-container {
-        display: flex;
-        flex-grow: 1;
-        padding: 3px; 
-        height: 215px; 
-        width: 100%; 
-        border-radius: 8px; /* Slightly smaller border radius */
-        box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4); /* Softer shadow for smaller look */
-        text-align: left;
-        border: 1px solid #ddd;
-        background-color: white;
-        transition: background-color 0.3s, color 0.3s;
-        justify-content: space-between;
-    }
+.line-graph-container {
+    width: 100%;
+    height: 100%;
+    height: 271px;
+    border-radius: 8px;
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4);
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 15px;
+}
 
-    button.analyse-chart-btn2 {
-        background-color: #c8e6deba; /* Light green background */
-        color: black;
-        border: none;
-        padding: 5px 20px;
-        border-radius: 5px;
-        font-size: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-left: 10px;
-    }
-    
-    button.analyse-chart-btn2:hover {
-        background-color: #b2d6cb; /* Darken background on hover */
-    }
-    
-    button.analyse-chart-btn2:active {
-        background-color: #a0cfc0; /* Darker shade on click */
-    }
+/* Pie Chart Side */
+.pie-chart-side {
+    width: 30%;
+    height: 100%;
+}
 
+.pieChart-container {
+    height: 100%;
+    width: 100%;
+    min-height: 270px;
+    border-radius: 8px;
+    box-shadow: 0 3px 4px rgba(122, 120, 120, 0.4);
+    border: 1px solid #ddd;
+    background-color: white;
+    display: flex;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+    padding: 15px;
+}
+
+/* Graph Name Containers */
+.bottom-graph-name-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.graph-name-container2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Analysis Button */
+button.analyse-chart-btn2 {
+    background-color: #c8e6deba;
+    color: black;
+    border: none;
+    padding: 5px 20px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+button.analyse-chart-btn2:hover {
+    background-color: #b2d6cb;
+}
+
+button.analyse-chart-btn2:active {
+    background-color: #a0cfc0;
+}
+
+.carbonFootprint{
+    white-space: nowrap;
+  
+}
+/* Canvas Sizing */
+#carbonFootprintGraph {
+    width: 100%;
+    height: auto;
+    margin-left: 10px;
+}
+
+#pieChart2 {
+    margin-top: 40px;
+    margin-left: -50px;
+    margin-right: 50px;
+    height: 80px;
+    width: auto;
+    position: relative;
+}
     
 
     @media (min-width: 1444px) and (max-width: 1540px) {
@@ -802,13 +916,13 @@
         }
 
 
-        #legendButtons button {
+        .legendButtons button {
             width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
-        #pieChart {
+        #pieChart, #pieChart2 {
             flex: 0 0 250px; /* Fixed width, won't shrink */
             height: 170px;
             margin-left: -40px;
@@ -820,6 +934,60 @@
 
         button.analyse-chart-btn2 {
             margin-right: 650px;
+        }
+
+        .popup-modal {
+            max-height: 400px !important; /* Fixed height */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; 
+            padding: 20px;
+            box-sizing: border-box; 
+        }
+        
+        .popup-content {
+            min-height: fit-content;
+            height: auto;
+            width: 100%; 
+            overflow: scroll;
+            padding-top: 20px;
+        }
+        
+         
+        .popup-content h2 {
+            margin-top: 10px;
+        }
+
+
+        .popup-modal::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .popup-modal::-webkit-scrollbar-thumb {
+            background: #aeaeae;
+            border-radius: 4px;
+            visibility: visible;
+        }
+
+        .recommendations-container {
+            margin-top: 20px;
+            display: none;
+            width: 100%;
+            height: auto;
+            min-height: fit-content;
+        }
+
+        #recommendationsSection {
+            margin-top: 20px; /* Spacing between content and recommendations */
+        }
+        
+        .recommendations-content {
+            overflow-y: auto; 
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #59c19b69;
+            box-sizing: border-box;
         }
     }
 
@@ -844,14 +1012,14 @@
         }
 
 
-        #legendButtons button {
+        .legendButtons button {
             width: 90px;
             height: 40px;
             font-size: 12px; 
         }
         
 
-        #pieChart {
+        #pieChart, #pieChart2 {
             flex: 0 0 250px; /* Fixed width, won't shrink */
             height: 170px;
             margin-left: -50px;
@@ -863,6 +1031,58 @@
 
         button.analyse-chart-btn2 {
             margin-right: 650px;
+        }
+
+        .popup-modal {
+            max-height: 400px !important; /* Fixed height */
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
+    
+        .popup-content {
+            min-height: fit-content;
+            height: auto;
+            width: 100%; 
+            overflow: scroll;
+            padding-top: 20px;
+        }
+    
+        .popup-content h2 {
+            margin-top: 10px;
+        }
+    
+        .popup-modal::-webkit-scrollbar {
+            width: 5px;
+        }
+    
+        .popup-modal::-webkit-scrollbar-thumb {
+            background: #aeaeae;
+            border-radius: 4px;
+            visibility: visible;
+        }
+    
+        .recommendations-container {
+            margin-top: 20px;
+            display: none;
+            width: 100%;
+            height: auto;
+            min-height: fit-content;
+        }
+    
+        #recommendationsSection {
+            margin-top: 20px; /* Spacing between content and recommendations */
+        }
+    
+        .recommendations-content {
+            overflow-y: auto; 
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #59c19b69;
+            box-sizing: border-box;
         }
     }
 
@@ -1020,18 +1240,18 @@
             align-items: flex-start; /* Align to the left */
         }
 
-        #legendButtons {
+        .legendButtons {
             margin-top: 25px;
             height: auto;
         }
 
-        #legendButtons button {
+        .legendButtons button {
             width: 80%;
             height: 40px;
             font-size: 14px; 
         }
 
-        #pieChart {
+        #pieChart, #pieChart2 {
             margin-top: 40px;
             margin-left: -50px;
             margin-right: 50px;
@@ -1261,7 +1481,7 @@
     }
     
 
-    #pieChart {
+    #pieChart, #pieChart2 {
         height: 120px;
     }
 
@@ -1271,12 +1491,12 @@
         align-items: flex-start; /* Align to the left */
     }
 
-    #legendButtons {
+    .legendButtons {
         margin-top: 25px;
         height: auto;
     }
 
-    #legendButtons button {
+    .legendButtons button {
         width: 89%;
         height: 40px;
         font-size: 10px; 
@@ -1411,4 +1631,355 @@
     display: flex;  /* Make sure this is a flex container */
     justify-self: flex-end;  /* Align the items to the right */
     align-items: center;  /* Vertically align items to the center */
+}
+
+/* Styles for PDF page breaks */
+.pdf-page {
+    page-break-after: always;
+}
+
+@media print {
+    .pdf-page {
+        page-break-after: always;
+    }
+}
+/* Add to your CSS file */
+.canvas-container {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Heatmap container */
+.heatmap-container {
+    width: 100%;
+    height: calc(100vh - 80px);  /* Increase visible area */
+    position: relative;
+    margin-top: -30px;  /* Pull heatmap up more */
+}
+
+#heatmap {
+    width: 100%;
+    background-image: url('../assets/general/Background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    max-height: 500px!important;
+    max-width: 800px !important;
+}
+
+
+#heatmap svg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translate(-50px, -30px);  /* Move SVG up and left */
+}
+
+/* Adjust title spacing */
+h2 {
+    margin: 0;
+    padding: 5px 0;  /* Reduce padding */
+}
+
+/* Adjust form control spacing */
+.form-control {
+    margin: 5px 0;  /* Reduce margin */
+}
+
+#auditorium {
+    transform: translate(100px, 100px);
+}
+
+#classroom {
+    transform: translate(100px, -40px);
+}
+
+#office {
+    transform: translate(310px, 120px);
+}
+
+#staffroom {
+    transform: translate(270px,  145px);
+}
+
+#laboratory {
+    transform: translate(-50px,  -190px);
+}
+
+#auditorium {
+    transform: translate(200px,  380px);
+}
+
+#cafeteria {
+    transform: translate(625px,  -45px);
+}
+
+#library {
+    transform: translate(110px, -30px);
+}
+
+#gym {
+    transform: translate(280px, 270px)
+}
+
+
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 60%;
+    padding: 20px;
+}
+
+
+#progressToGoalsCard {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#energyUsageCard {
+    width: 50%;
+}
+
+#carbonFootprintCard {
+    width: 50%;
+}
+
+/* Container for Energy and Carbon cards */
+.metrics-cards-container {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-height: none;
+    max-height: none;
+}
+
+/* Energy Usage and Carbon Footprint cards */
+.energy-usage-card,
+.carbon-footprint-card {
+    flex: none; /* Prevents auto-expanding */
+    width: 50% !important; /* Forces a fixed width */
+    max-width: 50%; /* Ensures it doesn't grow */
+    overflow-wrap: break-word; /* Ensures words break if necessary */
+    word-wrap: break-word; /* Alternative for better browser support */
+    white-space: normal; /* Allows text wrapping */
+}
+
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.legend-gradient {
+    width: 200px;
+    height: 20px;
+    border: 1px solid #ccc;
+}
+
+.legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.form-select {
+    width: 200px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 14px;
+}
+
+.heatmap-controls {
+    margin-bottom: 20px;
+    z-index: 100;
+}
+
+.heatmap-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.legend-gradient {
+    height: 20px;
+    background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.heatmap-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between controls and legend */
+    margin-bottom: 15px;
+}
+
+.heatmap-controls {
+    flex-shrink: 0; /* Prevents the dropdown from shrinking */
+}
+
+.form-select {
+    width: 150px; /* Reduced width */
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 14px;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.legend-gradient {
+    width: 150px; /* Match the width with the dropdown */
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 150px; /* Match the width with the gradient */
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.legend-labels span {
+    color: #666;
+}
+
+.legend-container {
+    z-index: 100;
+}
+
+.controls-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 20px;
+    margin-right: 0px !important;
+}
+
+.controls-container {
+    max-width: 500px;
+}
+
+.controls-container h1 {
+    font-weight: bold;
+    font-size: 1.3rem;  
+    padding-bottom: 10px;
+}
+
+#heatmap {
+    transform: translate(-100px, -50px);
+    width: 135%;
+}
+
+.right-container {
+    z-index: 100;
+    width: 60%;
+}
+
+.metrics-cards-container {
+    max-height: 200px;
+}
+
+.heatmap {
+    max-height: 500px;
+}
+
+
+.modalHeader {
+    display: flex;
+    flex-direction: row;
+}
+
+.modalHeader button {
+    margin-left: 10px;
+}
+
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 500px;
+    margin: 15vh auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#modalTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+}
+
+.details-section {
+    margin-bottom: 20px;
+}
+
+.details-section h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+.percentage {
+    color: #666;
+}
+
+.value {
+    font-weight: bold;
 }

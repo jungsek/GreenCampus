@@ -1,3 +1,9 @@
+guardLoginPage();
+
+const token = sessionStorage.getItem("accessToken") || localStorage.getItem("accessToken");
+const role = sessionStorage.getItem("role") || localStorage.getItem("role");
+
+console.log('Role:', role); // Debugging log
 let placeholderID = 1;
 let currentCampaignID;
 let currentCampaigns = [];
@@ -34,9 +40,11 @@ async function renderCampaigns() {
         else {
             signups = await signupresponse.json()
         }
+        const impact = await calculateCarbonImpact(campaign.start_date);
         const card = document.createElement("div");
         card.classList.add("campaign-card");
-        card.innerHTML = `
+        if (impact != null){
+            card.innerHTML = `
             <img src="${campaign.image}" alt="Campaign Image" class="campaign-image">
             <div class="campaign-content">
                 <h3 class="campaign-title">${campaign.name}</h3>
@@ -47,6 +55,14 @@ async function renderCampaigns() {
                 </div>
                 <div class="campaign-signups">
                     ${signups} Sign-ups
+                <div class="impact-summary">
+                <h3>Environmental Impact</h3>
+                <p>Since this campaign, the net carbon footprint has</p>
+                <p class="${impact.improved ? 'positive-impact' : 'negative-impact'}">
+                    ${impact.improved ? 'Decreased' : 'Increased'} by ${Math.abs(impact.difference)} tons
+                    (${Math.abs(impact.percentage)}%)!
+                </p>
+            </div>
                 <div class="campaign-actions">
                     <button class="action-button edit-button" onclick="openModifyPopup(${campaign.id})">
                         <i class='bx bx-pencil'></i> Edit
@@ -57,6 +73,35 @@ async function renderCampaigns() {
                 </div>
             </div>
         `;
+        }else{
+            card.innerHTML = `
+            <img src="${campaign.image}" alt="Campaign Image" class="campaign-image">
+            <div class="campaign-content">
+                <h3 class="campaign-title">${campaign.name}</h3>
+                <p class="campaign-description">${campaign.description}</p>
+                <div class="campaign-points">
+                    <i class='bx bx-star'></i>
+                    ${campaign.points} Points
+                </div>
+                <div class="campaign-signups">
+                    ${signups} Sign-ups
+                <div class="impact-summary">
+                <h3>Environmental Impact</h3>
+                <p>Campaign is too recent - check back in a month for impact data!
+                </p>
+            </div>
+                <div class="campaign-actions">
+                    <button class="action-button edit-button" onclick="openModifyPopup(${campaign.id})">
+                        <i class='bx bx-pencil'></i> Edit
+                    </button>
+                    <button class="action-button delete-button" onclick="openDeletePopup(${campaign.id})">
+                        <i class='bx bx-trash'></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+        }
+        
         parentContainer.appendChild(card);
     });
 }
@@ -106,6 +151,39 @@ document.getElementById('createForm').addEventListener('submit', async function(
         alert("Error creating campaign. Please try again.");
     }
 });
+
+async function calculateCarbonImpact(campaignDate) {
+    const campaignMonth = new Date(campaignDate).getMonth() + 1;
+    const campaignYear = new Date(campaignDate).getFullYear();
+    const currentDate = new Date();
+    
+    // Only calculate for campaigns at least 1 month old
+    if (currentDate - new Date(campaignDate) < 2592000000) { // 30 days in milliseconds
+        return null;
+    }
+
+    try {
+        // Fetch carbon data for campaign month
+        const baselineResponse = await fetch(`/api/carbon-footprint/${placeholderID}}/${campaignYear}/${campaignMonth}`);
+        const baselineData = await baselineResponse.json();
+
+        // Fetch current month's data
+        const currentResponse = await fetch(`/api/carbon-footprint/${placeholderID}/2024/11`);
+        const currentData = await currentResponse.json();
+
+        const difference = currentData.total - baselineData.total;
+        console.log(baselineData.total)
+        return {
+            difference: difference.toFixed(2),
+            percentage: ((difference / baselineData.total) * 100).toFixed(1),
+            improved: difference < 0
+        };
+    } catch (error) {
+        console.error('Error calculating carbon impact:', error);
+        return null;
+    }
+}
+
 
 // Open Modify Popup
 function openModifyPopup(id) {

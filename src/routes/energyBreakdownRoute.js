@@ -11,6 +11,7 @@ const energyBreakdownRoute = (app) => {
     app.get("/energy-breakdowns/usage/:energyUsageId/category/:category", energyBreakdownController.getBreakdownByCategory); // Get breakdown by category
     app.get("/energy-breakdowns/usage/:energyUsageId/percentage", energyBreakdownController.getPercentageByCategory); // Get percentage by category
     app.get("/api/energy-breakdown/:schoolId/year/:year", energyBreakdownController.getEnergyBreakdownPerYearBySchool);
+    app.post('/api/EBrecommendations/:category', energyBreakdownController.getRecommendations);
 };
 
 module.exports = energyBreakdownRoute;

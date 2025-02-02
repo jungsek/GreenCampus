@@ -14,36 +14,30 @@ function inputChanged(e){
 }
 
 async function login(){
-    const response = await post(`/users/login`,{email:emailInput.value, password: passwordInput.value})
-    //check if login successful
-    if (response.status == 404){
-        //clear password field
-        passwordInput.value = ""
-        //display error message
-        errorMsg.style.display = "block"
-        return
-    }
-    //login successful
-    
-    const token = await response.json();
-    const accessToken = token.accessToken;
-    const role = token.role
+  const response = await post(`/users/login`,{email:emailInput.value, password: passwordInput.value})
+  if (response.status == 404){
+      passwordInput.value = ""
+      errorMsg.style.display = "block"
+      return
+  }
   
-    // Store the token and role in session storage
-    sessionStorage.setItem('accessToken', accessToken);
-    sessionStorage.setItem('role', role);
+  const token = await response.json();
+  const accessToken = token.accessToken;
+  const role = token.role
+
+  // Store tokens based on remember me setting
+  if (rememberInput.checked) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('role', role);
+  } else {
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('role', role);
+  }
     
-    // Store in local if remember me is enabled
-    if (rememberInput.checked) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('role', role);
-      } else {
-        sessionStorage.setItem('accessToken', accessToken);
-        sessionStorage.setItem('role', role);
-      }
-      
-    //redirect user to courses
-    window.location.href = "../index.html"
-    
-    
+  // Role-based redirect
+  if (role === 'student') {
+      window.location.href = "../studentcampaign.html";
+  } else {
+      window.location.href = "../dashboard.html";
+  }
 }

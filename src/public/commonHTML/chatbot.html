@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Integration</title>
+    <link rel="stylesheet" href="../styles/chatbot.css">
+    <!-- Add marked library for Markdown support -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="gc-chat-container gc-hidden" id="chat-container">
+        <div class="gc-chat-header">
+            <h2 class="gc-chat-title">GreenCampus Assistant</h2>
+            <button id="close-chat" class="gc-close-btn">×</button>
+        </div>
+        <div class="gc-chat-messages" id="chat-messages">
+            <!-- Loading indicator (hidden by default) -->
+            <div id="gc-typing-indicator" class="gc-typing-indicator gc-hidden">
+                <div class="gc-typing-dot"></div>
+                <div class="gc-typing-dot"></div>
+                <div class="gc-typing-dot"></div>
+            </div>
+        </div>
+        <div class="gc-chat-input-container">
+            <input 
+                type="text" 
+                id="user-input" 
+                class="gc-chat-input"
+                placeholder="Ask me anything about sustainability..." 
+            />
+            <button id="send-button" class="gc-send-btn">
+                <img src="../assets/general/send.png" alt="Send" width="20" height="20">
+            </button>
+        </div>
+    </div>
+    
+    <!-- Chatbot Toggle Button -->
+    <button id="open-chat" class="gc-chat-toggle">
+        <img src="../assets/general/Logo-icon.png" alt="Chat">
+    </button>
+
+  </div>
+    <script src="../scripts/chatbot.js"></script>
+</body>
+</html>

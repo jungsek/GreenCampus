@@ -9,12 +9,16 @@ $(".nav-placeholder").load("./commonHTML/navbar.html", () => {
 $(".studentnav-placeholder").load("./commonHTML/studentnavbar.html", () => {
 
 })
-//load the footer html into the class
-$(".footer-placeholder").load("./commonHTML/footer.html")
 
-//load the header for course-view pages
-$(".course-header-placeholder").load("./commonHTML/course-header.html")
-
+// Load chatbot
+$(function() {
+  $(".chatbot-placeholder").load("./commonHTML/chatbot.html", function() {
+      // Initialize chatbot after loading
+      if (typeof initializeChatbot === 'function') {
+          initializeChatbot();
+      }
+  });
+});
 // Get the access token and role
 const accessToken = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
 const userRole =  localStorage.getItem("role") || sessionStorage.getItem("role");
@@ -97,7 +101,7 @@ async function guardLoginPage(){
 
 //opposite of guardLoginPage, redirect user to home (course) page if they are logged in
 async function guardAlreadyLoginPage(){
-  if (await isLoggedIn()) location.href = "courses.html"
+  if (await isLoggedIn()) location.href = "index.html"
 }
 
 //returns the user id stored in local/session storage

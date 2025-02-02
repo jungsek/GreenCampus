@@ -51,6 +51,16 @@ class EnergyUsage {
         return result.length ? result.map((x) => this.toEnergyUsageObj(x)) : null;
     }
 
+    static async getEnergyUsageById(id){
+        const params = {"id": id}
+        const result = (await this.query(
+            "SELECT * FROM EnergyUsage WHERE id = @id", params)).recordset;
+    
+        // Ensure result is valid and return the first item
+        return result.length > 0 ? this.toEnergyUsageObj(result[0]) : null;
+    }
+    
+
     static async createEnergyUsage(data) {
         const params = {
             "school_id": data.school_id,
