@@ -3,10 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let role = sessionStorage.getItem('role')
     let navbar = document.createElement('div')
     if (role == 'student') {
-        navbar.classList.add('studentnav-placeholder')
+        navbar.classList.add('nav-placeholder')
     }
     else {
-        navbar.classList.add('nav-placeholder')
     }
     document.body.insertBefore(navbar, document.body.firstChild);
 
