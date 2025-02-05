@@ -231,7 +231,7 @@ class EnergyBreakdown {
 
     static async generateRecommendations(prompt) {
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             
             // Add specific formatting instructions
             const enhancedPrompt = `${prompt}
