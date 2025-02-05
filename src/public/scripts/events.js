@@ -431,14 +431,13 @@ function closeCreatePopup() {
 // Handle create campaign form submission
 document.getElementById('createForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    
     const newEventData = {
         school_id: placeholderID,
         name: document.getElementById('eventName').value,
         description: document.getElementById('eventDescription').value,
         date: document.getElementById('eventDate').value
     };
-
+    
     if (newEventData.date <= (new Date().getDate())) {
         alert("Please enter a date later than today.");
         return;
