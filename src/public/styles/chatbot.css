@@ -286,3 +286,361 @@
     border: none;
     border-top: 1px solid #e0e0e0;
 }
+
+/* Interactive Elements */
+.gc-interactive-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.gc-interactive-link:hover {
+    color: #45a049;
+    text-decoration: underline;
+}
+
+/* Energy Breakdown Display */
+.gc-energy-breakdown {
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+}
+
+.gc-energy-breakdown h4 {
+    margin: 0 0 8px 0;
+    color: #2c5282;
+}
+
+.gc-energy-breakdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.gc-energy-breakdown li {
+    padding: 4px 0;
+    color: #4a5568;
+    font-size: 0.9em;
+}
+
+/* Enhanced Message Styling */
+.gc-bot-message {
+    max-width: 80%;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 12px;
+    margin: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gc-bot-message a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.gc-bot-message a:hover {
+    text-decoration: underline;
+}
+
+.gc-bot-message ul {
+    padding-left: 20px;
+}
+
+.gc-bot-message li {
+    margin: 4px 0;
+}
+
+/* Code blocks and pre formatting */
+.gc-bot-message pre {
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.gc-bot-message code {
+    font-family: monospace;
+    background: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Add to existing chatbot.css */
+
+/* Chart Container */
+.gc-chart-container {
+    width: 100%;
+    height: 200px;
+    margin: 12px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Welcome Message */
+.gc-welcome-message {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.gc-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.gc-quick-action-btn {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.gc-quick-action-btn:hover {
+    background: #047857;
+}
+
+/* Campaign Cards */
+.gc-campaigns-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.gc-campaign-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    transition: transform 0.2s;
+}
+
+.gc-campaign-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.gc-campaign-card h4 {
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
+}
+
+.gc-campaign-card p {
+    margin: 0 0 8px 0;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.gc-campaign-points {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #059669;
+    font-weight: 600;
+}
+
+.gc-campaign-points i {
+    color: #fbbf24;
+}
+
+/* Enhanced Message Styling */
+.gc-bot-message {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.gc-bot-message a {
+    color: #059669;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gc-bot-message a:hover {
+    text-decoration: underline;
+}
+
+/* Data Visualization Elements */
+.gc-data-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+}
+
+.gc-data-card h4 {
+    margin: 0 0 8px 0;
+    color: #2d3748;
+}
+
+.gc-data-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #059669;
+}
+
+.gc-data-label {
+    font-size: 14px;
+    color: #4a5568;
+}
+
+/* Loading Animation Enhancement */
+.gc-typing-indicator {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 8px 16px;
+}
+
+.gc-typing-dot {
+    background: #059669;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .gc-chat-container {
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+    }
+
+    .gc-quick-actions {
+        flex-direction: column;
+    }
+
+    .gc-quick-action-btn {
+        width: 100%;
+    }
+
+    .gc-chart-container {
+        height: 250px;
+    }
+}
+
+/* Chart Tooltips */
+.gc-chart-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Accessibility Improvements */
+.gc-chat-input:focus {
+    outline: 2px solid #059669;
+    outline-offset: -2px;
+}
+
+.gc-quick-action-btn:focus {
+    outline: 2px solid #059669;
+    outline-offset: 2px;
+}
+
+/* Animation for Chart Loading */
+@keyframes gc-chart-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gc-chart-container {
+    animation: gc-chart-fade-in 0.3s ease-out;
+}
+
+.gc-campaign-signups {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gc-campaign-signups::before {
+    content: '👥';
+    font-size: 1.1em;
+}
+
+.gc-view-all-campaigns {
+    display: inline-block;
+    background-color: #059669;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    margin: 10px 0;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.gc-view-all-campaigns:hover {
+    background-color: #047857;
+    text-decoration: none;
+    color: white;
+}
+
+/* Carbon Footprint Response Styling */
+.gc-data-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.gc-data-section {
+    margin-bottom: 20px;
+}
+
+.gc-data-section:last-child {
+    margin-bottom: 0;
+}
+
+.gc-data-section h4 {
+    margin: 0 0 8px 0;
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gc-data-section p {
+    margin: 0 0 12px 0;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.gc-data-section ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.gc-data-section li {
+    margin: 8px 0;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.gc-section-spacer {
+    height: 24px;
+}
+
+.gc-chart-container {
+    margin-bottom: 24px;
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
